@@ -61,7 +61,9 @@ add_executable(ProgettoPCS2025
       ${ProgettoPCS2025_sources}
       ${ProgettoPCS2025_headers})
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell0Ds.csv ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell1Ds.csv ${CMAKE_CURRENT_SOURCE_DIR}/TriangularMesh/Cell2Ds.csv
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell0Ds_tetrahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell1Ds_tetrahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell2Ds_tetrahedron.csv ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell3Ds_tetrahedron.csv 
+	${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell0Ds_octahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell1Ds_octahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell2Ds_octahedron.csv ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell3Ds_octahedron.csv 
+	${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell0Ds_icosahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell1Ds_icosahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell2Ds_icosahedron.csv ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell3Ds_icosahedron.csv
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(${PROJECT_NAME} ${ProgettoPCS2025_LINKED_LIBRARIES})
