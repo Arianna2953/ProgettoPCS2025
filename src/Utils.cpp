@@ -376,4 +376,27 @@ bool ImportCell3Ds(const string& file2Ds, PolyhedralMesh& mesh)
     }
     return true;
 }
+
+bool TriangulateFaces(PolyhedralMesh& mesh,const int& b,const int& c)
+{
+	//ho impostato solo un controllo sui valori, bisogna implementare ancora tutta la funzione per la triangolazione!!! 
+	
+	
+	
+	//imposto i vari casi in base al valore di b e c in input_iterator
+	if((b==0 && c >=1) || (b>=1 && c==0)){
+		int n = max(b,c);
+		//triangolazione tipo 1
+		cout << "Tipo 1" << endl;
+	}
+	else if(b==c && b!=0){
+		int n = b;
+		//triangolazione tipo 2
+		cout << "Tipo 2" << endl;
+	}
+	else {
+		cout << "valori di b e c non validi" << endl;
+	}
 }
+}	
+		
