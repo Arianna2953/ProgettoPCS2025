@@ -36,6 +36,10 @@ list(APPEND ProgettoPCS2025_LINKED_LIBRARIES PRIVATE GTest::gmock_main)
 # Insert Sources
 ################################################################################
 
+include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src_test)
+include_directories(${CMAKE_SOURCE_DIR}/ExportParaview)
+
 add_subdirectory(src)
 
 list(APPEND ProgettoPCS2025_sources ${src_sources})
@@ -56,7 +60,7 @@ list(APPEND ProgettoPCS2025_includes ${src_paraview_includes})
 
 # Create executable
 ################################################################################
-add_executable(ProgettoPCS2025
+add_executable(${PROJECT_NAME}
       main.cpp
       ${ProgettoPCS2025_sources}
       ${ProgettoPCS2025_headers})

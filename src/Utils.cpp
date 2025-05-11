@@ -11,10 +11,10 @@
 
 namespace PolyhedralLibrary
 {
-bool ImportMesh(PolyhedralMesh& mesh)
+bool ImportMesh(PolyhedralMesh& mesh,const string& file0Ds,const string& file1Ds,const string& file2Ds,const string& file3Ds)
 {
 
-    if(!ImportCell0Ds(mesh)){
+    if(!ImportCell0Ds(file0Ds,mesh)){
         return false;
 	}
 	else{
@@ -32,7 +32,7 @@ bool ImportMesh(PolyhedralMesh& mesh)
 		}
 	}
 
-    if(!ImportCell1Ds(mesh)){
+    if(!ImportCell1Ds(file1Ds,mesh)){
         return false;
 	}
 	else{
@@ -50,7 +50,7 @@ bool ImportMesh(PolyhedralMesh& mesh)
 		}
 	}
 
-    if(!ImportCell2Ds(mesh)){
+    if(!ImportCell2Ds(file2Ds,mesh)){
         return false;
 	}
 	else{
@@ -68,7 +68,7 @@ bool ImportMesh(PolyhedralMesh& mesh)
 		}
 	}
 	
-	if(!ImportCell3Ds(mesh)){
+	if(!ImportCell3Ds(file3Ds,mesh)){
         return false;
 	}
 	else{
@@ -89,9 +89,9 @@ bool ImportMesh(PolyhedralMesh& mesh)
     return true;
 }
 
-bool ImportCell0Ds(& nome_file, PolygonalMesh& mesh)
+bool ImportCell0Ds(const string& file0Ds, PolyhedralMesh& mesh)
 {
-    ifstream file("./Cell0Ds_" << nome_file << ".csv");
+    ifstream file(file0Ds);
 
     if(file.fail())
         return false;
@@ -126,7 +126,7 @@ bool ImportCell0Ds(& nome_file, PolygonalMesh& mesh)
         unsigned int marker;
         char delimiter; // per memorizzare il ; del file csv
 
-        converter >>  id >> delimiter >> marker >> delimiter >> mesh.Cell0DsCoordinates(0, id) >> delimiter >> mesh.Cell0DsCoordinates(1, id);
+        converter >>  id >> delimiter >> marker >> delimiter >> mesh.Cell0DsCoordinates(0, id) >> delimiter >> mesh.Cell0DsCoordinates(1, id)>> delimiter >> mesh.Cell0DsCoordinates(2, id);
 
         mesh.Cell0DsId.push_back(id);
 
@@ -148,9 +148,9 @@ bool ImportCell0Ds(& nome_file, PolygonalMesh& mesh)
     return true;
 }
 
-bool ImportCell1Ds(& nome_file, PolygonalMesh& mesh)
+bool ImportCell1Ds(const string& file1Ds, PolyhedralMesh& mesh)
 {
-    ifstream file("./Cell1Ds_" << nome_file << ".csv");
+    ifstream file(file1Ds);
 
     if(file.fail())
         return false;
@@ -203,10 +203,7 @@ bool ImportCell1Ds(& nome_file, PolygonalMesh& mesh)
 		}
 		
 		// verifica che ciascun lato non abbia lunghezza zero
-		int& origine=mesh.Cell1DsExtrema(0,id);
-		int& fine=mesh.Cell1DsExtrema(1,id);
-		if (origine==fine)
-		{
+		if(mesh.Cell1DsExtrema(0, id) == mesh.Cell1DsExtrema(1, id)){
 			cerr<<"Il lato ha lunghezza pari a 0";
 			return false;
 		}
@@ -214,10 +211,9 @@ bool ImportCell1Ds(& nome_file, PolygonalMesh& mesh)
     return true;
 }
 
-bool ImportCell2Ds(& nome_file, PolygonalMesh& mesh)
+bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh)
 {
-    ifstream file;
-    file.open("./Cell2Ds_" << nome_file << ".csv");
+    ifstream file(file1Ds);
 
     if(file.fail())
         return false;
@@ -293,37 +289,37 @@ bool ImportCell2Ds(& nome_file, PolygonalMesh& mesh)
             }
 		}
 		// verifica che tutti i poligoni abbiano area diversa da zero
-		vector<unsigned int>& vecvet=mesh.Cell2DsVertices[id];
-		const unsigned int n=vecvet.size();
-		double area=0.0;
-		for(unsigned int i=0;i<n;i++)
-		{
-			const unsigned int viid=vecvet[i];
-			const unsigned int vjid=vecvet[(i+1)%n]; // serve per chiudere il poligono e connettere primo e ultimo vertice
-			const MatrixXd coord=mesh.Cell0DsCoordinates;
-			const double Xvi=coord(0,viid);
-			const double Yvi=coord(1,viid);
-			const double Zvi=coord(2,viid);
-			const double Xvj=coord(0,vjid);
-			const double Yvj=coord(1,vjid);
-			const double Zvi=coord(2,vjid);
-			area=+(Xvi*Yvj)-(Xvj*Yvi);
-		}
-		area =abs(area/2.0);
-		if (area<=1.e-16)
-		{
+		
+		const MatrixXd& coord = mesh.Cell0DsCoordinates;
+			Vector3d areaVec(0.0, 0.0, 0.0);
+
+			for (unsigned int i = 0; i < num_vert; i++) {
+				unsigned int j = (i + 1) % num_vert;
+
+				Vector3d vi = coord.col(vecv[i]);
+				Vector3d vj = coord.col(vecv[j]);
+
+				areaVec += vi.cross(vj);
+			}
+
+			double area = 0.5 * areaVec.norm();
+			cout << "area poligono " << id << " = " << area << endl;
+		
+			if (area<=1.e-16)
+			{
 			cerr<<"il poligono ha area pari a 0";
 			return false;
+			}
+			
 		}
-    }
+
     return true;
 }
-}
 
-bool ImportCell3Ds(& nome_file, PolygonalMesh& mesh)
+
+bool ImportCell3Ds(const string& file2Ds, PolyhedralMesh& mesh)
 {
-    ifstream file;
-    file.open("./Cell3Ds_" << nome_file << ".csv");
+    ifstream file(file2Ds);
 
     if(file.fail())
         return false;

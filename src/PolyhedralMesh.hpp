@@ -30,3 +30,4 @@ struct PolyhedralMesh
 	vector<vector<unsigned int>> Cell3DsFaces = {}; // id facce del poligono, (1 x NumberCell3Faces[NumberCell3D])
 	map<unsigned int, list<unsigned int>> MarkerCell3Ds = {}; // Cell3D markers
 };
+}
