@@ -130,7 +130,7 @@ int main(int argc, char* argv[]) {
         cout << "Combinazione di valori di p e q non corrispondente a nessun poliedro regolare." << endl;
     }
 
-	
+	TriangulateFaces(mesh,b,c);
 
 Gedim::UCDUtilities utilities;
     {	vector<Gedim::UCDProperty<double>> cell0Ds_properties(1);
