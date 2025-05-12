@@ -43,4 +43,9 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh);
 //mesh: a PolyhedralMesh struct
 //b & c: input numbers 
 bool TriangulateFaces(PolyhedralMesh& mesh,const int& b,const int& c);
+
+// Projects the vertices of the triangulation onto a unit sphere centered at the origin
+// vertices: a vector containing 3 coordinates of the vertex
+// return the normalized vector
+void projectOntoUnitSphere(Vector3d& v);
 }

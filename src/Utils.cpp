@@ -4,6 +4,7 @@
 #include <sstream>
 #include "Eigen/Eigen"
 #include <string>
+#include <cmath>
 #include <list>
 #include <map>
 #include <vector>
@@ -398,5 +399,16 @@ bool TriangulateFaces(PolyhedralMesh& mesh,const int& b,const int& c)
 		cout << "valori di b e c non validi" << endl;
 	}
 }
+
+void projectOntoUnitSphere(Vector3d& v){
+	double len = v.norm();//sqrt(v.x() * v.x() + v.y() * v.y() + v.z() * v.z())
+    if (len < 1e-16) {
+        cerr << "Warning: il vettore considerato ha lunghezza nulla";
+        return;
+    }
+    v /= len;
+}
+
+
 }	
 		
