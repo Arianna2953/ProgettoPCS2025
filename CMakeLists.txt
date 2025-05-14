@@ -20,18 +20,18 @@ endif (WIN32)
 
 ## Eigen3
 find_package(Eigen3 CONFIG REQUIRED)
-list(APPEND ProgettoPCS2025_LINKED_LIBRARIES PUBLIC Eigen3::Eigen)
+list(APPEND ${PROJECT_NAME}_LINKED_LIBRARIES PUBLIC Eigen3::Eigen)
 
 ## Threads
 find_package(Threads REQUIRED)
-list(APPEND ProgettoPCS2025_LINKED_LIBRARIES PRIVATE Threads::Threads)
+list(APPEND ${PROJECT_NAME}_LINKED_LIBRARIES PRIVATE Threads::Threads)
 
 ## GTest
 find_package(GTest REQUIRED)
-list(APPEND ProgettoPCS2025_LINKED_LIBRARIES PRIVATE GTest::gtest)
-list(APPEND ProgettoPCS2025_LINKED_LIBRARIES PRIVATE GTest::gtest_main)
-list(APPEND ProgettoPCS2025_LINKED_LIBRARIES PRIVATE GTest::gmock)
-list(APPEND ProgettoPCS2025_LINKED_LIBRARIES PRIVATE GTest::gmock_main)
+list(APPEND ${PROJECT_NAME}_LINKED_LIBRARIES PRIVATE GTest::gtest)
+list(APPEND ${PROJECT_NAME}_LINKED_LIBRARIES PRIVATE GTest::gtest_main)
+list(APPEND ${PROJECT_NAME}_LINKED_LIBRARIES PRIVATE GTest::gmock)
+list(APPEND ${PROJECT_NAME}_LINKED_LIBRARIES PRIVATE GTest::gmock_main)
 
 # Insert Sources
 ################################################################################
@@ -42,34 +42,78 @@ include_directories(${CMAKE_SOURCE_DIR}/ExportParaview)
 
 add_subdirectory(src)
 
-list(APPEND ProgettoPCS2025_sources ${src_sources})
-list(APPEND ProgettoPCS2025_headers ${src_headers})
-list(APPEND ProgettoPCS2025_includes ${src_includes})
-
-add_subdirectory(src_test)
-
-list(APPEND ProgettoPCS2025_sources ${src_test_sources})
-list(APPEND ProgettoPCS2025_headers ${src_test_headers})
-list(APPEND ProgettoPCS2025_includes ${src_test_includes})
+list(APPEND ${PROJECT_NAME}_sources ${src_sources})
+list(APPEND ${PROJECT_NAME}_headers ${src_headers})
+list(APPEND ${PROJECT_NAME}_includes ${src_includes})
 
 add_subdirectory(ExportParaview)
 
-list(APPEND ProgettoPCS2025_sources ${src_paraview_sources})
-list(APPEND ProgettoPCS2025_headers ${src_paraview_headers})
-list(APPEND ProgettoPCS2025_includes ${src_paraview_includes})
+list(APPEND ${PROJECT_NAME}_sources ${src_paraview_sources})
+list(APPEND ${PROJECT_NAME}_headers ${src_paraview_headers})
+list(APPEND ${PROJECT_NAME}_includes ${src_paraview_includes})
 
-# Create executable
+add_subdirectory(src_test)
+
+list(APPEND ${PROJECT_NAME}_test_sources ${${PROJECT_NAME}_sources} ${src_test_sources})
+list(APPEND ${PROJECT_NAME}_test_headers ${${PROJECT_NAME}_headers} ${src_test_headers})
+list(APPEND ${PROJECT_NAME}_test_includes ${${PROJECT_NAME}_includes} ${src_test_includes})
+
+# Copy file
 ################################################################################
-add_executable(${PROJECT_NAME}
-      main.cpp
-      ${ProgettoPCS2025_sources}
-      ${ProgettoPCS2025_headers})
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell0Ds_tetrahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell1Ds_tetrahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell2Ds_tetrahedron.csv ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell3Ds_tetrahedron.csv 
 	${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell0Ds_octahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell1Ds_octahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell2Ds_octahedron.csv ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell3Ds_octahedron.csv 
 	${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell0Ds_icosahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell1Ds_icosahedron.csv  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell2Ds_icosahedron.csv ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell3Ds_icosahedron.csv
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-target_link_libraries(${PROJECT_NAME} ${ProgettoPCS2025_LINKED_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${ProgettoPCS2025_INCLUDE})
+# Create executable
+################################################################################
+add_executable(${PROJECT_NAME}
+      main.cpp
+      ${${PROJECT_NAME}_sources}
+      ${${PROJECT_NAME}_headers})
+
+target_link_libraries(${PROJECT_NAME} ${${PROJECT_NAME}_LINKED_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${${PROJECT_NAME}_includes})
 target_compile_options(${PROJECT_NAME} PUBLIC -fPIC)
+
+#Eseguibile test
+add_executable(${PROJECT_NAME}_TEST
+      main_test.cpp
+	  ${${PROJECT_NAME}_test_sources}
+	  ${${PROJECT_NAME}_test_headers})
+
+target_link_libraries(${PROJECT_NAME}_TEST ${${PROJECT_NAME}_LINKED_LIBRARIES})
+target_include_directories(${PROJECT_NAME}_TEST PRIVATE ${${PROJECT_NAME}_test_includes})
+target_compile_options(${PROJECT_NAME}_TEST PUBLIC -fPIC)
+
+
+################################################################################
+# Eseguibili personali
+add_executable(${PROJECT_NAME}_Arianna
+      main_Arianna.cpp
+      ${${PROJECT_NAME}_test_sources}
+	  ${${PROJECT_NAME}_test_headers})
+
+target_link_libraries(${PROJECT_NAME}_Arianna ${${PROJECT_NAME}_LINKED_LIBRARIES})
+target_include_directories(${PROJECT_NAME}_Arianna PRIVATE ${${PROJECT_NAME}_test_includes})
+target_compile_options(${PROJECT_NAME}_Arianna PUBLIC -fPIC)
+
+add_executable(${PROJECT_NAME}_Elena
+      main_Elena.cpp
+	  ${${PROJECT_NAME}_test_sources}
+	  ${${PROJECT_NAME}_test_headers})
+	  
+target_link_libraries(${PROJECT_NAME}_Elena ${${PROJECT_NAME}_LINKED_LIBRARIES})
+target_include_directories(${PROJECT_NAME}_Elena PRIVATE ${${PROJECT_NAME}_test_includes})
+target_compile_options(${PROJECT_NAME}_Elena PUBLIC -fPIC)
+	  
+add_executable(${PROJECT_NAME}_Giulia
+      main_Giulia.cpp
+      ${${PROJECT_NAME}_test_sources}
+	  ${${PROJECT_NAME}_test_headers})
+
+target_link_libraries(${PROJECT_NAME}_Giulia ${${PROJECT_NAME}_LINKED_LIBRARIES})
+target_include_directories(${PROJECT_NAME}_Giulia PRIVATE ${${PROJECT_NAME}_test_includes})
+target_compile_options(${PROJECT_NAME}_Giulia PUBLIC -fPIC)
+################################################################################
