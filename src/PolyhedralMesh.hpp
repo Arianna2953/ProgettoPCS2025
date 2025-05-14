@@ -27,6 +27,8 @@ struct PolyhedralMesh
 	
 	unsigned int NumCell3Ds = 0; // numero di Cell3D
 	vector<unsigned int> Cell3DsId = {}; // id poligoni, (1 x NumberCell3D)
+	vector<vector<unsigned int>> Cell3DsVertices = {}; // id vertici del poligono, (1 x NumberCell3DVertices[NumberCell3D])
+    vector<vector<unsigned int>> Cell3DsEdges = {}; // id lati del poligono, (1 x NumberCell3DEdges[NumberCell3D])
 	vector<vector<unsigned int>> Cell3DsFaces = {}; // id facce del poligono, (1 x NumberCell3Faces[NumberCell3D])
 	map<unsigned int, list<unsigned int>> MarkerCell3Ds = {}; // Cell3D markers
 };
