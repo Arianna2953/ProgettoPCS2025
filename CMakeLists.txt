@@ -4,6 +4,7 @@ project(ProgettoPCS2025 LANGUAGES CXX C VERSION 1.0.0)
 
 # Set C++ Standard
 ################################################################################
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -68,6 +69,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/Cell0Ds_tetrahedron.csv  ${C
 
 # Create executable
 ################################################################################
+
 add_executable(${PROJECT_NAME}
       main.cpp
       ${${PROJECT_NAME}_sources}
@@ -77,7 +79,6 @@ target_link_libraries(${PROJECT_NAME} ${${PROJECT_NAME}_LINKED_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${${PROJECT_NAME}_includes})
 target_compile_options(${PROJECT_NAME} PUBLIC -fPIC)
 
-#Eseguibile test
 add_executable(${PROJECT_NAME}_TEST
       main_test.cpp
 	  ${${PROJECT_NAME}_test_sources}
