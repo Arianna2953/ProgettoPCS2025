@@ -3,7 +3,6 @@
 #include <cctype>  // per isdigit()
 #include "PolyhedralMesh.hpp"
 #include "ImportExport.hpp"
-#include "ImportExport.cpp"
 #include "Utils.hpp"
 #include "UCDUtilities.hpp"
 
@@ -107,7 +106,11 @@ int main(int argc, char* argv[]) {
 		} 
 	
 	
-	TriangulateFaces(mesh,b,c);
+	
+	
+	PolyhedralMesh mesh; //da cambiare nome prob
+	
+	TriangulateFaces(regularPolyhedron, mesh,b,c);
 
 Gedim::UCDUtilities utilities;
     {	vector<Gedim::UCDProperty<double>> cell0Ds_properties(1);

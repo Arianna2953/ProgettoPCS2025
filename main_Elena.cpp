@@ -32,7 +32,7 @@ int main()
 			return 1;
 		}
 	*/
-	
+	/*
 	Eigen::vector3d a;
 	a << 0, 0, 0;
 	Eigen::vector3d b;
@@ -42,7 +42,7 @@ int main()
 	
 	Eigen::vector3d B;
 	B = 1/3*(a+b+c)
-	
+	*/
 	return 0;
 }
 
