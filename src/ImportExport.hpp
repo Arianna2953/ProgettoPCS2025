@@ -29,13 +29,13 @@ bool ImportCell1Ds(const string& file1Ds, PolyhedralMesh& mesh);
 
 // Import the Cell2D properties from Cell2Ds_type.csv file
 //file2Ds: a file containing information about Cell2Ds
-// mesh: a PolyhdralMesh struct
+// mesh: a PolyhedralMesh struct
 // return the result of the reading, true if is success, false otherwise
 bool ImportCell2Ds(const string& file2Ds, PolyhedralMesh& mesh);
 
 // Import the Cell3D properties from Cell3Ds_type.csv file
 //file3Ds: a file containing information about Cell3Ds
-// mesh: a PolyhdralMesh struct
+// mesh: a PolyhedralMesh struct
 // return the result of the reading, true if is success, false otherwise
 bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh);
 }

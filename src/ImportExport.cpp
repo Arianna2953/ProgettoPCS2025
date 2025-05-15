@@ -1,3 +1,4 @@
+
 #include "ImportExport.hpp"
 #include <iostream>
 #include <fstream>
@@ -263,7 +264,7 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh)
 		}
 		mesh.Cell2DsVertices.push_back(vecv);
 		
-		converter >> id >> delimiter >> marker >> delimiter >> num_edges;
+		converter >> delimiter >> num_edges;
 		
 		vector<unsigned int> vece;
 		vece.reserve(num_edges);
