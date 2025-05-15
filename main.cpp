@@ -13,7 +13,7 @@ using namespace PolyhedralLibrary;
 int main(int argc, char* argv[]) {
     // Verifica che ci siano 5 o 7 argomenti (5 se non ci sono v0 e v1, 7 se ci sono v0 e v1)
     if (argc != 5 && argc != 7) {
-        cerr << "Uso: ./programma p q b c [v0 v1]\n";
+        cerr << "Indicare i parametri nella forma: ./programma p q b c [v0 v1]\n";
         return 1;
     }
 
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
     string file2Ds;
     string file3Ds;
 	
-	PolyhedralMesh mesh;
+	PolyhedralMesh regularPolyhedron;
 
     // Controllo combinazioni specifiche di p e q
     if (p == 3 && q == 3) {
@@ -56,12 +56,6 @@ int main(int argc, char* argv[]) {
 		file3Ds = "./Cell3Ds_tetrahedron.csv";
 		
         cout << "Poliedro regolare di base: Tetraedro" << endl;
-		
-		if(!ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds))
-		{
-			cerr << "file non trovato" << endl;
-			return 1;
-		}
     } 
     else if (p == 3 && q == 4) {
         file0Ds = "./Cell0Ds_octahedron.csv";
@@ -70,12 +64,6 @@ int main(int argc, char* argv[]) {
 		file3Ds = "./Cell3Ds_octahedron.csv";
 		
         cout << "Poliedro regolare di base: Ottaedro" << endl;
-		
-		if(!ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds))
-		{
-			cerr << "file non trovato" << endl;
-			return 1;
-		}
     } 
     else if (p == 3 && q == 5) {
         file0Ds = "./Cell0Ds_icosahedron.csv";
@@ -84,13 +72,6 @@ int main(int argc, char* argv[]) {
 		file3Ds = "./Cell3Ds_icosahedron.csv";
 		
         cout << "Poliedro regolare di base: Icosaedro" << endl;
-		
-		if(!ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds))
-		{
-			cerr << "file non trovato" << endl;
-			return 1;
-		}
-		
     } 
     else if (p == 4 && q == 3) {
 		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
@@ -100,14 +81,7 @@ int main(int argc, char* argv[]) {
 		file2Ds = "./Cell2Ds_octahedron.csv";
 		file3Ds = "./Cell3Ds_octahedron.csv";
 		
-        cout << "Poliedro regolare di base: Ottaedro - bisogna poi farne il duale" << endl;
-		
-		if(!ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds))
-		{
-			cerr << "file non trovato" << endl;
-			return 1;
-		}
-        	
+        cout << "Poliedro regolare di base: Ottaedro - bisogna poi farne il duale" << endl;	
     } 
     else if (p == 5 && q == 3) {
 		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
@@ -117,19 +91,20 @@ int main(int argc, char* argv[]) {
 		file2Ds = "./Cell2Ds_icosahedron.csv";
 		file3Ds = "./Cell3Ds_icosahedron.csv";
 		
-        cout << "Poliedro regolare di base: Icosaedro - bisogna poi farne il duale" << endl;
-		
-		if(!ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds))
+        cout << "Poliedro regolare di base: Icosaedro - bisogna poi farne il duale" << endl;	
+    } 
+    else {
+        cout << "Combinazione di valori di p e q non corrispondente a nessun poliedro regolare." << endl;
+		return 1;
+    }
+
+	if(!ImportMesh(regularPolyhedron,file0Ds,file1Ds,file2Ds,file3Ds))
 		{
 			cerr << "file non trovato" << endl;
 			return 1;
 		} 
-		
-    } 
-    else {
-        cout << "Combinazione di valori di p e q non corrispondente a nessun poliedro regolare." << endl;
-    }
-
+	
+	
 	TriangulateFaces(mesh,b,c);
 
 Gedim::UCDUtilities utilities;
