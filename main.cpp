@@ -2,6 +2,8 @@
 #include <string>
 #include <cctype>  // per isdigit()
 #include "PolyhedralMesh.hpp"
+#include "ImportExport.hpp"
+#include "ImportExport.cpp"
 #include "Utils.hpp"
 #include "UCDUtilities.hpp"
 
