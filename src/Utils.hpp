@@ -9,14 +9,14 @@ namespace PolyhedralLibrary
 //Triangulate the faces of the polyhedron
 //mesh: a PolyhedralMesh struct
 //b & c: input numbers 
-bool TriangulateFaces(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& p,const int& q, const int& b,const int& c);
+void TriangulateFaces(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& b,const int& c);
 
 // Projects the vertices of the triangulation onto a unit sphere centered at the origin
 // vertices: a vector containing 3 coordinates of the vertex
 // return the normalized vector
 bool projectOntoUnitSphere(Vector3d& v);
 
-void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& p,const int& q, const int& n); 
+void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& n); 
 // finire e correggere i commenti!!!!
 
 }
