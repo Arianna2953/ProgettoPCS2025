@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
 	
 	PolyhedralMesh mesh; //da cambiare nome prob
 	
-	TriangulateFaces(regularPolyhedron, mesh,p,q,b,c);
+	TriangulateFaces(regularPolyhedron, mesh,b,c);
 
 Gedim::UCDUtilities utilities;
     {	vector<Gedim::UCDProperty<double>> cell0Ds_properties(1);
