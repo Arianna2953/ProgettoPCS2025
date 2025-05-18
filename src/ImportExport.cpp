@@ -1,4 +1,3 @@
-
 #include "ImportExport.hpp"
 #include <iostream>
 #include <fstream>
@@ -124,8 +123,8 @@ bool ImportCell0Ds(const string& file0Ds, PolyhedralMesh& mesh)
     {
         istringstream converter(line);
 
-        unsigned int id;
-        unsigned int marker;
+        int id;
+        int marker;
         char delimiter; // per memorizzare il ; del file csv
 
         converter >>  id >> delimiter >> marker >> delimiter >> mesh.Cell0DsCoordinates(0, id) >> delimiter >> mesh.Cell0DsCoordinates(1, id)>> delimiter >> mesh.Cell0DsCoordinates(2, id);
@@ -182,8 +181,8 @@ bool ImportCell1Ds(const string& file1Ds, PolyhedralMesh& mesh)
     {
         istringstream converter(line);
 
-        unsigned int id;
-        unsigned int marker;
+        int id;
+        int marker;
         char delimiter;
 
         converter >>  id >> delimiter >> marker >> delimiter >>  mesh.Cell1DsExtrema(0, id) >> delimiter >>  mesh.Cell1DsExtrema(1, id);
@@ -246,31 +245,30 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh)
     {
         istringstream converter(line);
 
-        unsigned int id;
-		unsigned int marker;
-		unsigned int num_vert;
-		unsigned int num_edges;
-		char delimiter;
+        int id;
+	int marker;
+	int num_vert;
+	int num_edges;
+	char delimiter;
         
-		converter >> id >> delimiter >> marker >> delimiter >> num_vert;
+	converter >> id >> delimiter >> marker >> delimiter >> num_vert;
 
-        vector<unsigned int> vecv;
+        vector<int> vecv;
 		vecv.reserve(num_vert);
-        for(unsigned int i = 0; i < num_vert; i++)
-		{
-			unsigned int vert;
-            converter >> delimiter >> vert;
-			vecv.push_back(vert);
+        for(int i = 0; i < num_vert; i++){
+		int vert;
+            	converter >> delimiter >> vert;
+		vecv.push_back(vert);
 		}
 		mesh.Cell2DsVertices.push_back(vecv);
 		
 		converter >> delimiter >> num_edges;
 		
-		vector<unsigned int> vece;
+		vector<int> vece;
 		vece.reserve(num_edges);
-        for(unsigned int i = 0; i < num_edges; i++)
+        for(int i = 0; i < num_edges; i++)
 		{
-			unsigned int edge;
+			int edge;
             converter >> delimiter >> edge;
 			vece.push_back(edge);
 		}
@@ -295,8 +293,8 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh)
 		const MatrixXd& coord = mesh.Cell0DsCoordinates;
 			Vector3d areaVec(0.0, 0.0, 0.0);
 
-			for (unsigned int i = 0; i < num_vert; i++) {
-				unsigned int j = (i + 1) % num_vert;
+			for (int i = 0; i < num_vert; i++) {
+				int j = (i + 1) % num_vert;
 
 				Vector3d vi = coord.col(vecv[i]);
 				Vector3d vj = coord.col(vecv[j]);
@@ -351,16 +349,16 @@ bool ImportCell3Ds(const string& file2Ds, PolyhedralMesh& mesh)
     {
         istringstream converter(line);
 
-        unsigned int id;
-		unsigned int marker;
-		unsigned int num_fac;
-		char delimiter;
+        int id;
+	int marker;
+	int num_fac;
+	char delimiter;
         
-		converter >> id >> delimiter >> marker >> delimiter >> num_fac;
+	converter >> id >> delimiter >> marker >> delimiter >> num_fac;
 
-		mesh.Cell3DsId.push_back(id);
+	mesh.Cell3DsId.push_back(id);
 		
-		if(marker != 0)
+	if(marker != 0)
         {
             const auto it = mesh.MarkerCell3Ds.find(marker);
             if(it == mesh.MarkerCell3Ds.end())

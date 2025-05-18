@@ -12,34 +12,72 @@
 
 namespace PolyhedralLibrary
 {
-void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& n){
+
+int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge){
+	for (unsigned int i = 0; i < poly.Cell1DsId.size(); i++){
+		int u0 = poly.Cell1DsExtrema(0,i);
+		int u1 = poly.Cell1DsExtrema(1,i);
+		int w0 = edge[0]; 
+		int w1 = edge[1]; 
+		
+		if((w0 == u0 && w1 == u1)||(w0 == u1 && w1 == u0)){
+			return i;//id del lato che verrebbe duplicato
+		}
+	}
+	id_edge++;
+	poly.Cell1DsId.push_back(id_edge);
+	poly.Cell1DsExtrema.col(id_edge) = edge;
+	//cout << "edge" <<id_edge << ": \n" << edge << endl;
+	return id_edge;	
+}
+
+void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& p, const int& q,const int& n){
 	
 	using namespace PolyhedralLibrary;
 	
-	unsigned int idV_new = 0;// id dei vertici del poliedro generato dopo la triangolazione
-	unsigned int idE_new = 0;// id dei lati del poliedro generato dopo la triangolazione
-	unsigned int idF_new = 0;// id delle facce del poliedro generato dopo la triangolazione
-	unsigned int idV_copy = 0;// id dei vertici del poliedro duplicati (su spigoli o vertici)
-	unsigned int idE_copy = 0;// id dei lati del poliedro (sugli spigoli o tra i triangoli della stessa faccia)
+	int idV_new = 0;// id dei vertici del poliedro generato dopo la triangolazione
+	int idE_new = -1;// id dei lati del poliedro generato dopo la triangolazione
+	int idF_new = 0;// id delle facce del poliedro generato dopo la triangolazione
 	
-	unsigned int tot_vertices = (polyOld.NumCell2Ds)*((n+1)*(n+2)/2);
-	unsigned int tot_edges = 3*n*n*(polyOld.NumCell2Ds);
-	unsigned int tot_faces = n*n*(polyOld.NumCell2Ds);
-	
-	polyNew.NumCell0Ds = tot_vertices;
-	polyNew.Cell0DsId.reserve(tot_vertices);
-	polyNew.Cell0DsCoordinates = Eigen::MatrixXd::Zero(3, tot_vertices);
-	
-	polyNew.NumCell1Ds = tot_edges;
-	polyNew.Cell1DsId.reserve(tot_edges);
-	polyNew.Cell1DsExtrema = Eigen::MatrixXi::Zero(2, tot_edges);
-	
-	polyNew.NumCell2Ds = tot_faces;
-	polyNew.Cell2DsId.reserve(tot_faces);
-	polyNew.Cell2DsEdges.reserve(tot_faces);
-	polyNew.Cell2DsVertices.reserve(tot_faces);
+	int T = n*n;
+	int V,E,F;
 		
-	for (unsigned int f = 0; f < polyOld.NumCell2Ds; f++) {//itero sulle facce del poliedro di base
+	if(p == 3 && q == 3){
+		V = 2*T+2;
+		E = 6*T;
+		F = 4*T;
+	}
+	else if(p == 3 && q == 4){
+		V = 4*T +2;
+		E = 12*T;
+		F = 8*T;
+	}
+	else if(p == 3 && q == 5){
+		V = 10*T+2;
+		E = 30*T;
+		F = 20*T;
+	}
+	
+	polyNew.NumCell0Ds = V;
+	polyNew.Cell0DsId.reserve(V);
+	polyNew.Cell0DsCoordinates = Eigen::MatrixXd::Zero(3, V);
+	
+	polyNew.NumCell1Ds = E;
+	polyNew.Cell1DsId.reserve(E);
+	polyNew.Cell1DsExtrema = Eigen::MatrixXi::Zero(2, E);
+	
+	polyNew.NumCell2Ds = F;
+	polyNew.Cell2DsId.reserve(F);
+	polyNew.Cell2DsEdges.reserve(F);
+	polyNew.Cell2DsVertices.reserve(F);
+	
+	polyNew.NumCell3Ds = 1;
+	polyNew.Cell3DsId.reserve(1);
+	polyNew.Cell3DsEdges.reserve(1);
+	polyNew.Cell3DsVertices.reserve(1);
+	polyNew.Cell3DsFaces.reserve(1);
+		
+	for (int f = 0; f < polyOld.NumCell2Ds; f++) {//itero sulle facce del poliedro di base
 		
 		//cout << "faccia = " << f << endl;
 		
@@ -52,32 +90,28 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 		double c = 0.0;
 		Vector3d new_point(0.0, 0.0, 0.0);
 		MatrixXd vertPosition = MatrixXd::Zero(n+1, n+1);
-		for(unsigned int i=0;i<=n;i++){ //itero per creare tutte le combinazioni di coefficienti possibili 
-            for (unsigned int j = 0; j<=i;j++){
-				unsigned int s = i-j;
+		for(int i=0;i<=n;i++){ //itero per creare tutte le combinazioni di coefficienti possibili 
+            for (int j = 0; j<=i;j++){
+				int s = i-j;
 					
                 a=double(s)/n;
                 b=double(j)/n;
                 c=1.0-a-b;
 					
 				new_point = a*v0 + b*v1 + c*v2;
+				double len = new_point.norm();
+				new_point = new_point/len;
 				
 				//se un verice è già presente, non lo reinserisco
 				bool is_copied = false;		
 				for(int k = 0; k < idV_new;k++){
-					if((polyNew.Cell0DsCoordinates.col(k) - new_point).norm() < 1e-16){
+					if((polyNew.Cell0DsCoordinates.col(k) - new_point).norm() < 1e-12){
 						is_copied = true;
-						idV_copy = k;//dovrebbe inserire al posto del nuovo id, quello del corrispondente già creato
+						vertPosition(i,j) = k;//dovrebbe inserire al posto del nuovo id, quello del corrispondente già creato
 						break;
 					}
 				}
-				if(is_copied){
-					vertPosition(i,j) = idV_copy;
-				}
-				else {
-					if (polyNew.Cell0DsCoordinates.cols() <= idV_new) {
-						polyNew.Cell0DsCoordinates.conservativeResize(3, idV_new + 1);
-					}
+				if(!is_copied){
 					vertPosition(i,j) = idV_new;//inserisco nella matrice per la "posizione"
 					polyNew.Cell0DsId.push_back(idV_new);
 					//projectOntoUnitSphere(new_point);
@@ -88,66 +122,64 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 			}
 		}
 		//genero i triangoli (nuovi lati e facce)
-		for(unsigned int i=0;i < n;i++){
-				for (unsigned int j = 0; j<=i;j++){
-					polyNew.Cell1DsExtrema(0,idE_new) = vertPosition(i,j);//v0:polyNew.Cell1DsExtrema(0,idE_new)
-					polyNew.Cell1DsExtrema(1,idE_new) = vertPosition(i+1,j);//v1:polyNew.Cell1DsExtrema(1,idE_new)
-					idE_new++;
-					polyNew.Cell1DsExtrema(0,idE_new) = vertPosition(i+1,j);
-					polyNew.Cell1DsExtrema(1,idE_new) = vertPosition(i+1,j+1);
-					idE_new++;
-					polyNew.Cell1DsExtrema(0,idE_new) = vertPosition(i+1,j+1);
-					polyNew.Cell1DsExtrema(1,idE_new) = vertPosition(i,j);
-					idE_new++;
+		for(int i=0;i < n;i++){
+				for (int j = 0; j<=i;j++){
+					int vert1 = vertPosition(i,j);
+					int vert2 = vertPosition(i+1,j);
+					int vert3 = vertPosition(i+1,j+1);
+					polyNew.Cell2DsVertices.push_back({vert1,vert2,vert3});
+					
+					Vector2i edge1 = {vert1,vert2};
+					int id1 = CheckAddEdges(polyNew,edge1,idE_new);
+					Vector2i edge2 = {vert2,vert3};
+					int id2 = CheckAddEdges(polyNew,edge2,idE_new);
+					Vector2i edge3 = {vert3,vert1};
+					int id3 = CheckAddEdges(polyNew,edge3,idE_new);				
+					
+					polyNew.Cell2DsEdges.push_back({id1,id2,id3});
 					
 					polyNew.Cell2DsId.push_back(idF_new);
 					idF_new++;
 					
 					if(i!=j){
-						polyNew.Cell1DsExtrema(0,idE_new) = vertPosition(i,j);
-						polyNew.Cell1DsExtrema(1,idE_new) = vertPosition(i+1,j+1);
-						idE_new++;
-						polyNew.Cell1DsExtrema(0,idE_new) = vertPosition(i+1,j+1);
-						polyNew.Cell1DsExtrema(1,idE_new) = vertPosition(i,j+1);
-						idE_new++;
-						polyNew.Cell1DsExtrema(0,idE_new) = vertPosition(i,j+1);
-						polyNew.Cell1DsExtrema(1,idE_new) = vertPosition(i,j);
-						idE_new++;
+						int vert1 = vertPosition(i,j);
+						int vert2 = vertPosition(i+1,j+1);
+						int vert3 = vertPosition(i,j+1);
+						polyNew.Cell2DsVertices.push_back({vert1,vert2,vert3});
 						
+						Vector2i edge1 = {vert1,vert2};
+						int id1 = CheckAddEdges(polyNew,edge1,idE_new);												
+						Vector2i edge2 = {vert2,vert3};
+						int id2 = CheckAddEdges(polyNew,edge2,idE_new);						
+						Vector2i edge3 = {vert3,vert1};
+						int id3 = CheckAddEdges(polyNew,edge3,idE_new);						
+						
+						polyNew.Cell2DsEdges.push_back({id1,id2,id3});
+					
 						polyNew.Cell2DsId.push_back(idF_new);
 						idF_new++;
 					}					
 				}
-		}
-		
-		
-		
-		
+		}		
 	}
-	//cout << "Dimensione matrice: "
-    //      << polyNew.Cell0DsCoordinates.rows() << " x " << polyNew.Cell0DsCoordinates.cols() << std::endl;
-		  
-	polyNew.Cell0DsCoordinates.conservativeResize(Eigen::NoChange, idV_new);
-	//cout << "Dimensione nuova matrice ridotta (no duplicati): "
-    //      << polyNew.Cell0DsCoordinates.rows() << " x " << polyNew.Cell0DsCoordinates.cols() << std::endl;
 	
-
+	polyNew.Cell3DsId.push_back(0); // ho solo un poliedro, con identificativo 0 (?)
+	polyNew.Cell3DsEdges.push_back(polyNew.Cell0DsId);
+	polyNew.Cell3DsVertices.push_back(polyNew.Cell1DsId);
+	polyNew.Cell3DsFaces.push_back(polyNew.Cell2DsId);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
-	
-void TriangulateFaces(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,const int& b,const int& c)
+void TriangulateFaces(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,const int& p,const int& q,const int& b,const int& c)
 {
 	//ho impostato solo un controllo sui valori, bisogna implementare ancora tutta la funzione per la triangolazione!!! 
-	
-	
-	
 	//imposto i vari casi in base al valore di b e c in input_iterator
 	if((b==0 && c >=1) || (b>=1 && c==0)){
 		int n = max(b,c);
 		//triangolazione tipo 1
-		cout << "Tipo 1" << endl;
-		TriangulationTypeI(polyOld, polyNew,n);
+		cout << "Triangolazione di 'tipo 1'" << endl;
+		TriangulationTypeI(polyOld, polyNew,p,q,n);
 	}
 	else if(b==c && b!=0){
 		int n = b;
@@ -158,6 +190,8 @@ void TriangulateFaces(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,con
 		cout << "valori di b e c non validi" << endl;
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 bool projectOntoUnitSphere(Vector3d& v){
 	double len = v.norm();//sqrt(v.x() * v.x() + v.y() * v.y() + v.z() * v.z())

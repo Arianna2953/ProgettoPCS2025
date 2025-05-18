@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
 	
 	PolyhedralMesh mesh; //da cambiare nome prob
 	
-	TriangulateFaces(regularPolyhedron, mesh,b,c);
+	TriangulateFaces(regularPolyhedron, mesh,p,q,b,c);
 
 Gedim::UCDUtilities utilities;
     {	vector<Gedim::UCDProperty<double>> cell0Ds_properties(1);
@@ -150,4 +150,87 @@ Gedim::UCDUtilities utilities;
                                  {},
                                  cell1Ds_properties);
     }
+	
+	
+	
+	
+	
+	
+    /*cout << "=== Cell0Ds (Vertices) ===\n";
+    cout << "NumCell0Ds: " << mesh.NumCell0Ds << "\n";
+    cout << "Cell0DsId: ";
+    for (int id : mesh.Cell0DsId) cout << id << " ";
+    cout << "\nCoordinates:\n" << mesh.Cell0DsCoordinates << "\n";
+    cout << "MarkerCell0Ds:\n";
+    for (const auto& [marker, ids] : mesh.MarkerCell0Ds) {
+        cout << "  Marker " << marker << ": ";
+        for (int id : ids) cout << id << " ";
+        cout << "\n";
+    }
+
+    cout << "\n=== Cell1Ds (Edges) ===\n";
+    cout << "NumCell1Ds: " << mesh.NumCell1Ds << "\n";
+    cout << "Cell1DsId: ";
+    for (int id : mesh.Cell1DsId) cout << id << " ";
+    cout << "\nExtrema:\n" << mesh.Cell1DsExtrema << "\n";
+    cout << "MarkerCell1Ds:\n";
+    for (const auto& [marker, ids] : mesh.MarkerCell1Ds) {
+        cout << "  Marker " << marker << ": ";
+        for (int id : ids) cout << id << " ";
+        cout << "\n";
+    }
+
+    cout << "\n=== Cell2Ds (Faces) ===\n";
+    cout << "NumCell2Ds: " << mesh.NumCell2Ds << "\n";
+    cout << "Cell2DsId: ";
+    for (int id : mesh.Cell2DsId) cout << id << " ";
+    cout << "\nVertices per Cell2D:\n";
+    for (size_t i = 0; i < mesh.Cell2DsVertices.size(); ++i) {
+        cout << "  Face " << i << ": ";
+        for (int v : mesh.Cell2DsVertices[i]) cout << v << " ";
+        cout << "\n";
+    }
+    cout << "Edges per Cell2D:\n";
+    for (size_t i = 0; i < mesh.Cell2DsEdges.size(); ++i) {
+        cout << "  Face " << i << ": ";
+        for (int e : mesh.Cell2DsEdges[i]) cout << e << " ";
+        cout << "\n";
+    }
+    cout << "MarkerCell2Ds:\n";
+    for (const auto& [marker, ids] : mesh.MarkerCell2Ds) {
+        cout << "  Marker " << marker << ": ";
+        for (int id : ids) cout << id << " ";
+        cout << "\n";
+    }
+
+    cout << "\n=== Cell3Ds (Volumes) ===\n";
+    cout << "NumCell3Ds: " << mesh.NumCell3Ds << "\n";
+    cout << "Cell3DsId: ";
+    for (int id : mesh.Cell3DsId) cout << id << " ";
+    cout << "\nVertices per Cell3D:\n";
+    for (size_t i = 0; i < mesh.Cell3DsVertices.size(); ++i) {
+        cout << "  Volume " << i << ": ";
+        for (int v : mesh.Cell3DsVertices[i]) cout << v << " ";
+        cout << "\n";
+    }
+    cout << "Edges per Cell3D:\n";
+    for (size_t i = 0; i < mesh.Cell3DsEdges.size(); ++i) {
+        cout << "  Volume " << i << ": ";
+        for (int e : mesh.Cell3DsEdges[i]) cout << e << " ";
+        cout << "\n";
+    }
+    cout << "Faces per Cell3D:\n";
+    for (size_t i = 0; i < mesh.Cell3DsFaces.size(); ++i) {
+        cout << "  Volume " << i << ": ";
+        for (int f : mesh.Cell3DsFaces[i]) cout << f << " ";
+        cout << "\n";
+    }
+    cout << "MarkerCell3Ds:\n";
+    for (const auto& [marker, ids] : mesh.MarkerCell3Ds) {
+        cout << "  Marker " << marker << ": ";
+        for (int id : ids) cout << id << " ";
+        cout << "\n";
+    }*/
+
+
 }
