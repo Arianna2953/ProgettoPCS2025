@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <string>
 #include <cctype>  // per isdigit()
@@ -107,4 +108,3 @@ int main()
 2. connetti baricentri
 
 3. 
-*/
