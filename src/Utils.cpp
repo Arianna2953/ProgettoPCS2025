@@ -32,7 +32,7 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 	
 	polyNew.NumCell1Ds = tot_edges;
 	polyNew.Cell1DsId.reserve(tot_edges);
-	polyNew.Cell1DsExtrema = Eigen::MatrixXi::Zero(3, tot_edges);
+	polyNew.Cell1DsExtrema = Eigen::MatrixXi::Zero(2, tot_edges);
 	
 	polyNew.NumCell2Ds = tot_faces;
 	polyNew.Cell2DsId.reserve(tot_faces);
