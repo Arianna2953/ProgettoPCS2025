@@ -164,8 +164,8 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 	}
 	
 	polyNew.Cell3DsId.push_back(0); // ho solo un poliedro, con identificativo 0 (?)
-	polyNew.Cell3DsEdges.push_back(polyNew.Cell0DsId);
-	polyNew.Cell3DsVertices.push_back(polyNew.Cell1DsId);
+	polyNew.Cell3DsVertices.push_back(polyNew.Cell0DsId);
+	polyNew.Cell3DsEdges.push_back(polyNew.Cell1DsId);
 	polyNew.Cell3DsFaces.push_back(polyNew.Cell2DsId);
 }
 
