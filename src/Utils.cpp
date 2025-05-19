@@ -27,7 +27,6 @@ int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge){
 	id_edge++;
 	poly.Cell1DsId.push_back(id_edge);
 	poly.Cell1DsExtrema.col(id_edge) = edge;
-	//cout << "edge" <<id_edge << ": \n" << edge << endl;
 	return id_edge;	
 }
 
@@ -79,8 +78,6 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 		
 	for (int f = 0; f < polyOld.NumCell2Ds; f++) {//itero sulle facce del poliedro di base
 		
-		//cout << "faccia = " << f << endl;
-		
 		Vector3d v0 = polyOld.Cell0DsCoordinates.col(polyOld.Cell2DsVertices[f][0]);
 		Vector3d v1 = polyOld.Cell0DsCoordinates.col(polyOld.Cell2DsVertices[f][1]);
 		Vector3d v2 = polyOld.Cell0DsCoordinates.col(polyOld.Cell2DsVertices[f][2]);
@@ -89,18 +86,19 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 		double b = 0.0;
 		double c = 0.0;
 		Vector3d new_point(0.0, 0.0, 0.0);
-		MatrixXd vertPosition = MatrixXd::Zero(n+1, n+1);
+		MatrixXi vertPosition = MatrixXi::Zero(n+1, n+1);
 		for(int i=0;i<=n;i++){ //itero per creare tutte le combinazioni di coefficienti possibili 
-            for (int j = 0; j<=i;j++){
-				int s = i-j;
-					
-                a=double(s)/n;
+            for (int j = 0; j<=i;j++){				
+                a=double(i-j)/n;
                 b=double(j)/n;
                 c=1.0-a-b;
 					
 				new_point = a*v0 + b*v1 + c*v2;
-				double len = new_point.norm();
-				new_point = new_point/len;
+				if (new_point.norm() < 1e-16) {
+					cerr << "Warning: il vettore considerato ha lunghezza nulla";
+					break;
+				}
+				new_point.normalize();
 				
 				//se un verice è già presente, non lo reinserisco
 				bool is_copied = false;		
@@ -114,7 +112,6 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 				if(!is_copied){
 					vertPosition(i,j) = idV_new;//inserisco nella matrice per la "posizione"
 					polyNew.Cell0DsId.push_back(idV_new);
-					//projectOntoUnitSphere(new_point);
 					polyNew.Cell0DsCoordinates.col(idV_new) = new_point;
 					
 					idV_new++;
@@ -129,12 +126,9 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 					int vert3 = vertPosition(i+1,j+1);
 					polyNew.Cell2DsVertices.push_back({vert1,vert2,vert3});
 					
-					Vector2i edge1 = {vert1,vert2};
-					int id1 = CheckAddEdges(polyNew,edge1,idE_new);
-					Vector2i edge2 = {vert2,vert3};
-					int id2 = CheckAddEdges(polyNew,edge2,idE_new);
-					Vector2i edge3 = {vert3,vert1};
-					int id3 = CheckAddEdges(polyNew,edge3,idE_new);				
+					int id1 = CheckAddEdges(polyNew,{vert1,vert2},idE_new);//{vert1,vert2} corrisponde al primo lato
+					int id2 = CheckAddEdges(polyNew,{vert2,vert3},idE_new);
+					int id3 = CheckAddEdges(polyNew,{vert3,vert1},idE_new);				
 					
 					polyNew.Cell2DsEdges.push_back({id1,id2,id3});
 					
@@ -142,17 +136,12 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 					idF_new++;
 					
 					if(i!=j){
-						int vert1 = vertPosition(i,j);
-						int vert2 = vertPosition(i+1,j+1);
-						int vert3 = vertPosition(i,j+1);
-						polyNew.Cell2DsVertices.push_back({vert1,vert2,vert3});
+						int vert4 = vertPosition(i,j+1);
+						polyNew.Cell2DsVertices.push_back({vert1,vert3,vert4});
 						
-						Vector2i edge1 = {vert1,vert2};
-						int id1 = CheckAddEdges(polyNew,edge1,idE_new);												
-						Vector2i edge2 = {vert2,vert3};
-						int id2 = CheckAddEdges(polyNew,edge2,idE_new);						
-						Vector2i edge3 = {vert3,vert1};
-						int id3 = CheckAddEdges(polyNew,edge3,idE_new);						
+						int id1 = CheckAddEdges(polyNew,{vert1,vert3},idE_new);			
+						int id2 = CheckAddEdges(polyNew,{vert3,vert4},idE_new);
+						int id3 = CheckAddEdges(polyNew,{vert4,vert1},idE_new);						
 						
 						polyNew.Cell2DsEdges.push_back({id1,id2,id3});
 					
