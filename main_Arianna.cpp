@@ -14,4 +14,7 @@ using namespace PolyhedralLibrary;
 PolyhedralMesh regularPolyhedron;
 int main(){
 Exportfile0Ds(regularPolyhedron);
+Exportfile1Ds(regularPolyhedron);
+Exportfile2Ds(regularPolyhedron);
+Exportfile3Ds(regularPolyhedron);
 }
