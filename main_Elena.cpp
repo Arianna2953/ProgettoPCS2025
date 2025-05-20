@@ -32,14 +32,15 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 	dual.Cell2DsEdges.reserve(F);
 	
 	dual.NumCell3Ds = 1;
-	dual.Cell3DsId.reserve(1);
+	dual.Cell3DsId.push_back(0);
 	dual.Cell3DsEdges.reserve(1);
 	dual.Cell3DsVertices.reserve(1);
 	dual.Cell3DsFaces.reserve(1);
 	
 	const int M = E*2/V; //Numero di vertici/lati per faccia nel poliedro originale
 	const int N = E*2/F; //Numero di vertici/lati per faccia nel poliedro duale
-	  
+	cout << "M : " << M << "\nN : " << N << endl;
+	
 	//Iterando sulle facce del poliedro originale mi trovo i baricentri, cioè i vertici del poliedro duale
 	for (int f : polyhedron.Cell2DsId)
 		{
@@ -69,7 +70,10 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 			dual.Cell0DsCoordinates.col(f) << barCoords;
 		};
 	
-	
+	cout << "Cell0DsId: ";
+	for (int v : dual.Cell0DsId) {cout << v << " ";};
+	cout << endl;
+	cout << "Cell0DsCoordinates \n" << dual.Cell0DsCoordinates << endl;
 
 	/*Trovo i lati del duale. 
 	Scorro le facce (f1) del poliedro orginale e ne considero un lato alla volta cercando la faccia (f2) 
@@ -77,11 +81,12 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 	
 	
 	int newEdge = 0; //Id lato da aggiungere
-	for (int i = 0; i < F; i++) //Itero sulle facce del poliedro originale
+	for (int i = 0; i < polyhedron.NumCell2Ds; i++) //Itero sulle facce del poliedro originale
 	{
 		int f1 = polyhedron.Cell2DsId[i];
 		vector<int> edges1 = polyhedron.Cell2DsEdges[f1];
-		for (int h = 0; h < M; h++) //Considero 1 alla volta i lati della faccia f1
+		cout << edges1.size() << endl;
+		for (int h = 0; h < M; h++) //Considero 1 alla volta i lati della faccia f1 
 		{
 			for (int j = 0; j <i; j ++) //Considero una alla volta le facce del poliedro originale "precedenti" a f1
 			{
@@ -96,37 +101,17 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 						dual.Cell1DsExtrema(1,newEdge) = f2;
 						newEdge++; //Incremento id nuovo lato.
 						found = true; //Ho trovato faccia in comune.
-						break; //Ho trovato edges1[h] tra i lati di f2 non ha senso considerare gli altri lati di f2.
+						//break; //Ho trovato edges1[h] tra i lati di f2 non ha senso considerare gli altri lati di f2.
 					}
 				}
 				if (found) {break;} //Ho trovato la "seconda faccia" di edges1[h], posso passare a condiderare edges1[h+1].
-				
 			}
 		}
 	}
-	
-
-	
-	/*for (unsigned int f : polyhedron.Cell2DsId)
-	{
-		for (unsigned int e : polyhedron.Cell2DsEdges[f]) 
-		{
-			for (unsigned int g : polyhedron.Cell2DsId)
-			{
-				for (unsigned int a : polyhedron.Cell2DsEdges[g])
-				{
-					if (e == a and f > g) 
-					{
-						dual.Cell1DsId.push_back(newEdge);
-						dual.Cell1DsExtrema(0,newEdge) = f;
-						dual.Cell1DsExtrema(1,newEdge) = g;
-						newEdge++;
-					}
-				}
-			}
-		}
-	}*/
-
+	cout << "newEdge" << newEdge << endl;
+	cout << "Cell1DsId: ";
+	for (int e : dual.Cell1DsId) {cout << e << " ";};
+	cout << endl;
 	cout << dual.Cell1DsExtrema << endl;
 	
 	//Iterando sui vertici del  poliedro originale costruisco le facce del duale
@@ -178,7 +163,27 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 		}
 		dual.Cell2DsEdges.push_back(faceEdges);
 	}
-	
+	//
+	cout << "Cell2DsId: ";
+	for (int e : dual.Cell2DsId) {cout << e << " ";};
+	cout << endl;
+	cout << "vertici cell2d:" << endl;
+	for (vector<int> v : dual.Cell2DsVertices) {
+		for (int w : v) {cout << w << " ";};
+			cout << endl;
+			};
+	cout << endl;
+	cout << "lati cell2d:" << endl;
+	for (vector<int> v : dual.Cell2DsEdges) {
+		for (int w : v) {cout << w << " ";};
+			cout << endl;
+			};
+	cout << endl;
+	//
+	//Aggiorno valori Cell3Ds
+	dual.Cell3DsEdges.push_back(dual.Cell1DsId);
+	dual.Cell3DsVertices.push_back(dual.Cell1DsId);
+	dual.Cell3DsFaces.push_back(dual.Cell2DsId);
 return true;	
 };
 
@@ -190,10 +195,10 @@ int main()
     string file2Ds;
     string file3Ds;
 	
-	file0Ds = "./Cell0Ds_tetrahedron.csv";
-	file1Ds = "./Cell1Ds_tetrahedron.csv";
-	file2Ds = "./Cell2Ds_tetrahedron.csv";
-	file3Ds = "./Cell3Ds_tetrahedron.csv";
+	file0Ds = "./Cell0Ds_icosahedron.csv";
+	file1Ds = "./Cell1Ds_icosahedron.csv";
+	file2Ds = "./Cell2Ds_icosahedron.csv";
+	file3Ds = "./Cell3Ds_icosahedron.csv";
 	
 	/*int p = 3;
     int q = 3;
