@@ -13,54 +13,45 @@ using namespace PolyhedralLibrary;
 
 bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual) 
 {	
-	/*//Dati poliedro originale
-	unsigned int numVPoly = polyhedron.NumCell0Ds; //numero vertici poliedro originale == numero facce del duale
-	unsigned int numFPoly = polyhedron.NumCell2Ds; //numero facce poliedro originale == numero vertici del duale
-	vector<unsigned int> verticesPoly = polyhedron.Cell0DsId; //id vertici poliedro originale
-	vector<unsigned int> facesPoly = polyhedron.Cell1DsId; //id facce poliedro originale
-	
-	//Numero verici e numero facce duale
-	dual.NumCell0Ds = numVPoly;
-	dual.NumCell2Ds = numFPoly;
-//COME CALCOLARE NUMERO LATI?	
-	*/
+	const int V = polyhedron.NumCell2Ds; //Numero facce poliedro originale = numero vertici duale
+	const int E = polyhedron.NumCell1Ds; //Numero lati poliedro originale = numero lati duale
+	const int F = polyhedron.NumCell0Ds; //Numero vertici poliedro originale = numero facce duale
 	
 	
-	//Numero vertici, lati e facce del duale.
-	dual.NumCell0Ds = polyhedron.NumCell2Ds;
-	dual.NumCell1Ds = polyhedron.NumCell1Ds;
-	dual.NumCell2Ds = polyhedron.NumCell0Ds;
+	dual.NumCell0Ds = V;
+	dual.Cell0DsId.reserve(V); //Vettore id vertici del duale
+	dual.Cell0DsCoordinates = MatrixXd::Zero(3,V); //Matrice coordinate vertici del duale
+	
+	dual.NumCell1Ds = E;
+	dual.Cell1DsId.reserve(E); //Vettore id lati del duale
+	dual.Cell1DsExtrema = MatrixXi::Zero(2,E); //Matrice id estremi dei lati del duale
+	
+	dual.NumCell2Ds = F;
+	dual.Cell2DsId.reserve(F); //Vettore id facce del duale
+	dual.Cell2DsVertices.reserve(F);
+	dual.Cell2DsEdges.reserve(F);
+	
 	dual.NumCell3Ds = 1;
+	dual.Cell3DsId.reserve(1);
+	dual.Cell3DsEdges.reserve(1);
+	dual.Cell3DsVertices.reserve(1);
+	dual.Cell3DsFaces.reserve(1);
 	
-	dual.Cell0DsId.reserve(dual.NumCell0Ds); //Vettore id vertici del duale
-	dual.Cell0DsCoordinates = MatrixXd::Zero(3,dual.NumCell0Ds); //Matrice coordinate vertici del duale
-	
-	dual.Cell1DsId.reserve(dual.NumCell1Ds); //Vettore id lati del duale
-	dual.Cell1DsExtrema = MatrixXi::Zero(2,dual.NumCell1Ds); //Matrice id estremi dei lati del duale
-	
-	dual.Cell2DsId.reserve(dual.NumCell2Ds); //Vettore id facce del duale
-	dual.Cell2DsVertices.reserve(dual.NumCell2Ds);
-	dual.Cell2DsEdges.reserve(dual.NumCell2Ds);
-	
-	const unsigned int n = dual.NumCell1Ds*2/dual.NumCell2Ds; //numero di vertici/lati delle facce del duale
-	
-	cout << dual.NumCell0Ds << "  " << dual.NumCell1Ds << "  " << dual.NumCell2Ds << "  " << dual.NumCell3Ds << endl;
+	const int M = E*2/V; //Numero di vertici/lati per faccia nel poliedro originale
+	const int N = E*2/F; //Numero di vertici/lati per faccia nel poliedro duale
 	  
 	//Iterando sulle facce del poliedro originale mi trovo i baricentri, cioè i vertici del poliedro duale
-	for (unsigned int f : polyhedron.Cell2DsId)
+	for (int f : polyhedron.Cell2DsId)
 		{
 			VectorXd barCoords(3); //Contenitore dove salverò le coordinate del baricentro
 			
 			//Ricavo id e coordinate dei vertici della faccia
-			const vector<unsigned int> faceVertices = polyhedron.Cell2DsVertices[f];
+			const vector<int> faceVertices = polyhedron.Cell2DsVertices[f];
 			//o
 			//const vector<unsigned int>& faceVertices = polyhedron.Cell2DsVertices[f];
-			Vector3d v0;
-			v0 = polyhedron.Cell0DsCoordinates.col(faceVertices[0]);
-			Vector3d v1;
-			v1 = polyhedron.Cell0DsCoordinates.col(faceVertices[1]);
-			Vector3d v2;
-			v2 = polyhedron.Cell0DsCoordinates.col(faceVertices[2]);
+			Vector3d v0 = polyhedron.Cell0DsCoordinates.col(faceVertices[0]);
+			Vector3d v1 = polyhedron.Cell0DsCoordinates.col(faceVertices[1]);
+			Vector3d v2 = polyhedron.Cell0DsCoordinates.col(faceVertices[2]);
 			
 			//Calcolo le coordinate del baricentro della faccia
 			barCoords = (v0+v1+v2)/3;
@@ -79,9 +70,44 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 		};
 	
 	
+
+	/*Trovo i lati del duale. 
+	Scorro le facce (f1) del poliedro orginale e ne considero un lato alla volta cercando la faccia (f2) 
+	con cui è condiviso. Nel duale f1 e f2 saranno gli estremi di un lato che vado ad aggiungere all'elenco. */
 	
-	unsigned int newEdge = 0;
-	for (unsigned int f : polyhedron.Cell2DsId)
+	
+	int newEdge = 0; //Id lato da aggiungere
+	for (int i = 0; i < F; i++) //Itero sulle facce del poliedro originale
+	{
+		int f1 = polyhedron.Cell2DsId[i];
+		vector<int> edges1 = polyhedron.Cell2DsEdges[f1];
+		for (int h = 0; h < M; h++) //Considero 1 alla volta i lati della faccia f1
+		{
+			for (int j = 0; j <i; j ++) //Considero una alla volta le facce del poliedro originale "precedenti" a f1
+			{
+				int f2 = polyhedron.Cell2DsId[j];
+				vector<int> edges2 = polyhedron.Cell2DsEdges[f2];
+				bool found = false; //Variabile booleana indica se ho trovato o no "l'altra faccia" del lato edges1[h]. NOTA: ogni lato è condiviso solo da 2 facce.
+				for (int k = 0; k < M; k++)
+				{
+					if (edges1[h] == edges2[k]){
+						dual.Cell1DsId.push_back(newEdge);
+						dual.Cell1DsExtrema(0,newEdge) = f1;
+						dual.Cell1DsExtrema(1,newEdge) = f2;
+						newEdge++; //Incremento id nuovo lato.
+						found = true; //Ho trovato faccia in comune.
+						break; //Ho trovato edges1[h] tra i lati di f2 non ha senso considerare gli altri lati di f2.
+					}
+				}
+				if (found) {break;} //Ho trovato la "seconda faccia" di edges1[h], posso passare a condiderare edges1[h+1].
+				
+			}
+		}
+	}
+	
+
+	
+	/*for (unsigned int f : polyhedron.Cell2DsId)
 	{
 		for (unsigned int e : polyhedron.Cell2DsEdges[f]) 
 		{
@@ -94,45 +120,43 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 						dual.Cell1DsId.push_back(newEdge);
 						dual.Cell1DsExtrema(0,newEdge) = f;
 						dual.Cell1DsExtrema(1,newEdge) = g;
-						
-
-						
 						newEdge++;
 					}
 				}
 			}
 		}
-	}
-	
+	}*/
+
 	cout << dual.Cell1DsExtrema << endl;
 	
 	//Iterando sui vertici del  poliedro originale costruisco le facce del duale
-	for (unsigned int v : polyhedron.Cell0DsId)
+	for (int v : polyhedron.Cell0DsId)
 	{
-		vector<unsigned int> adjacentFaces;
-		adjacentFaces.reserve(n);
-		unsigned int i = 0;
+		vector<int> adjacentFaces; //Contenitore dove mi salverò gli id delle facce adiacenti a v nel poliedro originale.
+		adjacentFaces.reserve(N);
+		int m = 0; //Contatore delle facce adiacenti a v trovate
 		//Trovo le vacce adiacenti al vertice v (nel poliedro originale)
-		for  (unsigned int f : polyhedron.Cell2DsId)
+		for  (int f : polyhedron.Cell2DsId)
 		{
-			for (unsigned int vf : polyhedron.Cell2DsVertices[f])
+			for (int vf : polyhedron.Cell2DsVertices[f])
 			{
 				if (v == vf) 
 				{
 					adjacentFaces.push_back(f);
-					i++;
+					m++;
 					break;
 				}
 			}
-			if (i >= n) {break;};
+			if (m >= N) {break;}; //Ci sono al più N facce adiacenti a v.
 		}
-		dual.Cell2DsId.push_back(v);
-		dual.Cell2DsVertices.push_back(adjacentFaces);
+		dual.Cell2DsId.push_back(v); //v corrisponde ad una faccia del duale.
+		dual.Cell2DsVertices.push_back(adjacentFaces); //adjacentFaces corrispondono ai vertici della faccia v nel duale.
 		
 		
-		vector<unsigned int> faceEdges;
-		faceEdges.reserve(n);
-		for (auto it1 = adjacentFaces.begin(); it1 != adjacentFaces.end(); it1++)
+		vector<int> faceEdges; //Contenitore dove vado a salvare gli id dei lati della faccia v (nel duale).
+		faceEdges.reserve(N);
+		int noE = 0; //Numero di lati di v trovati
+		for (auto it1 = adjacentFaces.begin(); it1 != adjacentFaces.end(); it1++) //Scorro i vertici della faccia v
 		{
 			for (auto it2 = adjacentFaces.begin(); it2 < it1 and it2 != adjacentFaces.end(); it2++)
 			{
@@ -140,18 +164,19 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 				ex1 << *it1, *it2;
 				Vector2i ex2;;
 				ex2 << *it2, *it1;
-				for (unsigned int j = 0; j < dual.NumCell1Ds; j++)
+				for (int j = 0; j < E; j++) //Scorro i lati del duale
 				{
 					if (ex1 == dual.Cell1DsExtrema.col(j) or ex2 == dual.Cell1DsExtrema.col(j))
 					{
 						faceEdges.push_back(j);
+						noE++;
+						break;
 					};
 				}
 			}
+			if (noE >= N){break;}
 		}
 		dual.Cell2DsEdges.push_back(faceEdges);
-		
-		
 	}
 	
 return true;	
@@ -192,16 +217,44 @@ int main()
 		return 1;
 	};
 	
+	Gedim::UCDUtilities utilities;
+    {	vector<Gedim::UCDProperty<double>> cell0Ds_properties(1);
+
+        cell0Ds_properties[0].Label = "Marker";
+        cell0Ds_properties[0].UnitLabel = "-";
+        cell0Ds_properties[0].NumComponents = 1;
+
+        vector<double> cell0Ds_marker(poly2.NumCell0Ds, 0.0);
+        for(const auto &m : poly2.MarkerCell0Ds)
+            for(const unsigned int id: m.second)
+                cell0Ds_marker.at(id) = m.first;
+
+        cell0Ds_properties[0].Data = cell0Ds_marker.data();
+
+        utilities.ExportPoints("./Cell0Ds.inp",
+                               poly2.Cell0DsCoordinates,
+                               cell0Ds_properties);
+    }
+
+    {	vector<Gedim::UCDProperty<double>> cell1Ds_properties(1);
+
+        cell1Ds_properties[0].Label = "Marker";
+        cell1Ds_properties[0].UnitLabel = "-";
+        cell1Ds_properties[0].NumComponents = 1;
+
+        vector<double> cell1Ds_marker(poly2.NumCell1Ds, 0.0);
+        for(const auto &m : poly2.MarkerCell1Ds)
+            for(const unsigned int id: m.second)
+                cell1Ds_marker.at(id) = m.first;
+
+        cell1Ds_properties[0].Data = cell1Ds_marker.data();
+
+        utilities.ExportSegments("./Cell1Ds.inp",
+                                 poly2.Cell0DsCoordinates,
+                                 poly2.Cell1DsExtrema,
+                                 {},
+                                 cell1Ds_properties);
+	}
+	
 	return 0;
 }
-
-/*
-1. calcola baricentro di una faccia
-		sia n numero di facce
-		matrice nx5 in cui memorizzo id_faccia, id_baricentro, coordinate_baricentro
-	
-		
-2. connetti baricentri
-
-3. 
-*/
