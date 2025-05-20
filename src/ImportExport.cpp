@@ -392,10 +392,10 @@ bool Exportfile0Ds(const PolyhedralMesh& polyNew)
 		return false;
 	}
 	ofs<<"is,marker,x,y,z"<<endl;
-	for (int i; i<polyNew.NumCell0Ds; i++){
+	for (int i=0; i<polyNew.NumCell0Ds; i++){
 		int id=polyNew.Cell0DsId[i];
 		//list<int> marker=polyNew.MarkerCell0Ds.at(id);
-		cout << id << ";" << ";" << polyNew.Cell0DsCoordinates(0, id) << ";" << polyNew.Cell0DsCoordinates(1, id) << ";" << polyNew.Cell0DsCoordinates(2, id) << endl;
+		cout << id << ";" << polyNew.Cell0DsCoordinates(0, id) << ";" << polyNew.Cell0DsCoordinates(1, id) << ";" << polyNew.Cell0DsCoordinates(2, id) << endl;
 	}
 	return true;
 }
@@ -414,10 +414,10 @@ bool Exportfile1Ds(const PolyhedralMesh & polyNew)
 		return false;
 	}
 	ofs<<"id,marker,v0,v1"<<endl;
-	for (int i; i<polyNew.NumCell1Ds; i++){
+	for (int i=0; i<polyNew.NumCell1Ds; i++){
 		int id=polyNew.Cell1DsId[i];
 		//list<int> marker=polyNew.MarkerCell1Ds.at(id);
-		cout << id << ";" << ";" << polyNew.Cell1DsExtrema(0, id) << ";" << polyNew.Cell1DsExtrema(1, id) << endl;
+		cout << id << ";" << polyNew.Cell1DsExtrema(0, id) << ";" << polyNew.Cell1DsExtrema(1, id) << endl;
 	}
 	return true;
 }
@@ -436,16 +436,16 @@ bool Exportfile2Ds(const PolyhedralMesh & polyNew)
 		return false;
 	}
 	ofs<<"id,marker,n_vertices,vertices,n_edges,edges"<<endl;
-	for (int i; i<polyNew.NumCell2Ds; i++){
+	for (int i=0; i<polyNew.NumCell2Ds; i++){
 		int id=polyNew.Cell2DsId[i];
 		//list<int> marker=polyNew.MarkerCell2Ds.at(id);
-		cout << id << ";" << ";" << polyNew.Cell2DsVertices.size() << ";";
+		cout << id << ";" << polyNew.Cell2DsVertices.size() << ";";
 		for (int k=0; k<3; k++){
 				cout << polyNew.Cell2DsVertices[i][k] << ";";
 		}
 		cout << polyNew.Cell2DsEdges.size() << ";";
-		for (int k=0; k<3; k++){
-				cout << polyNew.Cell2DsEdges[i][k] << ";";
+		for (int j=0; j<3; j++){
+				cout << polyNew.Cell2DsEdges[i][j] << ";";
 		}
 		cout << endl;	
 	}
@@ -466,20 +466,20 @@ bool Exportfile3Ds(const PolyhedralMesh & polyNew)
 		return false;
 	}
 	ofs<<"id,marker,n_vertices,vertices,n_edges,edges,n_faces,faces"<<endl;
-	for (int i; i<polyNew.NumCell3Ds; i++){
+	for (int i=0; i<polyNew.NumCell3Ds; i++){
 		int id=polyNew.Cell3DsId[i];
 		// list<int> marker=polyNew.MarkerCell3Ds.at(id);
-		cout << id << ";" << ";" << polyNew.NumCell3Ds << ";";
+		cout << id << ";" << polyNew.NumCell3Ds << ";";
 		for (int k=0; k<3; k++){
 				cout << polyNew.Cell3DsVertices[i][k] << ";";
 		}
 		cout << polyNew.Cell3DsEdges.size() << ";";
-		for (int k=0; k<3; k++){
-				cout << polyNew.Cell3DsEdges[i][k] << ";";
+		for (int j=0; j<3; j++){
+				cout << polyNew.Cell3DsEdges[i][j] << ";";
 		}
 		cout << polyNew.Cell3DsFaces.size() << ";";
-		for (int k=0; k<3; k++){
-				cout << polyNew.Cell3DsFaces[i][k] << ";";
+		for (int y=0; y<3; y++){
+				cout << polyNew.Cell3DsFaces[i][y] << ";";
 		}
 		cout << endl;	
 	}
