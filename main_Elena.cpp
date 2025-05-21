@@ -101,7 +101,7 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 						dual.Cell1DsExtrema(1,newEdge) = f2;
 						newEdge++; //Incremento id nuovo lato.
 						found = true; //Ho trovato faccia in comune.
-						//break; //Ho trovato edges1[h] tra i lati di f2 non ha senso considerare gli altri lati di f2.
+						break; //Ho trovato edges1[h] tra i lati di f2 non ha senso considerare gli altri lati di f2.
 					}
 				}
 				if (found) {break;} //Ho trovato la "seconda faccia" di edges1[h], posso passare a condiderare edges1[h+1].

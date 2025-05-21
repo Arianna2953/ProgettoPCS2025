@@ -14,11 +14,11 @@ namespace PolyhedralLibrary
 {
 
 int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge){
+	int w0 = edge[0]; 
+	int w1 = edge[1];
 	for (unsigned int i = 0; i < poly.Cell1DsId.size(); i++){
 		int u0 = poly.Cell1DsExtrema(0,i);
-		int u1 = poly.Cell1DsExtrema(1,i);
-		int w0 = edge[0]; 
-		int w1 = edge[1]; 
+		int u1 = poly.Cell1DsExtrema(1,i); 
 		
 		if((w0 == u0 && w1 == u1)||(w0 == u1 && w1 == u0)){
 			return i;//id del lato che verrebbe duplicato
