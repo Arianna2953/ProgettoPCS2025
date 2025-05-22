@@ -305,7 +305,7 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh)
 			}
 
 			double area = 0.5 * areaVec.norm();
-			cout << "area poligono " << id << " = " << area << endl;
+			//cout << "area poligono " << id << " = " << area << endl;
 		
 			if (area<=1.e-16)
 			{

@@ -14,11 +14,12 @@ namespace PolyhedralLibrary
 {
 
 int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge){
+	int w0 = edge[0]; 
+	int w1 = edge[1]; 
+	
 	for (unsigned int i = 0; i < poly.Cell1DsId.size(); i++){
 		int u0 = poly.Cell1DsExtrema(0,i);
 		int u1 = poly.Cell1DsExtrema(1,i);
-		int w0 = edge[0]; 
-		int w1 = edge[1]; 
 		
 		if((w0 == u0 && w1 == u1)||(w0 == u1 && w1 == u0)){
 			return i;//id del lato che verrebbe duplicato
@@ -99,6 +100,11 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
                 c=1.0-a-b;
 					
 				new_point = a*v0 + b*v1 + c*v2;
+				//proietto il nuovo vertice creato sulla superficie di una sfera unitaria centrata nell'origine
+				if (new_point.norm() < 1e-16) {
+					cerr << "Warning: il vettore considerato ha lunghezza nulla";
+					break;}
+				//new_point.normalize();
 				
 				//se un verice è già presente, non lo reinserisco
 				bool is_copied = false;		
@@ -113,11 +119,7 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 					vertPosition(i,j) = idV_new;//inserisco nella matrice per la "posizione"
 					polyNew.Cell0DsId.push_back(idV_new);
 					
-					//proietto il nuovo vertice creato sulla superficie di una sfera unitaria centrata nell'origine
-					if (new_point.norm() < 1e-16) {
-						cerr << "Warning: il vettore considerato ha lunghezza nulla";
-						break;}
-					new_point.normalize();
+					
 					polyNew.Cell0DsCoordinates.col(idV_new) = new_point;
 					
 					idV_new++;

@@ -11,6 +11,26 @@ using namespace std;
 using namespace Eigen;
 using namespace PolyhedralLibrary;
 
+//creo una lista di adiacenza nella forma di un vettore di liste
+vector<list<int>> CreateAdjacencyList(const PolyhedralMesh& mesh) {
+    vector<list<int>> adjacencyList(mesh.NumCell0Ds);
+
+    for (int i = 0; i < mesh.NumCell1Ds; i++){
+        int idFrom = mesh.Cell1DsExtrema(0, i);
+        int idTo = mesh.Cell1DsExtrema(1, i);
+
+        adjacencyList[idFrom].push_back(idTo);
+        adjacencyList[idTo].push_back(idFrom);
+    }
+	for (size_t i = 0; i < adjacencyList.size(); ++i) {
+        cout << "Vertice " << i << " → ";
+        for (int neighbor : adjacencyList[i]) {
+            cout << neighbor << " ";
+        }
+	cout << endl;}
+    return adjacencyList;
+}
+
 int main(int argc, char* argv[]) {
     // Verifica che ci siano 5 o 7 argomenti (5 se non ci sono v0 e v1, 7 se ci sono v0 e v1)
     if (argc != 5 && argc != 7) {
@@ -111,7 +131,18 @@ int main(int argc, char* argv[]) {
 	PolyhedralMesh mesh; //da cambiare nome prob
 	
 	TriangulateFaces(regularPolyhedron, mesh,p,q,b,c);
-
+	
+	vector<list<int>> adjacencyList = CreateAdjacencyList(mesh);
+	
+	
+	
+	//ExportPolyhedron(mesh);
+	
+	
+	
+	
+	
+//esporto file per visualizzazione
 Gedim::UCDUtilities utilities;
     {	vector<Gedim::UCDProperty<double>> cell0Ds_properties(1);
 
@@ -154,9 +185,8 @@ Gedim::UCDUtilities utilities;
 	
 	
 	
-	
-	
-    /*cout << "=== Cell0Ds (Vertices) ===\n";
+	//visualizzazione a terminale
+    cout << "=== Cell0Ds (Vertices) ===\n";
     cout << "NumCell0Ds: " << mesh.NumCell0Ds << "\n";
     cout << "Cell0DsId: ";
     for (int id : mesh.Cell0DsId) cout << id << " ";
@@ -230,7 +260,7 @@ Gedim::UCDUtilities utilities;
         cout << "  Marker " << marker << ": ";
         for (int id : ids) cout << id << " ";
         cout << "\n";
-    }*/
+    }
 
 
 }
