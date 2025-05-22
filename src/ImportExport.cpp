@@ -342,9 +342,11 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh)
         cerr << "There is no cell 3D" << endl;
         return false;
     }
-
-    mesh.Cell3DsId.reserve(mesh.NumCell3Ds);
-    mesh.Cell3DsFaces.reserve(mesh.NumCell3Ds);
+	
+	mesh.Cell3DsId.reserve(mesh.NumCell3Ds);
+    mesh.Cell3DsVertices.reserve(mesh.NumCell3Ds);
+    mesh.Cell3DsEdges.reserve(mesh.NumCell3Ds);
+	mesh.Cell3DsFaces.reserve(mesh.NumCell3Ds);
 
     for (const string& line : listLines)
     {
@@ -352,12 +354,47 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh)
 
         int id;
 	int marker;
-	int num_fac;
+	int num_vert;
+	int num_edges;
+	int num_faces;
 	char delimiter;
         
-	converter >> id >> delimiter >> marker >> delimiter >> num_fac;
+	converter >> id >> delimiter >> marker >> delimiter >> num_vert;
 
-	mesh.Cell3DsId.push_back(id);
+        vector<int> vecv;
+		vecv.reserve(num_vert);
+        for(int i = 0; i < num_vert; i++){
+		int vert;
+            	converter >> delimiter >> vert;
+		vecv.push_back(vert);
+		}
+		mesh.Cell3DsVertices.push_back(vecv);
+		
+		converter >> delimiter >> num_edges;
+		
+		vector<int> vece;
+		vece.reserve(num_edges);
+        for(int i = 0; i < num_edges; i++)
+		{
+			int edge;
+            converter >> delimiter >> edge;
+			vece.push_back(edge);
+		}
+		mesh.Cell3DsEdges.push_back(vece);
+		mesh.Cell3DsId.push_back(id);
+     
+	converter >> delimiter >> num_faces;
+	
+		vector<int> vecf;
+		vecf.reserve(num_faces);
+		for(int i = 0; i < num_faces; i++)
+		{
+			int face;
+            converter >> delimiter >> face;
+			vecf.push_back(face);
+		}
+		mesh.Cell3DsFaces.push_back(vecf);
+
 		
 	if(marker != 0)
         {
@@ -380,109 +417,118 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh)
 
 bool Exportfile0Ds(const PolyhedralMesh& polyNew)
 {
-	if(!Exportfile0Ds(polyNew))
-    {
-        cerr << "file not found" << endl;
-        return false;
-    }
 	string output="Cell0Ds.txt"; //creo il file di output
 	ofstream ofs(output);
 	if (!ofs){ // controllo che il file di output si apra correttamente
 		cerr << "Errore nell'apertura del file" << endl;
 		return false;
 	}
-	ofs<<"is,marker,x,y,z"<<endl;
+	ofs<<"id,x,y,z"<<endl;
 	for (int i=0; i<polyNew.NumCell0Ds; i++){
 		int id=polyNew.Cell0DsId[i];
 		//list<int> marker=polyNew.MarkerCell0Ds.at(id);
-		cout << id << ";" << polyNew.Cell0DsCoordinates(0, id) << ";" << polyNew.Cell0DsCoordinates(1, id) << ";" << polyNew.Cell0DsCoordinates(2, id) << endl;
+		ofs << id << ";" << polyNew.Cell0DsCoordinates(0, id) << ";" << polyNew.Cell0DsCoordinates(1, id) << ";" << polyNew.Cell0DsCoordinates(2, id) << endl;
 	}
 	return true;
 }
 
 bool Exportfile1Ds(const PolyhedralMesh & polyNew)
 {
-	if(!Exportfile1Ds(polyNew))
-    {
-        cerr << "file not found" << endl;
-        return false;
-    }
 	string output="Cell1Ds.txt"; //creo il file di output
 	ofstream ofs(output);
 	if (!ofs){ // controllo che il file di output si apra correttamente
 		cerr << "Errore nell'apertura del file" << endl;
 		return false;
 	}
-	ofs<<"id,marker,v0,v1"<<endl;
+	ofs<<"id,v0,v1"<<endl;
 	for (int i=0; i<polyNew.NumCell1Ds; i++){
 		int id=polyNew.Cell1DsId[i];
 		//list<int> marker=polyNew.MarkerCell1Ds.at(id);
-		cout << id << ";" << polyNew.Cell1DsExtrema(0, id) << ";" << polyNew.Cell1DsExtrema(1, id) << endl;
+		ofs << id << ";" << polyNew.Cell1DsExtrema(0, id) << ";" << polyNew.Cell1DsExtrema(1, id) << endl;
 	}
 	return true;
 }
 
 bool Exportfile2Ds(const PolyhedralMesh & polyNew)
 {
-	if(!Exportfile2Ds(polyNew))
-    {
-        cerr << "file not found" << endl;
-        return false;
-    }
 	string output="Cell2Ds.txt"; //creo il file di output
 	ofstream ofs(output);
 	if (!ofs){ // controllo che il file di output si apra correttamente
 		cerr << "Errore nell'apertura del file" << endl;
 		return false;
 	}
-	ofs<<"id,marker,n_vertices,vertices,n_edges,edges"<<endl;
+	ofs<<"id,n_vertices,vertices,n_edges,edges"<<endl;
 	for (int i=0; i<polyNew.NumCell2Ds; i++){
 		int id=polyNew.Cell2DsId[i];
 		//list<int> marker=polyNew.MarkerCell2Ds.at(id);
-		cout << id << ";" << polyNew.Cell2DsVertices.size() << ";";
-		for (int k=0; k<3; k++){
-				cout << polyNew.Cell2DsVertices[i][k] << ";";
+		ofs << id << ";" << polyNew.Cell2DsVertices[i].size() << ";";
+		for (size_t k=0; k<polyNew.Cell2DsVertices[i].size(); k++){
+			ofs << polyNew.Cell2DsVertices[i][k] << ";";
 		}
-		cout << polyNew.Cell2DsEdges.size() << ";";
-		for (int j=0; j<3; j++){
-				cout << polyNew.Cell2DsEdges[i][j] << ";";
+		ofs << polyNew.Cell2DsEdges[i].size() << ";";
+		for (size_t j=0; j<polyNew.Cell2DsEdges[i].size(); j++){
+			ofs << polyNew.Cell2DsEdges[i][j] << ";";
 		}
-		cout << endl;	
+		ofs << endl;	
 	}
 	return true;
 }
 
 bool Exportfile3Ds(const PolyhedralMesh & polyNew)
 {
-	if(!Exportfile3Ds(polyNew))
-    {
-        cerr << "file not found" << endl;
-        return false;
-    }
 	string output="Cell3Ds.txt"; //creo il file di output
 	ofstream ofs(output);
 	if (!ofs){ // controllo che il file di output si apra correttamente
 		cerr << "Errore nell'apertura del file" << endl;
 		return false;
 	}
-	ofs<<"id,marker,n_vertices,vertices,n_edges,edges,n_faces,faces"<<endl;
+	ofs<<"id,n_vertices,vertices,n_edges,edges,n_faces,faces"<<endl;
 	for (int i=0; i<polyNew.NumCell3Ds; i++){
 		int id=polyNew.Cell3DsId[i];
 		// list<int> marker=polyNew.MarkerCell3Ds.at(id);
-		cout << id << ";" << polyNew.NumCell3Ds << ";";
-		for (int k=0; k<3; k++){
-				cout << polyNew.Cell3DsVertices[i][k] << ";";
+
+		ofs << id << ";" << polyNew.Cell3DsVertices[i].size() << ";";
+		for (size_t k=0; k<polyNew.Cell3DsVertices[i].size(); k++){
+			ofs << polyNew.Cell3DsVertices[i][k] << ";";
 		}
-		cout << polyNew.Cell3DsEdges.size() << ";";
-		for (int j=0; j<3; j++){
-				cout << polyNew.Cell3DsEdges[i][j] << ";";
+		ofs << polyNew.Cell3DsEdges[i].size() << ";";
+		for (size_t j=0; j<polyNew.Cell3DsEdges[i].size(); j++){
+			ofs << polyNew.Cell3DsEdges[i][j] << ";";
 		}
-		cout << polyNew.Cell3DsFaces.size() << ";";
-		for (int y=0; y<3; y++){
-				cout << polyNew.Cell3DsFaces[i][y] << ";";
+		ofs << polyNew.Cell3DsFaces[i].size() << ";";
+		for (size_t j=0; j<polyNew.Cell3DsFaces[i].size(); j++){
+			ofs << polyNew.Cell3DsFaces[i][j] << ";";
 		}
-		cout << endl;	
+		ofs << endl;
 	}
+	return true;
+}
+
+bool ExportPolyhedron(const PolyhedralMesh & polyNew)
+{
+	if(!Exportfile0Ds(polyNew))
+    {
+        cerr << "file not found" << endl;
+        return false;
+    }
+	
+	if(!Exportfile1Ds(polyNew))
+    {
+        cerr << "file not found" << endl;
+        return false;
+    }
+	
+	if(!Exportfile2Ds(polyNew))
+    {
+        cerr << "file not found" << endl;
+        return false;
+    }
+	
+	if(!Exportfile3Ds(polyNew))
+    {
+        cerr << "file not found" << endl;
+        return false;
+    }
 	return true;
 }	
 }	

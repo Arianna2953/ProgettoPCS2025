@@ -43,7 +43,23 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh);
 // mesh: a PolyhedralMesh struct
 // return the result of the creation of the new polyhedron, true if is success, false otherwise
 bool Exportfile0Ds(const PolyhedralMesh & polyNew);
+
+// Import the Cell1D properties from PolyhedralMesh
+// mesh: a PolyhedralMesh struct
+// return the result of the creation of the new polyhedron, true if is success, false otherwise
 bool Exportfile1Ds(const PolyhedralMesh & polyNew);
+
+// Import the Cell2D properties from PolyhedralMesh
+// mesh: a PolyhedralMesh struct
+// return the result of the creation of the new polyhedron, true if is success, false otherwise
 bool Exportfile2Ds(const PolyhedralMesh & polyNew);
+
+// Import the Cell3D properties from PolyhedralMesh
+// mesh: a PolyhedralMesh struct
+// return the result of the creation of the new polyhedron, true if is success, false otherwise
 bool Exportfile3Ds(const PolyhedralMesh & polyNew);
+
+// general function for exporting the polyhedron from PolyhedralMesh
+bool ExportPolyhedron(const PolyhedralMesh & polyNew);
+
 }
