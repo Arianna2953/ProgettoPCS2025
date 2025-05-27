@@ -35,7 +35,7 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 //id_edge: id del lato che viene aggiornato ogni volta che viene aggiunto un nuovo lato alla struttura
 int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge);
 
-
+//COMMENTO DA AGGIUNGERE ELENA !!!!!!
 
 
 // finire e correggere i commenti!!!!
