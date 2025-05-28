@@ -36,6 +36,7 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge);
 
 //COMMENTO DA AGGIUNGERE ELENA !!!!!!
+bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual);
 
 
 // finire e correggere i commenti!!!!

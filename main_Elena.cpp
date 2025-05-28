@@ -11,7 +11,7 @@ using namespace std;
 using namespace Eigen;
 using namespace PolyhedralLibrary;
 
-bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual) 
+bool Du1alConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual) 
 {	
 	const int V = polyhedron.NumCell2Ds; //Numero facce poliedro originale = numero vertici duale
 	const int E = polyhedron.NumCell1Ds; //Numero lati poliedro originale = numero lati duale
