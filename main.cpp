@@ -51,46 +51,46 @@ int main(int argc, char* argv[]) {
 
     // Controllo combinazioni specifiche di p e q
     if (p == 3 && q == 3) {
-		file0Ds = "./Cell0Ds_tetrahedron.csv";
-		file1Ds = "./Cell1Ds_tetrahedron.csv";
-		file2Ds = "./Cell2Ds_tetrahedron.csv";
-		file3Ds = "./Cell3Ds_tetrahedron.csv";
+		file0Ds = ".tetrahedron/Cell0Ds.txt";
+		file1Ds = ".tetrahedron/Cell1Ds.txt";
+		file2Ds = ".tetrahedron/Cell2Ds.txt";
+		file3Ds = ".tetrahedron/Cell3Ds.txt";
 		
         cout << "Poliedro regolare di base: Tetraedro" << endl;
     } 
     else if (p == 3 && q == 4) {
-        file0Ds = "./Cell0Ds_octahedron.csv";
-		file1Ds = "./Cell1Ds_octahedron.csv";
-		file2Ds = "./Cell2Ds_octahedron.csv";
-		file3Ds = "./Cell3Ds_octahedron.csv";
+        file0Ds = ".octahedron/Cell0Ds.txt";
+		file1Ds = ".octahedron/Cell1Ds.txt";
+		file2Ds = ".octahedron/Cell2Ds.txt";
+		file3Ds = ".octahedron/Cell3Ds.txt";
 		
         cout << "Poliedro regolare di base: Ottaedro" << endl;
     } 
     else if (p == 3 && q == 5) {
-        file0Ds = "./Cell0Ds_icosahedron.csv";
-		file1Ds = "./Cell1Ds_icosahedron.csv";
-		file2Ds = "./Cell2Ds_icosahedron.csv";
-		file3Ds = "./Cell3Ds_icosahedron.csv";
+        file0Ds = ".icosahedron/Cell0Ds.txt";
+		file1Ds = ".icosahedron/Cell1Ds.txt";
+		file2Ds = ".icosahedron/Cell2Ds.txt";
+		file3Ds = ".icosahedron/Cell3Ds.txt";
 		
         cout << "Poliedro regolare di base: Icosaedro" << endl;
     } 
     else if (p == 4 && q == 3) {
 		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
 		
-		file0Ds = "./Cell0Ds_octahedron.csv";
-		file1Ds = "./Cell1Ds_octahedron.csv";
-		file2Ds = "./Cell2Ds_octahedron.csv";
-		file3Ds = "./Cell3Ds_octahedron.csv";
+		file0Ds = ".octahedron/Cell0Ds.txt";
+		file1Ds = ".octahedron/Cell1Ds.txt";
+		file2Ds = ".octahedron/Cell2Ds.txt";
+		file3Ds = ".octahedron/Cell3Ds.txt";
 		
         cout << "Poliedro regolare di base: Ottaedro - bisogna poi farne il duale" << endl;	
     } 
     else if (p == 5 && q == 3) {
 		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
 		
-		file0Ds = "./Cell0Ds_icosahedron.csv";
-		file1Ds = "./Cell1Ds_icosahedron.csv";
-		file2Ds = "./Cell2Ds_icosahedron.csv";
-		file3Ds = "./Cell3Ds_icosahedron.csv";
+		file0Ds = ".icosahedron/Cell0Ds.txt";
+		file1Ds = ".icosahedron/Cell1Ds.txt";
+		file2Ds = ".icosahedron/Cell2Ds.txt";
+		file3Ds = ".icosahedron/Cell3Ds.txt";
 		
         cout << "Poliedro regolare di base: Icosaedro - bisogna poi farne il duale" << endl;	
     } 
