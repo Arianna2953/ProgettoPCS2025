@@ -21,17 +21,17 @@ bool ImportMesh(PolyhedralMesh& mesh,const string& file0Ds,const string& file1Ds
         return false;
 	}
 	else{
-		cout << "Cell0D marker:" << endl;
-		if (mesh.MarkerCell0Ds.size()!=0){
-			for(auto it=mesh.MarkerCell0Ds.begin(); it!=mesh.MarkerCell0Ds.end(); it++){
-				cout << "marker id:\t" << it -> first << "\t valori:";
+		cout << "Cell0D ShortPath:" << endl;
+		if (mesh.ShortPathCell0Ds.size()!=0){
+			for(auto it=mesh.ShortPathCell0Ds.begin(); it!=mesh.ShortPathCell0Ds.end(); it++){
+				cout << "ShortPath id:\t" << it -> first << "\t valori:";
 				for (const unsigned int id: it -> second)
 					cout << "\t" << id;
 				cout << endl;
 			}
 		}
 		else{
-			cout<< "No not-null marker found" << endl;
+			cout<< "No not-null ShortPath found" << endl;
 		}
 	}
 
@@ -39,24 +39,24 @@ bool ImportMesh(PolyhedralMesh& mesh,const string& file0Ds,const string& file1Ds
         return false;
 	}
 	else{
-		cout << "Cell1D marker:" << endl;
-		if (mesh.MarkerCell1Ds.size()!=0){
-			for(auto it=mesh.MarkerCell1Ds.begin(); it!=mesh.MarkerCell1Ds.end(); it++){
-				cout << "marker id:\t" << it -> first << "\t valori:";
+		cout << "Cell1D ShortPath:" << endl;
+		if (mesh.ShortPathCell1Ds.size()!=0){
+			for(auto it=mesh.ShortPathCell1Ds.begin(); it!=mesh.ShortPathCell1Ds.end(); it++){
+				cout << "ShortPath id:\t" << it -> first << "\t valori:";
 				for (const unsigned int id: it -> second)
 					cout << "\t" << id;
 				cout << endl;
 			}
 		}
 		else{
-			cout<< "No not-null marker found" << endl;
+			cout<< "No not-null ShortPath found" << endl;
 		}
 	}
 
     if(!ImportCell2Ds(file2Ds,mesh)){
         return false;
 	}
-	else{
+	/*else{
 		cout << "Cell2D marker:" << endl;
 		if (mesh.MarkerCell2Ds.size()!=0){
 			for(auto it=mesh.MarkerCell2Ds.begin(); it!=mesh.MarkerCell2Ds.end(); it++){
@@ -69,12 +69,12 @@ bool ImportMesh(PolyhedralMesh& mesh,const string& file0Ds,const string& file1Ds
 		else{
 			cout<< "No not-null marker found" << endl;
 		}
-	}
+	}*/
 	
 	if(!ImportCell3Ds(file3Ds,mesh)){
         return false;
 	}
-	else{
+	/*else{
 		cout << "Cell3D marker:" << endl;
 		if (mesh.MarkerCell3Ds.size()!=0){
 			for(auto it=mesh.MarkerCell3Ds.begin(); it!=mesh.MarkerCell3Ds.end(); it++){
@@ -87,7 +87,7 @@ bool ImportMesh(PolyhedralMesh& mesh,const string& file0Ds,const string& file1Ds
 		else{
 			cout<< "No not-null marker found" << endl;
 		}
-	}
+	}*/
 
     return true;
 }
@@ -126,24 +126,24 @@ bool ImportCell0Ds(const string& file0Ds, PolyhedralMesh& mesh)
         istringstream converter(line);
 
         int id;
-        int marker;
+        int ShortPath;
         char delimiter; // per memorizzare il ; del file csv
 
-        converter >>  id >> delimiter >> marker >> delimiter >> mesh.Cell0DsCoordinates(0, id) >> delimiter >> mesh.Cell0DsCoordinates(1, id)>> delimiter >> mesh.Cell0DsCoordinates(2, id);
+        converter >>  id >> delimiter >> ShortPath >> delimiter >> mesh.Cell0DsCoordinates(0, id) >> delimiter >> mesh.Cell0DsCoordinates(1, id)>> delimiter >> mesh.Cell0DsCoordinates(2, id);
 
         mesh.Cell0DsId.push_back(id);
 
-        // Memorizza i marker
-        if(marker != 0)
+        // Memorizza gli ShortPath
+        if(ShortPath != 0)
         {
-            const auto it = mesh.MarkerCell0Ds.find(marker);
-            if(it == mesh.MarkerCell0Ds.end())
+            const auto it = mesh.ShortPathCell0Ds.find(ShortPath);
+            if(it == mesh.ShortPathCell0Ds.end())
             {
-                mesh.MarkerCell0Ds.insert({marker, {id}});
+                mesh.ShortPathCell0Ds.insert({ShortPath, {id}});
             }
             else
             {
-                // mesh.MarkerCell0Ds[marker].push_back(id);
+                // mesh.ShortPathCell0Ds[ShortPath].push_back(id);
                 it->second.push_back(id);
             }
         }
@@ -184,23 +184,23 @@ bool ImportCell1Ds(const string& file1Ds, PolyhedralMesh& mesh)
         istringstream converter(line);
 
         int id;
-        int marker;
+        int ShortPath;
         char delimiter;
 
-        converter >>  id >> delimiter >> marker >> delimiter >>  mesh.Cell1DsExtrema(0, id) >> delimiter >>  mesh.Cell1DsExtrema(1, id);
+        converter >>  id >> delimiter >> ShortPath >> delimiter >>  mesh.Cell1DsExtrema(0, id) >> delimiter >>  mesh.Cell1DsExtrema(1, id);
         mesh.Cell1DsId.push_back(id);
 
-        // Memorizza i marker
-        if(marker != 0)
+        // Memorizza gli ShortPath
+        if(ShortPath != 0)
         {
-            const auto it = mesh.MarkerCell1Ds.find(marker);
-            if(it == mesh.MarkerCell1Ds.end())
+            const auto it = mesh.ShortPathCell1Ds.find(ShortPath);
+            if(it == mesh.ShortPathCell1Ds.end())
             {
-                mesh.MarkerCell1Ds.insert({marker, {id}});
+                mesh.ShortPathCell1Ds.insert({ShortPath, {id}});
             }
             else
             {
-                // mesh.MarkerCell1Ds[marker].push_back(id);
+                // mesh.ShortPathCell1Ds[ShortPath].push_back(id);
                 it->second.push_back(id);
             }
 		}
@@ -248,12 +248,12 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh)
         istringstream converter(line);
 
         int id;
-	int marker;
+	//int ShortPath;
 	int num_vert;
 	int num_edges;
 	char delimiter;
         
-	converter >> id >> delimiter >> marker >> delimiter >> num_vert;
+	converter >> id >> delimiter >> num_vert;
 
         vector<int> vecv;
 		vecv.reserve(num_vert);
@@ -277,19 +277,20 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh)
 		mesh.Cell2DsEdges.push_back(vece);
 		mesh.Cell2DsId.push_back(id);
 		
-		if(marker != 0)
+		/*if(ShortPath != 0)
         {
-            const auto it = mesh.MarkerCell2Ds.find(marker);
-            if(it == mesh.MarkerCell2Ds.end())
+            const auto it = mesh.ShortPathCell2Ds.find(ShortPath);
+            if(it == mesh.ShortPathCell2Ds.end())
             {
-                mesh.MarkerCell2Ds.insert({marker, {id}});
+                mesh.ShortPathCell2Ds.insert({ShortPath, {id}});
             }
             else
             {
-                // mesh.MarkerCell2Ds[marker].push_back(id);
+                // mesh.ShortPathCell2Ds[ShortPath].push_back(id);
                 it->second.push_back(id);
             }
-		}
+		}*/
+		
 		// verifica che tutti i poligoni abbiano area diversa da zero
 		
 		const MatrixXd& coord = mesh.Cell0DsCoordinates;
@@ -353,13 +354,13 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh)
         istringstream converter(line);
 
         int id;
-	int marker;
+	//int marker;
 	int num_vert;
 	int num_edges;
 	int num_faces;
 	char delimiter;
         
-	converter >> id >> delimiter >> marker >> delimiter >> num_vert;
+	converter >> id >> delimiter >> num_vert;
 
         vector<int> vecv;
 		vecv.reserve(num_vert);
@@ -396,7 +397,7 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh)
 		mesh.Cell3DsFaces.push_back(vecf);
 
 		
-	if(marker != 0)
+	/*if(marker != 0)
         {
             const auto it = mesh.MarkerCell3Ds.find(marker);
             if(it == mesh.MarkerCell3Ds.end())
@@ -408,7 +409,8 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh)
                 // mesh.MarkerCell3Ds[marker].push_back(id);
                 it->second.push_back(id);
             }
-		}
+		}*/
+		
 		// verifica che tutti i poligoni abbiano volume diverso da zero
 		
     }
@@ -423,7 +425,7 @@ bool Exportfile0Ds(const PolyhedralMesh& polyNew)
 		cerr << "Errore nell'apertura del file" << endl;
 		return false;
 	}
-	ofs<<"id,x,y,z"<<endl;
+	ofs<<"id,ShortPath,x,y,z"<<endl;
 	for (int i=0; i<polyNew.NumCell0Ds; i++){
 		int id=polyNew.Cell0DsId[i];
 		//list<int> marker=polyNew.MarkerCell0Ds.at(id);
@@ -440,7 +442,7 @@ bool Exportfile1Ds(const PolyhedralMesh & polyNew)
 		cerr << "Errore nell'apertura del file" << endl;
 		return false;
 	}
-	ofs<<"id,v0,v1"<<endl;
+	ofs<<"id,ShortPath,v0,v1"<<endl;
 	for (int i=0; i<polyNew.NumCell1Ds; i++){
 		int id=polyNew.Cell1DsId[i];
 		//list<int> marker=polyNew.MarkerCell1Ds.at(id);

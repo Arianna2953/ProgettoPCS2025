@@ -119,12 +119,12 @@ Gedim::UCDUtilities utilities;
         cell0Ds_properties[0].UnitLabel = "-";
         cell0Ds_properties[0].NumComponents = 1;
 
-        vector<double> cell0Ds_marker(mesh.NumCell0Ds, 0.0);
-        for(const auto &m : mesh.MarkerCell0Ds)
+        vector<double> cell0Ds_ShortPath(mesh.NumCell0Ds, 0.0);
+        for(const auto &m : mesh.ShortPathCell0Ds)
             for(const unsigned int id: m.second)
-                cell0Ds_marker.at(id) = m.first;
+                cell0Ds_ShortPath.at(id) = m.first;
 
-        cell0Ds_properties[0].Data = cell0Ds_marker.data();
+        cell0Ds_properties[0].Data = cell0Ds_ShortPath.data();
 
         utilities.ExportPoints("./Cell0Ds.inp",
                                mesh.Cell0DsCoordinates,
@@ -137,12 +137,12 @@ Gedim::UCDUtilities utilities;
         cell1Ds_properties[0].UnitLabel = "-";
         cell1Ds_properties[0].NumComponents = 1;
 
-        vector<double> cell1Ds_marker(mesh.NumCell1Ds, 0.0);
-        for(const auto &m : mesh.MarkerCell1Ds)
+        vector<double> cell1Ds_ShortPath(mesh.NumCell1Ds, 0.0);
+        for(const auto &m : mesh.ShortPathCell1Ds)
             for(const unsigned int id: m.second)
-                cell1Ds_marker.at(id) = m.first;
+                cell1Ds_ShortPath.at(id) = m.first;
 
-        cell1Ds_properties[0].Data = cell1Ds_marker.data();
+        cell1Ds_properties[0].Data = cell1Ds_ShortPath.data();
 
         utilities.ExportSegments("./Cell1Ds.inp",
                                  mesh.Cell0DsCoordinates,
