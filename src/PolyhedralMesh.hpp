@@ -16,7 +16,7 @@ struct PolyhedralMesh
 
     int NumCell1Ds = 0; // numero di Cell1D
     vector<int> Cell1DsId = {}; // id lati, (1 x NumberCell1D)
-    MatrixXi Cell1DsExtrema = {}; // estremi dei lati, (2 x NumberCell1D (fromId,toId))
+    MatrixXi Cell1DsExtrema = {}; // estremi dei lati, (2 x NumberCell1D) (fromId,toId)
     map<int, list<int>> ShortPathCell1Ds = {}; // Cell1D markers
 
     int NumCell2Ds = 0; // numero di Cell2D

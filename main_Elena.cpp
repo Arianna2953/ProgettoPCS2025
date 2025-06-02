@@ -6,12 +6,145 @@
 #include "Utils.hpp"
 #include "UCDUtilities.hpp"
 #include <vector>
+#include <math.h>
 
 using namespace std;
 using namespace Eigen;
 using namespace PolyhedralLibrary;
 
-bool Du1alConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual) 
+void CreateAdjacencyList(const PolyhedralMesh& mesh, vector<list<int>>& adjList) {
+    for (int i = 0; i < mesh.NumCell1Ds; i++){
+        int idFrom = mesh.Cell1DsExtrema(0, i);
+        int idTo = mesh.Cell1DsExtrema(1, i);
+
+        adjList[idFrom].push_back(idTo);
+        adjList[idTo].push_back(idFrom);
+    }
+	/*
+	for (size_t i = 0; i < adjList.size(); ++i) {
+        cout << "Vertice " << i << " → ";
+        for (int neighbor : adjList[i]) {
+            cout << neighbor << " ";
+        }
+	cout << endl;}
+	*/
+    return;
+}
+
+void CreateWheightsMatrix(const PolyhedralMesh& mesh, MatrixXd& weights){
+	for (int e = 0; e < mesh.NumCell1Ds; e++){
+		int idV1 = mesh.Cell1DsId(0,e);
+		int idV2 = mesh.Cell1DsId(1,e);
+		Vector3d coordV1 = mesh.Cell0DsCoordinates.col(idV1);
+		Vector3d coordV2 = mesh.Cell0DsCoordinates.col(idV2);
+		double edgeLenght = (coordV1-corrdV2).norm();
+		weights(idV1, idV2) = edgeLenght;
+		weights(idV2, idV1) = edgeLenght;
+		}
+	return;
+}
+
+bool FindShortestPath(const PolyhedralMesh& mesh, sourceNode, destinationNode)
+{
+	int V = mesh.NumCell0Ds;
+	
+	if (sourceNode >= V || destinationNode >= V ){
+		cerr << "Id vertici non validi." << endl;
+		return false;
+	}
+	
+	//Creo la lista di adiacenza dei vertici del poliedro come vettore di liste.
+	vector<list<int>> adjacencyList(V);
+	CreateAdjacencyList(mesh, adjacencyList);
+	
+	//Creo la matrice dei pesi.
+	MatrixXd weightsEdges = Ones(V,V)*INFINITY;
+	CreateWheightsMatrix(mesh, weightsEdges);
+	return true;
+}
+
+int main() 
+{
+	string file0Ds;
+    string file1Ds;
+    string file2Ds;
+    string file3Ds;
+	
+	file0Ds = "./Cell0Ds_octahedron.csv";
+	file1Ds = "./Cell1Ds_octahedron.csv";
+	file2Ds = "./Cell2Ds_octahedron.csv";
+	file3Ds = "./Cell3Ds_octahedron.csv";
+	
+	PolyhedralMesh poly1;
+	PolyhedralMesh poly2;
+	
+	if(!ImportMesh(poly1,file0Ds,file1Ds,file2Ds,file3Ds))
+	{
+		cerr << "File non trovato." << endl;
+		return 1;
+	};
+	
+	int s = 0;
+	int s = 3;
+	FindShortestPath(poly1, s, d);
+	
+	/*
+	if(!DualConstructor(poly1, poly2))
+	{
+		cerr << "Costruzione del duale non riuscita." << endl;
+		return 1;
+	};
+	
+	if (!ExportPolyhedron(poly2))
+	{
+		cerr << "Esportazione fallita." << endl;
+		return 1;
+	}
+	
+	Gedim::UCDUtilities utilities;
+    {	vector<Gedim::UCDProperty<double>> cell0Ds_properties(1);
+
+        cell0Ds_properties[0].Label = "Marker";
+        cell0Ds_properties[0].UnitLabel = "-";
+        cell0Ds_properties[0].NumComponents = 1;
+
+        vector<double> cell0Ds_ShortPath(poly2.NumCell0Ds, 0.0);
+        for(const auto &m : poly2.ShortPathCell0Ds)
+            for(const unsigned int id: m.second)
+                cell0Ds_ShortPath.at(id) = m.first;
+
+        cell0Ds_properties[0].Data = cell0Ds_ShortPath.data();
+
+        utilities.ExportPoints("./Cell0Ds.inp",
+                               poly2.Cell0DsCoordinates,
+                               cell0Ds_properties);
+    }
+
+    {	vector<Gedim::UCDProperty<double>> cell1Ds_properties(1);
+
+        cell1Ds_properties[0].Label = "Marker";
+        cell1Ds_properties[0].UnitLabel = "-";
+        cell1Ds_properties[0].NumComponents = 1;
+
+        vector<double> cell1Ds_ShortPath(poly2.NumCell1Ds, 0.0);
+        for(const auto &m : poly2.ShortPathCell1Ds)
+            for(const unsigned int id: m.second)
+                cell1Ds_ShortPath.at(id) = m.first;
+
+        cell1Ds_properties[0].Data = cell1Ds_ShortPath.data();
+
+        utilities.ExportSegments("./Cell1Ds.inp",
+                                 poly2.Cell0DsCoordinates,
+                                 poly2.Cell1DsExtrema,
+                                 {},
+                                 cell1Ds_properties);
+    }
+	*/
+	return 0;
+}
+
+/*
+bool PROVADualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual) 
 {	
 	const int V = polyhedron.NumCell2Ds; //Numero facce poliedro originale = numero vertici duale
 	const int E = polyhedron.NumCell1Ds; //Numero lati poliedro originale = numero lati duale
@@ -65,9 +198,9 @@ bool Du1alConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 			dual.Cell0DsCoordinates.col(f) << barCoords;
 		};
 	
-	/*Trovo i lati del duale. 
-	Scorro le facce (f1) del poliedro orginale e ne considero un lato alla volta cercando la faccia (f2) 
-	con cui è condiviso. I baricentri di f1 e f2, nel duale, saranno gli estremi di un lato che vado ad aggiungere all'elenco. */
+	//Trovo i lati del duale. 
+	//Scorro le facce (f1) del poliedro orginale e ne considero un lato alla volta cercando la faccia (f2) 
+	//con cui è condiviso. I baricentri di f1 e f2, nel duale, saranno gli estremi di un lato che vado ad aggiungere all'elenco. 
 	int newEdge = 0; //Id lato da aggiungere
 	for (int i = 0; i < polyhedron.NumCell2Ds; i++) //Itero sulle facce del poliedro originale
 	{
@@ -168,86 +301,4 @@ bool Du1alConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
 	dual.Cell3DsFaces.push_back(dual.Cell2DsId);
 	return true;	
 };
-
-
-int main() 
-{
-	string file0Ds;
-    string file1Ds;
-    string file2Ds;
-    string file3Ds;
-	
-	file0Ds = "./Cell0Ds_octahedron.csv";
-	file1Ds = "./Cell1Ds_octahedron.csv";
-	file2Ds = "./Cell2Ds_octahedron.csv";
-	file3Ds = "./Cell3Ds_octahedron.csv";
-	
-	/*int p = 3;
-    int q = 3;
-    int b = 2;
-    int c = 0;
-    int v0 = 0, v1 = 0;*/
-	
-	PolyhedralMesh poly1;
-	PolyhedralMesh poly2;
-	
-	if(!ImportMesh(poly1,file0Ds,file1Ds,file2Ds,file3Ds))
-	{
-		cerr << "File non trovato." << endl;
-		return 1;
-	};
-	
-	
-	if(!DualConstructor(poly1, poly2))
-	{
-		cerr << "Costruzione del duale non riuscita." << endl;
-		return 1;
-	};
-	
-	if (!ExportPolyhedron(poly2))
-	{
-		cerr << "Esportazione fallita." << endl;
-		return 1;
-	}
-	
-	Gedim::UCDUtilities utilities;
-    {	vector<Gedim::UCDProperty<double>> cell0Ds_properties(1);
-
-        cell0Ds_properties[0].Label = "Marker";
-        cell0Ds_properties[0].UnitLabel = "-";
-        cell0Ds_properties[0].NumComponents = 1;
-
-        vector<double> cell0Ds_marker(poly2.NumCell0Ds, 0.0);
-        for(const auto &m : poly2.MarkerCell0Ds)
-            for(const unsigned int id: m.second)
-                cell0Ds_marker.at(id) = m.first;
-
-        cell0Ds_properties[0].Data = cell0Ds_marker.data();
-
-        utilities.ExportPoints("./Cell0Ds.inp",
-                               poly2.Cell0DsCoordinates,
-                               cell0Ds_properties);
-    }
-
-    {	vector<Gedim::UCDProperty<double>> cell1Ds_properties(1);
-
-        cell1Ds_properties[0].Label = "Marker";
-        cell1Ds_properties[0].UnitLabel = "-";
-        cell1Ds_properties[0].NumComponents = 1;
-
-        vector<double> cell1Ds_marker(poly2.NumCell1Ds, 0.0);
-        for(const auto &m : poly2.MarkerCell1Ds)
-            for(const unsigned int id: m.second)
-                cell1Ds_marker.at(id) = m.first;
-
-        cell1Ds_properties[0].Data = cell1Ds_marker.data();
-
-        utilities.ExportSegments("./Cell1Ds.inp",
-                                 poly2.Cell0DsCoordinates,
-                                 poly2.Cell1DsExtrema,
-                                 {},
-                                 cell1Ds_properties);
-	}
-	
-	return 0;
-}
+*/
