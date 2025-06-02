@@ -11,7 +11,7 @@ struct PolyhedralMesh
 {
     int NumCell0Ds = 0; // numero di Cell0D
     vector<int> Cell0DsId = {}; // id vertici, (1 x NumberCell0D)
-    MatrixXd Cell0DsCoordinates = {}; // coordinate dei punti, (2 x NumberCell0D (x,y))
+    MatrixXd Cell0DsCoordinates = {}; // coordinate dei punti, (3 x NumberCell0D (x,y))
     map<int, list<int>> ShortPathCell0Ds = {}; // Cell0D markers
 
     int NumCell1Ds = 0; // numero di Cell1D

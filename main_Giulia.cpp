@@ -11,6 +11,7 @@ using namespace std;
 using namespace Eigen;
 using namespace PolyhedralLibrary;
 
+
 //creo una lista di adiacenza nella forma di un vettore di liste
 vector<list<int>> CreateAdjacencyList(const PolyhedralMesh& mesh) {
     vector<list<int>> adjacencyList(mesh.NumCell0Ds);
@@ -71,46 +72,46 @@ int main(int argc, char* argv[]) {
 
     // Controllo combinazioni specifiche di p e q
     if (p == 3 && q == 3) {
-		file0Ds = "./Cell0Ds_tetrahedron.csv";
-		file1Ds = "./Cell1Ds_tetrahedron.csv";
-		file2Ds = "./Cell2Ds_tetrahedron.csv";
-		file3Ds = "./Cell3Ds_tetrahedron.csv";
+		file0Ds = "../PlatonicSolid/tetrahedron/Cell0Ds.txt";
+		file1Ds = "../PlatonicSolid/tetrahedron/Cell1Ds.txt";
+		file2Ds = "../PlatonicSolid/tetrahedron/Cell2Ds.txt";
+		file3Ds = "../PlatonicSolid/tetrahedron/Cell3Ds.txt";
 		
         cout << "Poliedro regolare di base: Tetraedro" << endl;
     } 
     else if (p == 3 && q == 4) {
-        file0Ds = "./Cell0Ds_octahedron.csv";
-		file1Ds = "./Cell1Ds_octahedron.csv";
-		file2Ds = "./Cell2Ds_octahedron.csv";
-		file3Ds = "./Cell3Ds_octahedron.csv";
+        file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
+		file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
+		file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
+		file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
 		
         cout << "Poliedro regolare di base: Ottaedro" << endl;
     } 
     else if (p == 3 && q == 5) {
-        file0Ds = "./Cell0Ds_icosahedron.csv";
-		file1Ds = "./Cell1Ds_icosahedron.csv";
-		file2Ds = "./Cell2Ds_icosahedron.csv";
-		file3Ds = "./Cell3Ds_icosahedron.csv";
+        file0Ds = "../PlatonicSolid/icosahedron/Cell0Ds.txt";
+		file1Ds = "../PlatonicSolid/icosahedron/Cell1Ds.txt";
+		file2Ds = "../PlatonicSolid/icosahedron/Cell2Ds.txt";
+		file3Ds = "../PlatonicSolid/icosahedron/Cell3Ds.txt";
 		
         cout << "Poliedro regolare di base: Icosaedro" << endl;
     } 
     else if (p == 4 && q == 3) {
 		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
 		
-		file0Ds = "./Cell0Ds_octahedron.csv";
-		file1Ds = "./Cell1Ds_octahedron.csv";
-		file2Ds = "./Cell2Ds_octahedron.csv";
-		file3Ds = "./Cell3Ds_octahedron.csv";
+		file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
+		file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
+		file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
+		file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
 		
         cout << "Poliedro regolare di base: Ottaedro - bisogna poi farne il duale" << endl;	
     } 
     else if (p == 5 && q == 3) {
 		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
 		
-		file0Ds = "./Cell0Ds_icosahedron.csv";
-		file1Ds = "./Cell1Ds_icosahedron.csv";
-		file2Ds = "./Cell2Ds_icosahedron.csv";
-		file3Ds = "./Cell3Ds_icosahedron.csv";
+		file0Ds = "../PlatonicSolid/icosahedron/Cell0Ds.txt";
+		file1Ds = "../PlatonicSolid/icosahedron/Cell1Ds.txt";
+		file2Ds = "../PlatonicSolid/icosahedron/Cell2Ds.txt";
+		file3Ds = "../PlatonicSolid/icosahedron/Cell3Ds.txt";
 		
         cout << "Poliedro regolare di base: Icosaedro - bisogna poi farne il duale" << endl;	
     } 
@@ -134,6 +135,8 @@ int main(int argc, char* argv[]) {
 	
 	vector<list<int>> adjacencyList = CreateAdjacencyList(mesh);
 	
+	//PolyhedralMesh dual;
+	//DualConstructor(mesh, dual); 
 	
 	
 	//ExportPolyhedron(mesh);
@@ -151,7 +154,7 @@ Gedim::UCDUtilities utilities;
         cell0Ds_properties[0].NumComponents = 1;
 
         vector<double> cell0Ds_marker(mesh.NumCell0Ds, 0.0);
-        for(const auto &m : mesh.MarkerCell0Ds)
+        for(const auto &m : mesh.ShortPathCell0Ds)
             for(const unsigned int id: m.second)
                 cell0Ds_marker.at(id) = m.first;
 
@@ -169,7 +172,7 @@ Gedim::UCDUtilities utilities;
         cell1Ds_properties[0].NumComponents = 1;
 
         vector<double> cell1Ds_marker(mesh.NumCell1Ds, 0.0);
-        for(const auto &m : mesh.MarkerCell1Ds)
+        for(const auto &m : mesh.ShortPathCell1Ds)
             for(const unsigned int id: m.second)
                 cell1Ds_marker.at(id) = m.first;
 
@@ -182,10 +185,44 @@ Gedim::UCDUtilities utilities;
                                  cell1Ds_properties);
     }
 	
+
+	/*{
+    vector<Gedim::UCDProperty<double>> cell2Ds_properties(1);
+
+    cell2Ds_properties[0].UnitLabel = "-";
+    cell2Ds_properties[0].NumComponents = 1;
+
+    // Crea lista dei vertici per ogni poligono
+    std::vector<std::vector<unsigned int>> polygons_vertices(mesh.NumCell2Ds);
+    for (int i = 0; i < mesh.NumCell2Ds; ++i)
+    {
+        for (int v : mesh.Cell2DsVertices[i])
+            polygons_vertices[i].push_back(static_cast<unsigned int>(v));
+    }
+
+    // Crea matrice punti 3D: (3 x NumCell0Ds)
+    Eigen::MatrixXd points3D(3, mesh.NumCell0Ds);
+    for (int i = 0; i < mesh.NumCell0Ds; ++i)
+    {
+        points3D(0, i) = mesh.Cell0DsCoordinates(0, i);
+        points3D(1, i) = mesh.Cell0DsCoordinates(1, i);
+        points3D(2, i) = mesh.Cell0DsCoordinates(2, i);
+    }
+
+    // Materiali (opzionale, azzerati qui)
+    Eigen::VectorXi materials = Eigen::VectorXi::Zero(mesh.NumCell2Ds);
+
+    utilities.ExportPolygons("./Cell2Ds.inp",
+                             points3D,
+                             polygons_vertices,
+                             {},
+                             cell2Ds_properties,
+                             materials);
+}*/
+
 	
 	
-	
-	//visualizzazione a terminale
+/*	//visualizzazione a terminale
     cout << "=== Cell0Ds (Vertices) ===\n";
     cout << "NumCell0Ds: " << mesh.NumCell0Ds << "\n";
     cout << "Cell0DsId: ";
@@ -226,12 +263,6 @@ Gedim::UCDUtilities utilities;
         for (int e : mesh.Cell2DsEdges[i]) cout << e << " ";
         cout << "\n";
     }
-    cout << "MarkerCell2Ds:\n";
-    for (const auto& [marker, ids] : mesh.MarkerCell2Ds) {
-        cout << "  Marker " << marker << ": ";
-        for (int id : ids) cout << id << " ";
-        cout << "\n";
-    }
 
     cout << "\n=== Cell3Ds (Volumes) ===\n";
     cout << "NumCell3Ds: " << mesh.NumCell3Ds << "\n";
@@ -255,12 +286,6 @@ Gedim::UCDUtilities utilities;
         for (int f : mesh.Cell3DsFaces[i]) cout << f << " ";
         cout << "\n";
     }
-    cout << "MarkerCell3Ds:\n";
-    for (const auto& [marker, ids] : mesh.MarkerCell3Ds) {
-        cout << "  Marker " << marker << ": ";
-        for (int id : ids) cout << id << " ";
-        cout << "\n";
-    }
-
+*/
 
 }
