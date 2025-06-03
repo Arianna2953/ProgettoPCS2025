@@ -432,12 +432,14 @@ bool Exportfile0Ds(const PolyhedralMesh& polyNew)
 		if (polyNew.ShortPathCell0Ds.contains(1)){
 			// const l=polyNew.ShortPathCell0Ds.get(1)
 			int nome=1;
-			if (polyNew.ShortPathCell0Ds.at(nome).find(id)){
-				sp=1;
-			}
-			else{
-				sp=0;
-			}
+			for (elemento:: polyNew.ShortPathCell0Ds.at(nome)){
+				if (elemento==id){
+					sp=1;
+				}
+				else{
+					sp=0;
+				}
+			};
 		}
 		else{
 			cout << "ShortPath not found" << endl;
@@ -463,14 +465,15 @@ bool Exportfile1Ds(const PolyhedralMesh & polyNew)
 		if (polyNew.ShortPathCell1Ds.contains(1)){
 			// const l=polyNew.ShortPathCell1Ds.get(1);
 			int nome=1;
-			if (polyNew.ShortPathCell1Ds.at(nome).find(id)){
-				sp=1;
-			}
-			else{
-				sp=0;
-			}
+			for (elemento:: polyNew.ShortPathCell1Ds.at(nome)){
+				if (elemento==id){
+					sp=1;
+				}
+				else{
+					sp=0;
+				}
+			};
 		}
-		else{
 			cout << "ShortPath not found" << endl;
 		}*/
 		//list<int> marker=polyNew.MarkerCell1Ds.at(id);
