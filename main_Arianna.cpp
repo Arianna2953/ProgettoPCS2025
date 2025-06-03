@@ -1,6 +1,10 @@
 #include <iostream>
 #include <string>
 #include <cctype>  // per isdigit()
+#include <cmath> 
+#include <numeric> 
+#include <chrono>
+#include <vector>
 #include "PolyhedralMesh.hpp"
 #include "ImportExport.hpp"
 #include "Utils.hpp"
