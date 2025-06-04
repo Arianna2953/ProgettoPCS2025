@@ -12,8 +12,8 @@ using namespace Eigen;
 using namespace PolyhedralLibrary;
 
 namespace PolyhedralLibrary{
-	PolyhedralMesh Poly;
-	/*Poly.NumCell0Ds=6;
+	/*PolyhedralMesh Poly;
+	Poly.NumCell0Ds=6;
 	Poly.Cell0DsId={0,1,2,3,4,5};
 	Poly.Cell0DsCoordinates[3][mesh.NumCell0Ds]={
 		{1,0,0},
@@ -54,19 +54,6 @@ namespace PolyhedralLibrary{
 TEST(TestChecking, TestCheckAddEdges)
 {
 	PolyhedralMesh OldMesh;
-	OldMesh.Cell1DsExtrema[2][OldMesh.NumCell1Ds]={
-		{0,2},
-		{0,3},
-		{0,4},
-		{0,5},
-		{1,2},
-		{1,3},
-		{1,4},
-		{1,5},
-		{2,4},
-		{2,5},
-		{3,4},
-		{3,5}};
 	int id=5;
 	CheckAddEdges(OldMesh,OldMesh.Cell1DsExtrema,id);
 
@@ -76,13 +63,6 @@ TEST(TestChecking, TestCheckAddEdges)
 TEST(TestChecking, TestCheckAddVertices)
 {
 	PolyhedralMesh OldMesh;
-	OldMesh.Cell0DsCoordinates[3][OldMesh.NumCell0Ds]={
-		{1,0,0},
-		{-1,0,0},
-		{0,1,0},
-		{0,-1,0},
-		{0,0,1},
-		{0,0,-1}};
 	int id=5;
 	CheckAddVertices(OldMesh,OldMesh.Cell0DsCoordinates,id);
 	EXPECT_EQ();
