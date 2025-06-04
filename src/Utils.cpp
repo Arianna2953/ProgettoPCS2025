@@ -58,7 +58,7 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 	int T = n*n;
 	int V,E,F;
 	
-	//relazioni fornite riguardo il numero di vertici, lati e facce del poliedro geodetico generato (presi p, q, b ,c in input
+	//relazioni fornite riguardo il numero di vertici, lati e facce del poliedro geodetico generato (presi p, q, b ,c in input)
 		
 	if(p == 3 && q == 3){
 		V = 2*T+2;
