@@ -12,7 +12,6 @@
 
 namespace PolyhedralLibrary
 {
-
 int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge){
 	int w0 = edge[0]; 
 	int w1 = edge[1]; 
@@ -28,6 +27,8 @@ int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge){
 	id_edge++;
 	poly.Cell1DsId.push_back(id_edge);
 	poly.Cell1DsExtrema.col(id_edge) = edge;
+	poly.ShortPathCell1Ds[0].push_back(id_edge);
+	
 	return id_edge;	
 }
 
@@ -43,6 +44,8 @@ int CheckAddVertices(PolyhedralMesh& poly, const Vector3d vertex, int& id_vert){
 	id_vert++;
 	poly.Cell0DsId.push_back(id_vert);
 	poly.Cell0DsCoordinates.col(id_vert) = vertex;
+	poly.ShortPathCell0Ds[0].push_back(id_vert);
+	
 	return id_vert;
 }
 

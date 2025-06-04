@@ -6,12 +6,12 @@
 #include "Utils.hpp"
 #include "UCDUtilities.hpp"
 
-
 using namespace std;
 using namespace Eigen;
 using namespace PolyhedralLibrary;
 
-
+/*
+---> per shortpath Ele
 //creo una lista di adiacenza nella forma di un vettore di liste
 vector<list<int>> CreateAdjacencyList(const PolyhedralMesh& mesh) {
     vector<list<int>> adjacencyList(mesh.NumCell0Ds);
@@ -30,7 +30,7 @@ vector<list<int>> CreateAdjacencyList(const PolyhedralMesh& mesh) {
         }
 	cout << endl;}
     return adjacencyList;
-}
+}*/
 
 int main(int argc, char* argv[]) {
     // Verifica che ci siano 5 o 7 argomenti (5 se non ci sono v0 e v1, 7 se ci sono v0 e v1)
@@ -69,6 +69,9 @@ int main(int argc, char* argv[]) {
     string file3Ds;
 	
 	PolyhedralMesh regularPolyhedron;
+	PolyhedralMesh toDualize;
+	bool dualize = false;
+	PolyhedralMesh mesh;
 
     // Controllo combinazioni specifiche di p e q
     if (p == 3 && q == 3) {
@@ -76,24 +79,21 @@ int main(int argc, char* argv[]) {
 		file1Ds = "../PlatonicSolid/tetrahedron/Cell1Ds.txt";
 		file2Ds = "../PlatonicSolid/tetrahedron/Cell2Ds.txt";
 		file3Ds = "../PlatonicSolid/tetrahedron/Cell3Ds.txt";
-		
-        cout << "Poliedro regolare di base: Tetraedro" << endl;
+		cout << "Poliedro regolare di base: Tetraedro" << endl;	
     } 
     else if (p == 3 && q == 4) {
         file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 		file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
 		file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
 		file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-		
-        cout << "Poliedro regolare di base: Ottaedro" << endl;
+		cout << "Poliedro regolare di base: Ottaedro" << endl;
     } 
     else if (p == 3 && q == 5) {
         file0Ds = "../PlatonicSolid/icosahedron/Cell0Ds.txt";
 		file1Ds = "../PlatonicSolid/icosahedron/Cell1Ds.txt";
 		file2Ds = "../PlatonicSolid/icosahedron/Cell2Ds.txt";
 		file3Ds = "../PlatonicSolid/icosahedron/Cell3Ds.txt";
-		
-        cout << "Poliedro regolare di base: Icosaedro" << endl;
+		cout << "Poliedro regolare di base: Icosaedro" << endl;
     } 
     else if (p == 4 && q == 3) {
 		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
@@ -101,9 +101,9 @@ int main(int argc, char* argv[]) {
 		file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 		file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
 		file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
-		file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-		
-        cout << "Poliedro regolare di base: Ottaedro - bisogna poi farne il duale" << endl;	
+		file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";		
+        cout << "Poliedro regolare di base: Ottaedro - bisogna poi farne il duale" << endl;
+		dualize = true;
     } 
     else if (p == 5 && q == 3) {
 		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
@@ -111,9 +111,9 @@ int main(int argc, char* argv[]) {
 		file0Ds = "../PlatonicSolid/icosahedron/Cell0Ds.txt";
 		file1Ds = "../PlatonicSolid/icosahedron/Cell1Ds.txt";
 		file2Ds = "../PlatonicSolid/icosahedron/Cell2Ds.txt";
-		file3Ds = "../PlatonicSolid/icosahedron/Cell3Ds.txt";
-		
+		file3Ds = "../PlatonicSolid/icosahedron/Cell3Ds.txt";		
         cout << "Poliedro regolare di base: Icosaedro - bisogna poi farne il duale" << endl;	
+		dualize = true;
     } 
     else {
         cout << "Combinazione di valori di p e q non corrispondente a nessun poliedro regolare." << endl;
@@ -125,25 +125,17 @@ int main(int argc, char* argv[]) {
 			cerr << "file non trovato" << endl;
 			return 1;
 		} 
+	//applico la triangolazione secondo le regole in base a p,q,b,c
+	if(dualize == true){
+		TriangulateFaces(regularPolyhedron, toDualize,q,p,b,c);
+		DualConstructor(toDualize,mesh);
+	}
+	else{
+		TriangulateFaces(regularPolyhedron,mesh,p,q,b,c);
+	}
 	
 	
-	
-	
-	PolyhedralMesh mesh; //da cambiare nome prob
-	
-	TriangulateFaces(regularPolyhedron, mesh,p,q,b,c);
-	
-	vector<list<int>> adjacencyList = CreateAdjacencyList(mesh);
-	
-	//PolyhedralMesh dual;
-	//DualConstructor(mesh, dual); 
-	
-	
-	//ExportPolyhedron(mesh);
-	
-	
-	
-	
+	ExportPolyhedron(mesh);
 	
 //esporto file per visualizzazione
 Gedim::UCDUtilities utilities;
@@ -219,18 +211,15 @@ Gedim::UCDUtilities utilities;
                              cell2Ds_properties,
                              materials);
 }*/
-
-	
-	
-/*	//visualizzazione a terminale
+	/*//visualizzazione a terminale
     cout << "=== Cell0Ds (Vertices) ===\n";
     cout << "NumCell0Ds: " << mesh.NumCell0Ds << "\n";
     cout << "Cell0DsId: ";
     for (int id : mesh.Cell0DsId) cout << id << " ";
     cout << "\nCoordinates:\n" << mesh.Cell0DsCoordinates << "\n";
-    cout << "MarkerCell0Ds:\n";
-    for (const auto& [marker, ids] : mesh.MarkerCell0Ds) {
-        cout << "  Marker " << marker << ": ";
+    cout << "ShortPathCell0Ds:\n";
+    for (const auto& [shortpath, ids] : mesh.ShortPathCell0Ds) {
+        cout << "  ShortPath " << shortpath << ": ";
         for (int id : ids) cout << id << " ";
         cout << "\n";
     }
@@ -240,9 +229,9 @@ Gedim::UCDUtilities utilities;
     cout << "Cell1DsId: ";
     for (int id : mesh.Cell1DsId) cout << id << " ";
     cout << "\nExtrema:\n" << mesh.Cell1DsExtrema << "\n";
-    cout << "MarkerCell1Ds:\n";
-    for (const auto& [marker, ids] : mesh.MarkerCell1Ds) {
-        cout << "  Marker " << marker << ": ";
+    cout << "ShortPathCell1Ds:\n";
+    for (const auto& [shortpath, ids] : mesh.ShortPathCell1Ds) {
+        cout << "  ShortPath " << shortpath << ": ";
         for (int id : ids) cout << id << " ";
         cout << "\n";
     }
@@ -285,7 +274,7 @@ Gedim::UCDUtilities utilities;
         cout << "  Volume " << i << ": ";
         for (int f : mesh.Cell3DsFaces[i]) cout << f << " ";
         cout << "\n";
-    }
-*/
+    }*/
+
 
 }
