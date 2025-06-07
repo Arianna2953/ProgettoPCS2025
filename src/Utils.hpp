@@ -32,13 +32,13 @@ void TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,
 //poly: PolyhedralMesh struct in cui si vuole valutare l'esistenza e l'eventuale inserimento del lato edge
 //edge: lato di cui si vuole valutare l'inserimento nella PolyhedralMesh
 //id_edge: id del lato che viene aggiornato ogni volta che viene aggiunto un nuovo lato alla struttura
-int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge);
+int CheckAddEdges(PolyhedralMesh& poly, const Vector2i& edge, int& id_edge);
 
 //Controlla se un nuovo punto che si vuole inserire sia già stato inserito tra i vertici del poliedro considerato
 //poly: PolyhedralMesh struct in cui si vuole valutare l'esistenza e l'eventuale inserimento del lato edge
 //vertex: vertice di cui si vuole valutare l'inserimento nella PolyhedralMesh
 //id_vert: id del vertice che viene aggiornato ogni volta che viene aggiunto un nuovo lato alla struttura
-int CheckAddVertices(PolyhedralMesh& poly, const Vector3d vertex, int& id_vert);
+int CheckAddVertices(PolyhedralMesh& poly, const Vector3d& vertex, int& id_vert);
 
 
 //COMMENTO DA AGGIUNGERE ELENA !!!!!!

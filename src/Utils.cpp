@@ -12,7 +12,7 @@
 
 namespace PolyhedralLibrary
 {
-int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge){
+int CheckAddEdges(PolyhedralMesh& poly, const Vector2i& edge, int& id_edge){
 	int w0 = edge[0]; 
 	int w1 = edge[1]; 
 	
@@ -33,7 +33,7 @@ int CheckAddEdges(PolyhedralMesh& poly, const Vector2i edge, int& id_edge){
 }
 
 //controlla se il punto in input esiste già o meno tra i punti esistenti Cell0Ds, e se necessario, lo aggiunge
-int CheckAddVertices(PolyhedralMesh& poly, const Vector3d vertex, int& id_vert){
+int CheckAddVertices(PolyhedralMesh& poly, const Vector3d& vertex, int& id_vert){
 	
 	for (unsigned int i = 0; i < poly.Cell0DsId.size(); i++){
 		
