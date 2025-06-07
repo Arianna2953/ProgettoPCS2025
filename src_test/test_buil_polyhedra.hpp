@@ -69,7 +69,6 @@ TEST(TestChecking, TestCheckAddEdges1)
 TEST(TestChecking, TestCheckAddEdges2)
 {
 	PolyhedralMesh OldMesh;
-	PolyhedralMesh OldMesh;
 	file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
 	file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
@@ -83,7 +82,6 @@ TEST(TestChecking, TestCheckAddEdges2)
 
 TEST(TestChecking, TestCheckAddVertices1)
 {
-	PolyhedralMesh OldMesh;
 	PolyhedralMesh OldMesh;
 	file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -114,7 +112,6 @@ TEST(TestChecking, TestCheckAddVertices2)
 TEST(TestChecking, TestTriangulationTypeI)
 {
 	PolyhedralMesh OldMesh;
-	PolyhedralMesh OldMesh;
 	file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
 	file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
@@ -131,7 +128,6 @@ TEST(TestChecking, TestTriangulationTypeI)
 TEST(TestChecking, TestTriangulationTypeII)
 {
 	PolyhedralMesh OldMesh;
-	PolyhedralMesh OldMesh;
 	file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
 	file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
@@ -145,7 +141,6 @@ TEST(TestChecking, TestTriangulationTypeII)
 
 TEST(TestChecking, TestTriangulateFaces)
 {
-	PolyhedralMesh OldMesh;
 	PolyhedralMesh OldMesh;
 	file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -163,7 +158,6 @@ TEST(TestChecking, TestTriangulateFaces)
 
 TEST(TestChecking, TestDualConstructor)
 {
-	PolyhedralMesh OldMesh;
 	PolyhedralMesh OldMesh;
 	file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
