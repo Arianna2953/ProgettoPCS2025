@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "test_buil_polyhedra.hpp"
+#include "test_build_polyhedra.hpp"
 
 int main(int argc, char *argv[])
 {
