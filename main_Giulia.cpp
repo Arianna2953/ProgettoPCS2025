@@ -125,15 +125,36 @@ int main(int argc, char* argv[]) {
 			cerr << "file non trovato" << endl;
 			return 1;
 		} 
-	//applico la triangolazione secondo le regole in base a p,q,b,c
-	if(dualize == true){
-		TriangulateFaces(regularPolyhedron, toDualize,q,p,b,c);
-		DualConstructor(toDualize,mesh);
-	}
-	else{
-		TriangulateFaces(regularPolyhedron,mesh,p,q,b,c);
-	}
 	
+	int n;
+	
+	//imposto i vari casi in base al valore di b e c
+	if((b==0 && c >=1) || (b>=1 && c==0)){
+		n = max(b,c);
+		cout << "Triangolazione di 'tipo 1'" << endl;
+		if(dualize == true){
+			TriangulationTypeI(regularPolyhedron, toDualize,p,q,n);
+			DualConstructor(toDualize,mesh);
+		}
+		else{
+			TriangulationTypeI(regularPolyhedron, mesh,p,q,n);
+		}
+	}
+	else if(b==c && b!=0){
+		n = b;
+		//triangolazione tipo 2
+		cout << "Triangolazione di 'tipo 2'" << endl;
+		if(dualize == true){
+			TriangulationTypeII(regularPolyhedron, toDualize,n);
+			DualConstructor(toDualize,mesh);
+		}
+		else{
+			TriangulationTypeII(regularPolyhedron, mesh,n);
+		}
+	}
+	else {
+		cout << "valori di b e c non validi" << endl;
+	}
 	
 	ExportPolyhedron(mesh);
 	

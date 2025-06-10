@@ -440,32 +440,6 @@ void TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,
 	polyNew.Cell3DsFaces.push_back(polyNew.Cell2DsId);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-
-void TriangulateFaces(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,const int& p,const int& q,const int& b,const int& c)
-{
-	//ho impostato solo un controllo sui valori, bisogna implementare ancora tutta la funzione per la triangolazione!!! 
-	//imposto i vari casi in base al valore di b e c in input_iterator
-	if((b==0 && c >=1) || (b>=1 && c==0)){
-		int n = max(b,c);
-		//triangolazione tipo 1
-		cout << "Triangolazione di 'tipo 1'" << endl;
-		TriangulationTypeI(polyOld, polyNew,p,q,n);
-	}
-	else if(b==c && b!=0){
-		int n = b;
-		//triangolazione tipo 2
-		cout << "Triangolazione di 'tipo 2'" << endl;
-		TriangulationTypeII(polyOld,polyNew,n);
-	}
-	else {
-		cout << "valori di b e c non validi" << endl;
-	}
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-
 bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual) 
 {	
 	const int V = polyhedron.NumCell2Ds; //Numero facce poliedro originale = numero vertici duale

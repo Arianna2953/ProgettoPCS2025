@@ -6,13 +6,6 @@ using namespace std;
 
 namespace PolyhedralLibrary
 {
-//Triangola le facce del poliedro, utilizzando la tipologia di funzione opportuna in base ai valori di b e c indicati
-//polyOld: PolyhedralMesh struct che rappresenta il poliedro di partenza, le cui facce vengono triangolate dalla funzione
-//polyNew: PolyhedralMesh struct in cui viene salvato il poliedro geodetico richiesto
-//p & q: numeri input relativi alla tipologia di poliedro
-//b & c: numberi input relativi alla triangolazione
-void TriangulateFaces(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& p,const int& q, const int& b,const int& c);
-
 //Triangola le facce del poliedro di partenza, a partire da una divisione dei lati in parti uguali, creando una griglia (?) ????
 //polyOld: PolyhedralMesh struct che rappresenta il poliedro di partenza, le cui facce vengono triangolate dalla funzione
 //polyNew: PolyhedralMesh struct in cui viene salvato il poliedro con le facce triangolate, e i cui vertici sono proiettati su una sfera di raggio unitario
