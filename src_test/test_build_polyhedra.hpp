@@ -63,9 +63,8 @@ namespace PolyhedralLibrary{
 	
 	//con questa inizializzazione potrebbe funzionare, ma non la prende nei test...forse va inserita dentro ogni test? forse conviene usare import a questo punto... o comunque provare con figure 2D quando si può e non solidi veri e propri
 
-
-
 	PolyhedralMesh NewMesh;
+	
 TEST(TestChecking, TestCheckAddEdges1)
 {
 	PolyhedralMesh OldMesh;
@@ -87,21 +86,15 @@ TEST(TestChecking, TestCheckAddEdges2)
     string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
     string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
     string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-
     ImportMesh(OldMesh, file0Ds, file1Ds, file2Ds, file3Ds);
-
     int originalNumEdges = OldMesh.NumCell1Ds;
     Vector2i edge = {4, 5}; //nuovo lato da aggiungere, non presente
-
     // Pre-allocazione se necessario (se CheckAddEdges assume spazio sufficiente)
     if (OldMesh.Cell1DsExtrema.cols() <= originalNumEdges) {
         OldMesh.Cell1DsExtrema.conservativeResize(2, originalNumEdges + 10);
     }
-
     int id_edge = originalNumEdges - 1; 
-
     int returnedId = CheckAddEdges(OldMesh, edge, id_edge);
-
     EXPECT_EQ(returnedId, originalNumEdges);
     EXPECT_EQ(OldMesh.Cell1DsId.back(), originalNumEdges);
     EXPECT_EQ(OldMesh.Cell1DsExtrema(0, originalNumEdges), 4);
@@ -125,12 +118,6 @@ TEST(TestChecking, TestCheckAddEdges2)
 	EXPECT_EQ(id_prova,id_corretto);
 }*/
 
-
-
-
-
-
-
 //si potrebbero fare questi test sopra anche senza file di input, ma con una figura geometrica a caso, con vertici semplici
 
 TEST(CheckAddEdgesTest, TestCheckAddEdges3) {
@@ -141,25 +128,15 @@ TEST(CheckAddEdgesTest, TestCheckAddEdges3) {
 	mesh.Cell1DsExtrema.col(0) = Vector2i(0,1);
 	mesh.Cell1DsExtrema.col(1) = Vector2i(1,2);
 	mesh.Cell1DsExtrema.col(2) = Vector2i(2,0);
-	
 	mesh.Cell1DsId = {0,1,2};
-	
 	int idE_origin = 2;
-	
     Vector2i edge(2,3);
-
     int idE = CheckAddEdges(mesh, edge, idE_origin);
-
     EXPECT_EQ(idE, 3);              
 }
 
 
-
-
-
-
-
-/*TEST(TestChecking, TestCheckAddVertices1)
+TEST(TestChecking, TestCheckAddVertices1)
 {
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
@@ -169,26 +146,25 @@ TEST(CheckAddEdgesTest, TestCheckAddEdges3) {
 	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
 	Vector3d vertex={0,0,1};
 	int id_prova=CheckAddVertices(OldMesh,vertex,OldMesh.NumCell0Ds);
-	int id_corretto=OldMesh.NumCell0Ds;
-	EXPECT_EQ(id_ptova,id_corretto);
+	int id_corretto=4;
+	EXPECT_EQ(id_prova,id_corretto);
 }
 
 TEST(TestChecking, TestCheckAddVertices2)
 {
-	PolyhedralMesh OldMesh;
-	PolyhedralMesh OldMesh;
-	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
-	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
-	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
-	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
-	Vector3d vertex={0,1,1};
-	int id_prova=CheckAddVertices(OldMesh,vertex,OldMesh.NumCell0Ds);
-	int id_corretto=OldMesh.NumCell0Ds+1;
-	EXPECT_EQ(id_ptova,id_corretto);
+	PolyhedralMesh mesh;
+    mesh.Cell0DsCoordinates = MatrixXd::Zero(3,10);
+	mesh.Cell0DsCoordinates.col(0) = Vector3d(1, 0, 1);
+	mesh.Cell0DsCoordinates.col(1) = Vector3d(-1, -1, 0);
+	mesh.Cell0DsCoordinates.col(2) = Vector3d(0, 1, 1);
+	mesh.Cell0DsId={0,1,2};
+	int id_iniziale=2;
+	Vector3d vertex{0,1,0};
+	int id_prova=CheckAddVertices(mesh,vertex,id_iniziale);
+	EXPECT_EQ(id_prova,3);
 }
 
-TEST(TestChecking, TestTriangulationTypeI)
+/*TEST(TestChecking, TestTriangulationTypeI)
 {
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
