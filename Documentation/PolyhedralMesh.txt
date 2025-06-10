@@ -1,0 +1,81 @@
+@startuml 
+
+title Geodesic and Goldberg Polyhedron
+
+package PolyhedralLibrary <<Folder>>
+{
+
+struct PolyhedralMesh {
+  + NumCell0Ds : int
+  + Cell0DsId : vector<int>
+  + Cell0DsCoordinates : MatrixXd
+  + ShortPathCell0Ds : map<int, list<int>>
+
+  + NumCell1Ds : int
+  + Cell1DsId : vector<int>
+  + Cell1DsExtrema : MatrixXi
+  + ShortPathCell1Ds : map<int, list<int>>
+
+  + NumCell2Ds : int
+  + Cell2DsId : vector<int>
+  + Cell2DsVertices : vector<vector<int>>
+  + Cell2DsEdges : vector<vector<int>>
+
+  + NumCell3Ds : int
+  + Cell3DsId : vector<int>
+  + Cell3DsVertices : vector<vector<int>>
+  + Cell3DsEdges : vector<vector<int>>
+  + Cell3DsFaces : vector<vector<int>>
+
+.. Non member function ..
+
+    + bool ImportMesh(PolyhedralMesh& mesh, const string& file0Ds, const string& file1Ds, const string& file2Ds, const string& file3Ds)
+      + bool ImportCell0Ds(const string& file0Ds, PolyhedralMesh& mesh)
+      + bool ImportCell1Ds(const string& file1Ds, PolyhedralMesh& mesh)
+      + bool ImportCell2Ds(const string& file2Ds, PolyhedralMesh& mesh)
+      + bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh)
+      + bool Exportfile0Ds(const PolyhedralMesh& polyNew)
+      + bool Exportfile1Ds(const PolyhedralMesh& polyNew)
+      + bool Exportfile2Ds(const PolyhedralMesh& polyNew)
+      + bool Exportfile3Ds(const PolyhedralMesh& polyNew)
+      + bool ExportPolyhedron(const PolyhedralMesh& polyNew)
+
+    + void TriangulateFaces(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& p, const int& q, const int& b, const int& c)
+    + void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& p, const int& q, const int& n)
+    + void  TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& n) : void
+    + int  CheckAddEdges(PolyhedralMesh& poly, const Vector2i& edge, int& id_edge)
+    + int CheckAddVertices(PolyhedralMesh& poly, const Vector3d& vertex, int& id_vert)
+    + bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
+    + SHORTPATH
+    
+.. TESTPOLYGON ..
+
+Test1
+Test2
+INSERIRE
+
+}
+
+package Gedim <<Frame>>
+{
+
+}
+package GTest <<Frame>>
+{
+
+}
+package Eigen <<Frame>>
+{
+
+}
+PolyhedralMesh::Interface --right--> Gedim
+PolyhedralMesh::Interface --left--> Eigen
+PolyhedralMesh::Interface --down--> GTest
+
+
+note "These are external packages" as Note
+Note .. Gedim
+Note .. GTest
+Note .. Eigen
+
+@enduml
