@@ -6,13 +6,31 @@
 #include "Utils.hpp"
 #include "UCDUtilities.hpp"
 #include <vector>
+#include <map>
+#include <list>
 #include <math.h>
+#include "Eigen/Eigen"
+
+#include <tuple>
 
 using namespace std;
 using namespace Eigen;
 using namespace PolyhedralLibrary;
 
-void CreateAdjacencyList(const PolyhedralMesh& mesh, vector<list<int>>& adjList) {
+int FindEdge(const PolyhedralMesh& mesh, const int& v0, const int& v1){
+	int edgeId = -1;
+	for (int j = 0; j < mesh.NumCell1Ds; j++){
+		int u0 = mesh.Cell1DsExtrema(0,j);
+		int u1 = mesh.Cell1DsExtrema(1,j);
+		if ( (v0 == u0 && v1 == u1) || (v0 == u1 && v1 == u0) ){
+			edgeId = j;
+			break;
+		}
+	}
+	return edgeId;
+}
+
+void CreateAdjacencyList(const PolyhedralMesh& mesh, vector<list<int>>& adjList){
     for (int i = 0; i < mesh.NumCell1Ds; i++){
         int idFrom = mesh.Cell1DsExtrema(0, i);
         int idTo = mesh.Cell1DsExtrema(1, i);
@@ -20,33 +38,109 @@ void CreateAdjacencyList(const PolyhedralMesh& mesh, vector<list<int>>& adjList)
         adjList[idFrom].push_back(idTo);
         adjList[idTo].push_back(idFrom);
     }
-	/*
-	for (size_t i = 0; i < adjList.size(); ++i) {
-        cout << "Vertice " << i << " → ";
-        for (int neighbor : adjList[i]) {
-            cout << neighbor << " ";
-        }
-	cout << endl;}
-	*/
     return;
 }
 
 void CreateWheightsMatrix(const PolyhedralMesh& mesh, MatrixXd& weights){
 	for (int e = 0; e < mesh.NumCell1Ds; e++){
-		int idV1 = mesh.Cell1DsId(0,e);
-		int idV2 = mesh.Cell1DsId(1,e);
+		int idV1 = mesh.Cell1DsExtrema(0,e);
+		int idV2 = mesh.Cell1DsExtrema(1,e);
 		Vector3d coordV1 = mesh.Cell0DsCoordinates.col(idV1);
 		Vector3d coordV2 = mesh.Cell0DsCoordinates.col(idV2);
-		double edgeLenght = (coordV1-corrdV2).norm();
+		double edgeLenght = (coordV1-coordV2).norm();
 		weights(idV1, idV2) = edgeLenght;
 		weights(idV2, idV1) = edgeLenght;
 		}
 	return;
 }
 
-bool FindShortestPath(const PolyhedralMesh& mesh, sourceNode, destinationNode)
+/*void ComputeDistances(const vector<list<int>>& adjList, const int& s, const MatrixXd& weights, const int& n, vector<int>& pred,  vector<double>& dist){
+	//Inizializzo il vettore dei precedenti e quello delle distanze.
+	for (int i = 0; i < n; i++){
+		pred[i] = -1;
+		dist[i] = INFINITY;
+	}
+	
+	//Inizializzo pred[s] e dist[s].
+	pred[s] = s;
+	dist[s] = 0;
+	
+	//Creo e riempio la coda con priorità.
+	vector<pair<double, int>> priorityQueue;
+	//reserve
+	for (int i = 0; i < n; i++){
+		priorityQueue[i] = pair(dist[i], i);
+		cout << "PQ[" << i << "] = " << dist[i] << " " << i << endl;
+	}
+	
+	bool dreached = false;
+	make_heap(priorityQueue,<);
+	while (!dreached){
+		pop_heap(priorityQueue.begin(), priorityQueue.end()-1);
+		
+	}
+	
+}*/
+
+void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int& d, const MatrixXd& weights, const int& V, vector<int>& pred, vector<double>& dist){
+	//Riempio il vettore dei predecessori e quello delle distanze.
+	for (int i = 0; i < V; i++){
+		pred[i] = -1;
+		dist[i] = INFINITY;	
+	}
+	
+	//Inizializzo il predecessore e la distanza del nodo sorgente s.
+	pred[s] = s;
+	dist[s] = 0;
+	
+	//Creo un vettore di n elementi per tenere traccia dei nodi  già  visitati.
+	vector<int> visitedNodes(V);
+	for (int i = 0; i < V; i++) {visitedNodes.push_back(0);}
+	
+	//Implemento la priority queue con un heap partendo da un vettore di tuple (distanza_nodo_i, nodo_i).
+	vector<pair<double,int>> priorityQueue(V);
+	for (int i = 0; i < V; i++){
+		priorityQueue.push_back(pair(dist[i], i));
+	}
+	make_heap(priorityQueue.begin(), priorityQueue.end(), greater<>{});
+		
+	for(int i = 0; i < V-1; i++){ //NOTA: uso un for per i che va da 0 a V-2 perché posso visitare al massimo V nodi e visitare l'ultimo (il più lontano) sarebbe superfluo
+		const int u = get<1>(priorityQueue.front()); //Leggo l'id del nodo con distanza minima.
+		
+		if (u == d) {break;} //Controllo se ho raggiunto il nodo destinazione, se sì esco  dal ciclo for.
+		
+		visitedNodes[u]  = 1; //Aggiorno visitedNodes, segno che il nodo u è stato visitato.
+		
+		//Dequeue
+		pop_heap(priorityQueue.begin(), priorityQueue.end());
+		priorityQueue.pop_back();
+		
+		for (int w : adjList[u]){
+			if (visitedNodes[w] != 0) {continue;} //Se ho già visitato il nodo w, passo al sucessivo
+			if (dist[w] > dist[u] + weights(u,w)){
+				pred[w] = u;
+				dist[w] = dist[u] + weights(u,w);
+				priorityQueue.push_back(pair(dist[w],w));
+				push_heap(priorityQueue.begin(), priorityQueue.end(), greater<>{});
+			}
+		}
+		
+		cout << "Nodo estratto:" << u << endl;
+		for (int i = 0; i < V; i++) {cout << visitedNodes[i] << "  ";}
+		cout << endl;
+		for (int i = 0; i < V; i++) {cout << dist[i] << "  ";}
+		cout << endl;
+		for (int i = 0; i < V; i++) {cout << pred[i] << "  ";}
+		cout << endl;
+	
+	}
+	 
+	return;
+}
+
+bool FindShortestPath(const PolyhedralMesh& mesh, const int& sourceNode, const int& destinationNode)
 {
-	int V = mesh.NumCell0Ds;
+	const int V = mesh.NumCell0Ds;
 	
 	if (sourceNode >= V || destinationNode >= V ){
 		cerr << "Id vertici non validi." << endl;
@@ -58,8 +152,52 @@ bool FindShortestPath(const PolyhedralMesh& mesh, sourceNode, destinationNode)
 	CreateAdjacencyList(mesh, adjacencyList);
 	
 	//Creo la matrice dei pesi.
-	MatrixXd weightsEdges = Ones(V,V)*INFINITY;
+	MatrixXd weightsEdges = MatrixXd::Ones(V,V)*INFINITY;
 	CreateWheightsMatrix(mesh, weightsEdges);
+	cout << "weights:\n" << weightsEdges << endl;
+	
+	vector<int> predecessors(V);
+	vector<double> distances(V);
+	ComputeDistances(adjacencyList, sourceNode, destinationNode, weightsEdges, V, predecessors, distances);
+	
+	//Calcolo il numero di lati nel percorso minimo 
+	//e aggiorno la proprietà ShortPath dei nodi e dei lati che compongono il percorso.
+	int ShortPath = 1;
+	unsigned int numEdges =0;
+	double pathLenght = distances[destinationNode];
+	int currentNode = destinationNode;
+	while (pathLenght != 0) {
+		numEdges++;
+		
+		/*const auto it0D = mesh.ShortPathCell0Ds.find(ShortPath);
+		if(it0D == mesh.ShortPathCell0Ds.end())
+		{
+			mesh.ShortPathCell0Ds.insert({ShortPath, {currentNode}});
+		}
+		else
+		{
+			it0D->second.push_back(currentNode);
+		}*/
+		
+		
+		int edgeId = FindEdge(mesh, currentNode, predecessors[currentNode]);
+		if (edgeId < 0 || edgeId >= V){
+			cerr << "Id lato non valido trovato." << endl;
+			return false;
+		}
+		/*
+		const auto it1D = mesh.ShortPathCell1Ds.find(1);
+		if (it1D != mesh.ShortPathCell1Ds.end()) {
+			it1D->second.push_back(edgeId);
+		}
+		else {
+			mesh.ShortPathCell1Ds.insert({1,{edgeId}});
+		}*/
+		
+		pathLenght = distances[predecessors[currentNode]];
+		currentNode = predecessors[currentNode];
+	}
+	
 	return true;
 }
 
@@ -70,10 +208,10 @@ int main()
     string file2Ds;
     string file3Ds;
 	
-	file0Ds = "./Cell0Ds_octahedron.csv";
-	file1Ds = "./Cell1Ds_octahedron.csv";
-	file2Ds = "./Cell2Ds_octahedron.csv";
-	file3Ds = "./Cell3Ds_octahedron.csv";
+	file0Ds = "../PlatonicSolid/icosahedron/Cell0Ds.txt";
+	file1Ds = "../PlatonicSolid/icosahedron/Cell1Ds.txt";
+	file2Ds = "../PlatonicSolid/icosahedron/Cell2Ds.txt";
+	file3Ds = "../PlatonicSolid/icosahedron/Cell3Ds.txt";
 	
 	PolyhedralMesh poly1;
 	PolyhedralMesh poly2;
@@ -85,7 +223,7 @@ int main()
 	};
 	
 	int s = 0;
-	int s = 3;
+	int d = 3;
 	FindShortestPath(poly1, s, d);
 	
 	/*
@@ -142,6 +280,10 @@ int main()
 	*/
 	return 0;
 }
+
+
+
+
 
 /*
 bool PROVADualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual) 

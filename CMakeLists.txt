@@ -65,7 +65,7 @@ list(APPEND ${PROJECT_NAME}_test_includes ${${PROJECT_NAME}_includes} ${src_test
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/tetrahedron/Cell0Ds.txt  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/tetrahedron/Cell1Ds.txt  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/tetrahedron/Cell2Ds.txt ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/tetrahedron/Cell3Ds.txt 
 	${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/octahedron/Cell0Ds.txt  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/octahedron/Cell1Ds.txt  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/octahedron/Cell2Ds.txt ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/octahedron/Cell3Ds.txt 
 	${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/icosahedron/Cell0Ds.txt  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/icosahedron/Cell1Ds.txt  ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/icosahedron/Cell2Ds.txt ${CMAKE_CURRENT_SOURCE_DIR}/PlatonicSolid/icosahedron/Cell3Ds.txt
-      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 # Create executable
 ################################################################################
