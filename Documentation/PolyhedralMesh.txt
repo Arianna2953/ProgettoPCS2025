@@ -40,19 +40,22 @@ struct PolyhedralMesh {
       + bool Exportfile3Ds(const PolyhedralMesh& polyNew)
       + bool ExportPolyhedron(const PolyhedralMesh& polyNew)
 
-    + void TriangulateFaces(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& p, const int& q, const int& b, const int& c)
     + void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& p, const int& q, const int& n)
     + void  TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& n) : void
     + int  CheckAddEdges(PolyhedralMesh& poly, const Vector2i& edge, int& id_edge)
     + int CheckAddVertices(PolyhedralMesh& poly, const Vector3d& vertex, int& id_vert)
     + bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
-    + SHORTPATH
+    + int int FindEdge(const PolyhedralMesh& mesh, const int& v0, const int& v1)
+    + void CreateAdjacencyList(const PolyhedralMesh& mesh, vector<list<int>>& adjList)
+    + void CreateWheightsMatrix(const PolyhedralMesh& mesh, MatrixXd& weights)
+    + void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int& d, const MatrixXd& weights, const int& V, vector<int>& pred, vector<double>& dist)
+    + bool FindShortestPath(const PolyhedralMesh& mesh, const int& sourceNode, const int& destinationNode)
     
 .. TESTPOLYGON ..
 
-Test1
-Test2
-INSERIRE
+Test1                                     Test3
+Test2                                     Test4
+INSERIRE tutti i vari test
 
 }
 

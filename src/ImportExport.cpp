@@ -418,7 +418,7 @@ bool Exportfile0Ds(const PolyhedralMesh& polyNew)
 		}*/
 		//list<int> marker=polyNew.MarkerCell0Ds.at(id);
 		
-		int shortpathCode;
+		int shortpathCode = -1;
         for (const auto& [code, ids] : polyNew.ShortPathCell0Ds) {
             if (find(ids.begin(), ids.end(), id) != ids.end()) {
                 shortpathCode = code;
@@ -463,7 +463,7 @@ bool Exportfile1Ds(const PolyhedralMesh & polyNew)
 		}*/
 		//list<int> marker=polyNew.MarkerCell1Ds.at(id);
 		
-		int shortpathCode;
+		int shortpathCode = -1;
 		for (const auto& [code, ids] : polyNew.ShortPathCell1Ds) {
 			if (find(ids.begin(), ids.end(), id) != ids.end()) {
 				shortpathCode = code;

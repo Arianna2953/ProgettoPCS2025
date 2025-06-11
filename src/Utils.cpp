@@ -43,7 +43,7 @@ int CheckAddVertices(PolyhedralMesh& poly, const Vector3d& vertex, int& id_vert)
 	}
 	id_vert++;
 	poly.Cell0DsId.push_back(id_vert);
-	poly.Cell0DsCoordinates.col(id_vert) = vertex;
+	poly.Cell0DsCoordinates.col(id_vert) = vertex; 
 	poly.ShortPathCell0Ds[0].push_back(id_vert);
 	
 	return id_vert;
@@ -255,18 +255,25 @@ void TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,
 				
 				// baricentro del primo triangolo con "punta in su" 
 				Vector3d centroid1 = (polyNew.Cell0DsCoordinates.col(vert1) + polyNew.Cell0DsCoordinates.col(vert2) + polyNew.Cell0DsCoordinates.col(vert3)) / 3.0;
-				int id_centroid1 = CheckAddVertices(polyNew,centroid1,idV_new);
 				
+				if (centroid1.norm() < 1e-16) {
+					cerr << "Warning: il vettore considerato ha lunghezza nulla";
+					break;}
+				centroid1.normalize();
+				
+				int id_centroid1 = CheckAddVertices(polyNew,centroid1,idV_new);
 				centroidPosition(i,p) = id_centroid1;
 				p++;
 				
 				if(j == 0){
 					Vector3d midPoint = (polyNew.Cell0DsCoordinates.col(vert1) + polyNew.Cell0DsCoordinates.col(vert2)) / 2.0;
-					int id_midPoint = CheckAddVertices(polyNew,midPoint,idV_new);
+					
 					if (midPoint.norm() < 1e-16) {
 						cerr << "Warning: il vettore considerato ha lunghezza nulla";
 						break;}
 					midPoint.normalize();
+					
+					int id_midPoint = CheckAddVertices(polyNew,midPoint,idV_new);
 					
 					//triangolo "sopra"
 					int id1n = CheckAddEdges(polyNew, {vert1, id_centroid1}, idE_new);
@@ -291,13 +298,14 @@ void TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,
 				//creo punto medio su lato destro e creo i due triangoli corrispondenti
 				if(i == j){
 					Vector3d midPoint = (polyNew.Cell0DsCoordinates.col(vert1) + polyNew.Cell0DsCoordinates.col(vert3)) / 2.0;
-					int id_midPoint = CheckAddVertices(polyNew,midPoint,idV_new);
-					
+										
 					if (midPoint.norm() < 1e-16) {
 						cerr << "Warning: il vettore considerato ha lunghezza nulla";
 						break;}
 					midPoint.normalize();
 					
+					int id_midPoint = CheckAddVertices(polyNew,midPoint,idV_new);
+
 					//triangolo "sopra"
 					int id1n = CheckAddEdges(polyNew, {vert1, id_centroid1}, idE_new);
 					int id2n = CheckAddEdges(polyNew, {id_centroid1, id_midPoint}, idE_new);
@@ -323,12 +331,13 @@ void TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,
 				//creo punto medio su lato inferiore e creo i due triangoli corrispondenti
 				if(i == n-1){
 					Vector3d midPoint = (polyNew.Cell0DsCoordinates.col(vert2) + polyNew.Cell0DsCoordinates.col(vert3)) / 2.0;
-					int id_midPoint = CheckAddVertices(polyNew,midPoint,idV_new);
 					
 					if (midPoint.norm() < 1e-16) {
 						cerr << "Warning: il vettore considerato ha lunghezza nulla";
 						break;}
 					midPoint.normalize();
+					
+					int id_midPoint = CheckAddVertices(polyNew,midPoint,idV_new);
 					
 					//triangolo "destra"
 					int id1n = CheckAddEdges(polyNew, {vert2, id_centroid1}, idE_new);
@@ -358,7 +367,14 @@ void TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,
 					
 					// baricentro del primo triangolo con "punta in giù" 
 					Vector3d centroid2 = (polyNew.Cell0DsCoordinates.col(vert1) + polyNew.Cell0DsCoordinates.col(vert3) + polyNew.Cell0DsCoordinates.col(vert4)) / 3.0;
-					int id_centroid2 = CheckAddVertices(polyNew,centroid2,idV_new);					
+					
+					if (centroid2.norm() < 1e-16) {
+						cerr << "Warning: il vettore considerato ha lunghezza nulla";
+						break;}
+					centroid2.normalize();
+					
+					int id_centroid2 = CheckAddVertices(polyNew,centroid2,idV_new);
+					
 					centroidPosition(i,p) = id_centroid2;
 					p++;
 				}					
