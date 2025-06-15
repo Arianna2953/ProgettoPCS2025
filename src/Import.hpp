@@ -1,4 +1,3 @@
-/*
 #pragma once
 #include <iostream>
 #include "PolyhedralMesh.hpp"
@@ -41,4 +40,3 @@ bool ImportCell2Ds(const string& file2Ds, PolyhedralMesh& mesh);
 bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh);
 
 }
-/*

@@ -1,4 +1,3 @@
-/*
 #pragma once
 #include <iostream>
 #include "PolyhedralMesh.hpp"
@@ -35,4 +34,3 @@ int CheckAddEdges(PolyhedralMesh& poly, const Vector2i& edge, int& id_edge);
 int CheckAddVertices(PolyhedralMesh& poly, const Vector3d& vertex, int& id_vert);
 
 }
-*/

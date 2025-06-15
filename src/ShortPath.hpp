@@ -1,4 +1,3 @@
-/*
 #pragma once
 #include <iostream>
 #include "PolyhedralMesh.hpp"
@@ -45,4 +44,3 @@ void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int&
 bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& destinationNode);
 
 }
-*/

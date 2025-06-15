@@ -2,8 +2,11 @@
 #include <string>
 #include <cctype>  // per isdigit()
 #include "PolyhedralMesh.hpp"
-#include "ImportExport.hpp"
-#include "Utils.hpp"
+#include "Import.hpp"
+#include "Export.hpp"
+#include "Triangulation.hpp"
+#include "Dual.hpp"
+#include "ShortPath.hpp"
 #include "UCDUtilities.hpp"
 
 using namespace std;

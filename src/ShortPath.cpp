@@ -1,4 +1,3 @@
-/*
 #include "ShortPath.hpp"
 #include <iostream>
 #include <fstream>
@@ -185,4 +184,4 @@ bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& de
 
 
 }
-*/
+

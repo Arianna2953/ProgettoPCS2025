@@ -1,4 +1,4 @@
-/*
+
 #pragma once
 #include <iostream>
 #include "PolyhedralMesh.hpp"
@@ -16,4 +16,3 @@ namespace PolyhedralLibrary
 bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual);
 
 }
-*/

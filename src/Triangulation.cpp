@@ -1,4 +1,3 @@
-/*
 #include "Triangulation.hpp"
 #include <iostream>
 #include <fstream>
@@ -462,4 +461,4 @@ void TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,
 
 
 }
-*/
+

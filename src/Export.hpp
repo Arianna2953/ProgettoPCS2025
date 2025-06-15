@@ -1,4 +1,3 @@
-/*
 #pragma once
 #include <iostream>
 #include "PolyhedralMesh.hpp"
@@ -31,4 +30,3 @@ bool Exportfile3Ds(const PolyhedralMesh & polyNew);
 bool ExportPolyhedron(const PolyhedralMesh & polyNew);
 
 }
-*/

@@ -1,4 +1,3 @@
-/*
 #include "Dual.hpp"
 #include <iostream>
 #include <fstream>
@@ -173,4 +172,3 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual){
 }
 
 }
-*/
