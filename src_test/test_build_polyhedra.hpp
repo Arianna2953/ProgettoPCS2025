@@ -5,8 +5,11 @@
 #include <vector>
 
 #include <gtest/gtest.h>
-#include "Utils.hpp"
-#include "ImportExport.hpp"
+#include "Import.hpp"
+#include "Export.hpp"
+#include "Triangulation.hpp"
+#include "Dual.hpp"
+#include "ShortPath.hpp"
 #include "PolyhedralMesh.hpp"
 
 using namespace std;
@@ -120,8 +123,8 @@ TEST(TestChecking, TestCheckAddEdges2b)
 
 //si potrebbero fare questi test sopra anche senza file di input, ma con una figura geometrica a caso, con vertici semplici
 
-TEST(TestChecking, TestCheckAddEdges2) {
-	
+TEST(TestChecking, TestCheckAddEdges2)
+{
 	//aggiungo un nuovo lato che non esiste
     PolyhedralMesh mesh;
     mesh.Cell1DsExtrema = MatrixXi::Zero(2,10);
@@ -129,10 +132,10 @@ TEST(TestChecking, TestCheckAddEdges2) {
 	mesh.Cell1DsExtrema.col(1) = Vector2i(1,2);
 	mesh.Cell1DsExtrema.col(2) = Vector2i(2,0);
 	mesh.Cell1DsId = {0,1,2};
-	int idE_origin = 2;
+	int id_iniziale = 2;
     Vector2i edge(2,3);
-    int idE = CheckAddEdges(mesh, edge, idE_origin);
-    EXPECT_EQ(idE, 3);              
+    int id_prova = CheckAddEdges(mesh, edge, id_iniziale);
+    EXPECT_EQ(id_prova, 3);              
 }
 
 
@@ -167,6 +170,7 @@ TEST(TestChecking, TestCheckAddVertices2)
 
 TEST(TestChecking, TestTriangulationTypeI)
 {
+	// confrontro tra numero di vertici, lati e facce del poliedro triangolato (ootenuto con la funzione) e i valori che si ottengono applicando le formule
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -182,7 +186,7 @@ TEST(TestChecking, TestTriangulationTypeI)
 	int p=3;
 	int q=4;
 	int n=2;
-	TriangulationTypeI(OldMesh,NewMesh,p,q,n);
+	TriangulationTypeI(OldMesh,NewMesh,p,q,n); 
 	PolyhedralMesh mesh;
 	mesh.Cell3DsId = {0};
 	mesh.Cell3DsVertices = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}};
@@ -199,6 +203,7 @@ TEST(TestChecking, TestTriangulationTypeI)
 
 TEST(TestChecking, TestTriangulationTypeII)
 {
+	// confrontro tra numero di vertici, lati e facce del poliedro triangolato (ootenuto con la funzione) e i valori che si ottengono applicando le formule
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -229,25 +234,9 @@ TEST(TestChecking, TestTriangulationTypeII)
 	EXPECT_EQ(NewMesh.Cell3DsFaces,mesh.Cell3DsFaces);
 }
 
-/*TEST(TestChecking, TestTriangulateFaces)
-{
-	PolyhedralMesh OldMesh;
-	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
-	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
-	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
-	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
-	PolyhedralMesh NewMesh;
-	int p=3;
-	int q=4;
-	int b=2;
-	int c=2;
-	TriangulateFaces(OldMesh,NewMesh,p,q,b,c);
-	EXPECT_EQ();
-}
-
 TEST(TestChecking, TestDualConstructor)
 {
+	// confrontro tra il numero di vertici, lati e facce del poliedro duale che si ottine utilizzando la funzione e i valori che si ottengono applicando le formule
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -256,6 +245,38 @@ TEST(TestChecking, TestDualConstructor)
 	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
 	PolyhedralMesh DualMesh;
 	DualConstructor(OldMesh,DualMesh);
-	EXPECT_EQ();
-}*/
+	PolyhedralMesh mesh;
+	mesh.Cell3DsId = {0};
+	mesh.Cell3DsVertices = {{0,1,2,3,4,5,6,7}};
+	mesh.Cell3DsEdges = {{0,1,2,3,4,5,6,7,8,9,10,11}};
+	mesh.Cell3DsFaces = {{0,1,2,3,4,5}};
+	EXPECT_EQ(DualMesh.Cell3DsId,mesh.Cell3DsId);
+	EXPECT_EQ(DualMesh.Cell3DsVertices,mesh.Cell3DsVertices);
+	EXPECT_EQ(DualMesh.Cell3DsEdges,mesh.Cell3DsEdges);
+	EXPECT_EQ(DualMesh.Cell3DsFaces,mesh.Cell3DsFaces);
+}
+
+TEST(TestChecking, TestFindShortestPath)
+{
+	// controllo del cammino minimo
+	PolyhedralMesh Mesh;
+	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
+	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
+	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
+	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
+	ImportMesh(Mesh,file0Ds,file1Ds,file2Ds,file3Ds);
+	PolyhedralMesh NewMesh;
+	int p=3;
+	int q=4;
+	int n=2;
+	TriangulationTypeI(Mesh,NewMesh,p,q,n);
+	int nodo_partenza=3;
+	int nodo_arrivo=15;
+	FindShortestPath(NewMesh,nodo_partenza,nodo_arrivo);
+	PolyhedralMesh mesh;
+	mesh.ShortPathCell0Ds[1] = {3,1,2,5,15};
+	mesh.ShortPathCell1Ds[1] = {3,1,8,34};
+	EXPECT_EQ(NewMesh.ShortPathCell0Ds[1],mesh.ShortPathCell0Ds[1]);
+	EXPECT_EQ(NewMesh.ShortPathCell1Ds[1],mesh.ShortPathCell1Ds[1]);
+}
 }
