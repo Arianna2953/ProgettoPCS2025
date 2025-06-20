@@ -67,42 +67,42 @@ namespace PolyhedralLibrary{
 	
 TEST(TestChecking, TestCheckAddEdges1)
 {
-	PolyhedralMesh OldMesh;
+	PolyhedralMesh mesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
 	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
 	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
+	ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds);
 	Vector2i edge = {0,5};
-	int id_prova = CheckAddEdges(OldMesh,edge,OldMesh.NumCell1Ds);
+	int id_prova = CheckAddEdges(mesh,edge,mesh.NumCell1Ds);
 	int id_corretto = 3; //3 è l'id corrispondente al lato con gli estremi indicati in id_prova
 	EXPECT_EQ(id_prova,id_corretto);
 }
 
-TEST(TestChecking, TestCheckAddEdges2)
+/*TEST(TestChecking, TestCheckAddEdges1b)
 {
-    PolyhedralMesh OldMesh;
+    PolyhedralMesh mesh;
     string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
     string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
     string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
     string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-    ImportMesh(OldMesh, file0Ds, file1Ds, file2Ds, file3Ds);
-    int originalNumEdges = OldMesh.NumCell1Ds;
+    ImportMesh(mesh, file0Ds, file1Ds, file2Ds, file3Ds);
+    int originalNumEdges = mesh.NumCell1Ds;
     Vector2i edge = {4, 5}; //nuovo lato da aggiungere, non presente
     // Pre-allocazione se necessario (se CheckAddEdges assume spazio sufficiente)
-    if (OldMesh.Cell1DsExtrema.cols() <= originalNumEdges) {
-        OldMesh.Cell1DsExtrema.conservativeResize(2, originalNumEdges + 10);
+    if (mesh.Cell1DsExtrema.cols() <= originalNumEdges) {
+        mesh.Cell1DsExtrema.conservativeResize(2, originalNumEdges + 10);
     }
     int id_edge = originalNumEdges - 1; 
-    int returnedId = CheckAddEdges(OldMesh, edge, id_edge);
+    int returnedId = CheckAddEdges(mesh, edge, id_edge);
     EXPECT_EQ(returnedId, originalNumEdges);
-    EXPECT_EQ(OldMesh.Cell1DsId.back(), originalNumEdges);
-    EXPECT_EQ(OldMesh.Cell1DsExtrema(0, originalNumEdges), 4);
-    EXPECT_EQ(OldMesh.Cell1DsExtrema(1, originalNumEdges), 5);
+    EXPECT_EQ(mesh.Cell1DsId.back(), originalNumEdges);
+    EXPECT_EQ(mesh.Cell1DsExtrema(0, originalNumEdges), 4);
+    EXPECT_EQ(mesh.Cell1DsExtrema(1, originalNumEdges), 5);
 }
 
-/*
-TEST(TestChecking, TestCheckAddEdges2)
+
+TEST(TestChecking, TestCheckAddEdges2b)
 {
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
@@ -120,7 +120,7 @@ TEST(TestChecking, TestCheckAddEdges2)
 
 //si potrebbero fare questi test sopra anche senza file di input, ma con una figura geometrica a caso, con vertici semplici
 
-TEST(CheckAddEdgesTest, TestCheckAddEdges3) {
+TEST(TestChecking, TestCheckAddEdges2) {
 	
 	//aggiungo un nuovo lato che non esiste
     PolyhedralMesh mesh;
@@ -138,20 +138,21 @@ TEST(CheckAddEdgesTest, TestCheckAddEdges3) {
 
 TEST(TestChecking, TestCheckAddVertices1)
 {
-	PolyhedralMesh OldMesh;
+	PolyhedralMesh mesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
 	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
 	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
+	ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds);
 	Vector3d vertex={0,0,1};
-	int id_prova=CheckAddVertices(OldMesh,vertex,OldMesh.NumCell0Ds);
-	int id_corretto=4;
+	int id_prova=CheckAddVertices(mesh,vertex,mesh.NumCell0Ds);
+	int id_corretto=4; //4 è l'id corrispondente al vertice con gli estremi indicati in id_prova
 	EXPECT_EQ(id_prova,id_corretto);
 }
 
 TEST(TestChecking, TestCheckAddVertices2)
 {
+	//aggiungo un nuovo vertice che non esiste
 	PolyhedralMesh mesh;
     mesh.Cell0DsCoordinates = MatrixXd::Zero(3,10);
 	mesh.Cell0DsCoordinates.col(0) = Vector3d(1, 0, 1);
@@ -164,7 +165,7 @@ TEST(TestChecking, TestCheckAddVertices2)
 	EXPECT_EQ(id_prova,3);
 }
 
-/*TEST(TestChecking, TestTriangulationTypeI)
+TEST(TestChecking, TestTriangulationTypeI)
 {
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
@@ -172,12 +173,28 @@ TEST(TestChecking, TestCheckAddVertices2)
 	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
 	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
 	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
+	/*OldMesh.Cell0DsCoordinates = MatrixXd::Zero(3,10);
+	OldMesh.Cell0DsCoordinates.col(0) = Vector3d(0, 0, 0);
+	OldMesh.Cell0DsCoordinates.col(1) = Vector3d(1, 0, 0);
+	OldMesh.Cell0DsCoordinates.col(2) = Vector3d(0.5, 0.8660254038, 0);
+	OldMesh.Cell2DsVertices = {{0,1,2}};*/
 	PolyhedralMesh NewMesh;
-	int p=4;
-	int q=3;
-	int n=0;
+	int p=3;
+	int q=4;
+	int n=2;
 	TriangulationTypeI(OldMesh,NewMesh,p,q,n);
-	EXPECT_EQ();
+	PolyhedralMesh mesh;
+	mesh.Cell3DsId = {0};
+	mesh.Cell3DsVertices = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}};
+	mesh.Cell3DsEdges = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47}};
+	mesh.Cell3DsFaces = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31}};
+	//mesh.Cell3DsVertices = {{0,1,2,3,4,5,6,7,8,9}};
+	//mesh.Cell3DsEdges = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}};
+	//mesh.Cell3DsFaces = {{0}};
+	EXPECT_EQ(NewMesh.Cell3DsId,mesh.Cell3DsId);
+	EXPECT_EQ(NewMesh.Cell3DsVertices,mesh.Cell3DsVertices);
+	EXPECT_EQ(NewMesh.Cell3DsEdges,mesh.Cell3DsEdges);
+	EXPECT_EQ(NewMesh.Cell3DsFaces,mesh.Cell3DsFaces);
 }
 
 TEST(TestChecking, TestTriangulationTypeII)
@@ -188,13 +205,31 @@ TEST(TestChecking, TestTriangulationTypeII)
 	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
 	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
 	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
+	/*OldMesh.NumCell0Ds = 6;
+	OldMesh.NumCell1Ds = 12;
+	OldMesh.NumCell2Ds = 8;
+	OldMesh.Cell0DsCoordinates = MatrixXd::Zero(3,10);
+	OldMesh.Cell0DsCoordinates.col(0) = Vector3d(0, 0, 0);
+	OldMesh.Cell0DsCoordinates.col(1) = Vector3d(1, 0, 0);
+	OldMesh.Cell0DsCoordinates.col(2) = Vector3d(0.5, 0.8660254038, 0);
+	OldMesh.Cell2DsVertices = {{0,1,2}};*/
 	PolyhedralMesh NewMesh;
-	int n=0;
+	//int p=3;
+	//int q=4;
+	int n=2;
 	TriangulationTypeII(OldMesh,NewMesh,n);
-	EXPECT_EQ();
+	PolyhedralMesh mesh;
+	mesh.Cell3DsId = {0};
+	mesh.Cell3DsVertices = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73}};
+	mesh.Cell3DsEdges = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215}};
+	mesh.Cell3DsFaces = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143}};
+	EXPECT_EQ(NewMesh.Cell3DsId,mesh.Cell3DsId);
+	EXPECT_EQ(NewMesh.Cell3DsVertices,mesh.Cell3DsVertices);
+	EXPECT_EQ(NewMesh.Cell3DsEdges,mesh.Cell3DsEdges);
+	EXPECT_EQ(NewMesh.Cell3DsFaces,mesh.Cell3DsFaces);
 }
 
-TEST(TestChecking, TestTriangulateFaces)
+/*TEST(TestChecking, TestTriangulateFaces)
 {
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
