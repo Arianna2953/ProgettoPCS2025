@@ -137,6 +137,13 @@ int main(int argc, char* argv[]) {
 		cout << "valori di b e c non validi" << endl;
 	}
 	
+	//trovo il percorso minimo sul poliedro tra i vertici v0 e v1 
+	if(v0 >= 0 && v1 >= 0){
+		FindShortestPath(mesh,v0,v1);	
+	}
+	
+	ExportPolyhedron(mesh);
+	
 	ExportPolyhedron(mesh);
 	
 //esporto file per visualizzazione
