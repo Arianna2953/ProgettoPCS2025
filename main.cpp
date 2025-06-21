@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     int q = stoi(argv[2]);
     int b = stoi(argv[3]);
     int c = stoi(argv[4]);
-    int v0 = 0, v1 = 0;
+    int v0 = -1, v1 = -1;
     if (argc == 7) {
         v0 = stoi(argv[5]);
         v1 = stoi(argv[6]);
@@ -144,7 +144,6 @@ int main(int argc, char* argv[]) {
 	
 	ExportPolyhedron(mesh);
 	
-	ExportPolyhedron(mesh);
 	
 //esporto file per visualizzazione
 Gedim::UCDUtilities utilities;
