@@ -5,9 +5,12 @@
 #include <numeric> 
 #include <chrono>
 #include <vector>
+#include "Import.hpp"
+#include "Export.hpp"
+#include "Triangulation.hpp"
+#include "Dual.hpp"
+#include "ShortPath.hpp"
 #include "PolyhedralMesh.hpp"
-#include "ImportExport.hpp"
-#include "Utils.hpp"
 #include "UCDUtilities.hpp"
 
 
@@ -17,7 +20,7 @@ using namespace PolyhedralLibrary;
 
 int main() 
 {
-	string file0Ds;
+	/*string file0Ds;
     string file1Ds;
     string file2Ds;
     string file3Ds;
@@ -27,11 +30,11 @@ int main()
 	file2Ds = "./Cell2Ds_icosahedron.csv";
 	file3Ds = "./Cell3Ds_icosahedron.csv";
 	
-	/*int p = 3;
+	int p = 3;
     int q = 3;
     int b = 2;
     int c = 0;
-    int v0 = 0, v1 = 0;*/
+    int v0 = 0, v1 = 0;
 	
 	PolyhedralMesh poly1;
 	PolyhedralMesh poly2;
@@ -45,5 +48,13 @@ int main()
     {
         cerr << "file not found" << endl;
         return false;
-    }
+    }*/
+	PolyhedralMesh mesh;
+	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
+	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
+	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
+	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
+	ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds);
+	vector<list<int>> adjList;
+	CreateAdjacencyList(mesh,adjList);
 }

@@ -1,8 +1,15 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include "Eigen/Eigen"
 #include <string>
+#include <cmath>
+#include <list>
+#include <map>
 #include <vector>
+#include <set>
 
 #include <gtest/gtest.h>
 #include "Import.hpp"
@@ -254,6 +261,84 @@ TEST(TestChecking, TestDualConstructor)
 	EXPECT_EQ(DualMesh.Cell3DsVertices,mesh.Cell3DsVertices);
 	EXPECT_EQ(DualMesh.Cell3DsEdges,mesh.Cell3DsEdges);
 	EXPECT_EQ(DualMesh.Cell3DsFaces,mesh.Cell3DsFaces);
+}
+
+TEST(TestChecking, TestFindEdge)
+{
+	PolyhedralMesh mesh;
+	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
+	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
+	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
+	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
+	ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds);
+	int v0=2;
+	int v1=4;
+	int edgeId=FindEdge(mesh,v0,v1);
+	EXPECT_EQ(edgeId,8);
+}
+
+TEST(TestChecking, TestCreateAdjacencyList)
+{
+	PolyhedralMesh mesh;
+	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
+	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
+	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
+	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
+	ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds);
+	vector<list<int>> adjList(mesh.NumCell0Ds);
+	CreateAdjacencyList(mesh,adjList);
+	vector<list<int>> lista_corretta= {{2,3,4,5},{2,3,4,5},{0,1,4,5},{0,1,4,5},{0,1,2,3},{0,1,2,3}};
+	EXPECT_EQ(adjList,lista_corretta);
+}
+
+TEST(TestChecking, TestCreateWeightsMatrix)
+{
+	PolyhedralMesh mesh;
+	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
+	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
+	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
+	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
+	ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds);
+	MatrixXd weightsEdges = MatrixXd::Ones(mesh.NumCell0Ds,mesh.NumCell0Ds);
+	CreateWeightsMatrix(mesh,weightsEdges);
+	MatrixXd matrice_corretta = MatrixXd::Ones(mesh.NumCell0Ds,mesh.NumCell0Ds);
+	/*MatrixXd matrice_corretta = MatrixXd::Ones(mesh.NumCell0Ds,mesh.NumCell0Ds);
+	matrice_corretta.col(0) = Vector6d(1,1,1.41421,1.41421,1.41421,1.41421);
+	matrice_corretta.col(1) = Vector6d(1,1,1.41421,1.41421,1.41421,1.41421);
+	matrice_corretta.col(2) = Vector6d(1.41421,1.41421,1,1,1.41421,1.41421);
+	matrice_corretta.col(3) = Vector6d(1.41421,1.41421,1,1,1.41421,1.41421);
+	matrice_corretta.col(4) = Vector6d(1.41421,1.41421,1.41421,1.41421,1,1);
+	matrice_corretta.col(5) = Vector6d(1.41421,1.41421,1.41421,1.41421,1,1);*/
+	/*MatrixXd matrice_corretta = {
+		{1.0,1.0,1.41421,1.41421,1.41421,1.41421},
+		{1.0,1.0,1.41421,1.41421,1.41421,1.41421},
+		{1.41421,1.41421,1,1,1.41421,1.41421},
+		{1.41421,1.41421,1,1,1.41421,1.41421},
+		{1.41421,1.41421,1.41421,1.41421,1,1},
+		{1.41421,1.41421,1.41421,1.41421,1,1}
+		};*/
+	EXPECT_EQ(weightsEdges,matrice_corretta);	
+}
+
+TEST(TestChecking, TestComputeDistances)
+{
+	PolyhedralMesh mesh;
+	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
+	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
+	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
+	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
+	ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds);
+	vector<list<int>> adjacencyList(mesh.NumCell0Ds);
+	CreateAdjacencyList(mesh, adjacencyList);
+	MatrixXd weightsEdges = MatrixXd::Ones(mesh.NumCell0Ds,mesh.NumCell0Ds)*INFINITY;
+	CreateWeightsMatrix(mesh, weightsEdges);
+	vector<int> predecessors(mesh.NumCell0Ds);
+	vector<double> distances(mesh.NumCell0Ds);
+	int sourceNode=3;
+	int destinationNode=15;
+	ComputeDistances(adjacencyList, sourceNode, destinationNode, weightsEdges, mesh.NumCell0Ds, predecessors, distances);
+	double distanza_corretta=3.21143e-322;
+	EXPECT_EQ(distances[destinationNode],distanza_corretta);
 }
 
 TEST(TestChecking, TestFindShortestPath)
