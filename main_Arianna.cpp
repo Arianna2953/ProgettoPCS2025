@@ -20,7 +20,7 @@ using namespace PolyhedralLibrary;
 
 int main() 
 {
-	/*string file0Ds;
+	string file0Ds;
     string file1Ds;
     string file2Ds;
     string file3Ds;
@@ -48,13 +48,6 @@ int main()
     {
         cerr << "file not found" << endl;
         return false;
-    }*/
-	PolyhedralMesh mesh;
-	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
-	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
-	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
-	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-	ImportMesh(mesh,file0Ds,file1Ds,file2Ds,file3Ds);
-	vector<list<int>> adjList;
-	CreateAdjacencyList(mesh,adjList);
+    }
+	
 }
