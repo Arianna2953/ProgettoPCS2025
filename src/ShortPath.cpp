@@ -81,16 +81,16 @@ void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int&
 	for(int i = 0; i < V-1; i++){ //NOTA: uso un for per i che va da 0 a V-2 perché posso visitare al massimo V nodi e visitare l'ultimo (il più lontano) sarebbe superfluo
 		const int u = get<1>(priorityQueue.front()); //Leggo l'id del nodo con distanza minima.
 		
-		if (u == d) {break;} //Controllo se ho raggiunto il nodo destinazione, se sì esco  dal ciclo for.
+		if (u == d) {break;} //Controllo se ho raggiunto il nodo destinazione, se sì esco dal ciclo for.
 		
-		visitedNodes[u]  = 1; //Aggiorno visitedNodes, segno che il nodo u è stato visitato.
+		visitedNodes[u] = 1; //Aggiorno visitedNodes, segno che il nodo u è stato visitato.
 		
-		//Dequeue
+		//Dequeue, rimuovo il nodo u dalla priority queue.
 		pop_heap(priorityQueue.begin(), priorityQueue.end());
 		priorityQueue.pop_back();
 		
 		for (int w : adjList[u]){
-			if (visitedNodes[w] != 0) {continue;} //Se ho già visitato il nodo w, passo al sucessivo
+			if (visitedNodes[w] != 0) {continue;} //Se ho già visitato il nodo w, passo al sucessivo.
 			if (dist[w] > dist[u] + weights(u,w)){
 				pred[w] = u;
 				dist[w] = dist[u] + weights(u,w);
