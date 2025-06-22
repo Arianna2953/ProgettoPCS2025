@@ -5,9 +5,12 @@
 #include <numeric> 
 #include <chrono>
 #include <vector>
+#include "Import.hpp"
+#include "Export.hpp"
+#include "Triangulation.hpp"
+#include "Dual.hpp"
+#include "ShortPath.hpp"
 #include "PolyhedralMesh.hpp"
-#include "ImportExport.hpp"
-#include "Utils.hpp"
 #include "UCDUtilities.hpp"
 
 
@@ -27,11 +30,11 @@ int main()
 	file2Ds = "./Cell2Ds_icosahedron.csv";
 	file3Ds = "./Cell3Ds_icosahedron.csv";
 	
-	/*int p = 3;
+	int p = 3;
     int q = 3;
     int b = 2;
     int c = 0;
-    int v0 = 0, v1 = 0;*/
+    int v0 = 0, v1 = 0;
 	
 	PolyhedralMesh poly1;
 	PolyhedralMesh poly2;
@@ -46,4 +49,5 @@ int main()
         cerr << "file not found" << endl;
         return false;
     }
+	
 }

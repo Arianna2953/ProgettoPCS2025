@@ -41,7 +41,7 @@ void CreateAdjacencyList(const PolyhedralMesh& mesh, vector<list<int>>& adjList)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
-void CreateWheightsMatrix(const PolyhedralMesh& mesh, MatrixXd& weights){
+void CreateWeightsMatrix(const PolyhedralMesh& mesh, MatrixXd& weights){
 	for (int e = 0; e < mesh.NumCell1Ds; e++){
 		int idV1 = mesh.Cell1DsExtrema(0,e);
 		int idV2 = mesh.Cell1DsExtrema(1,e);
@@ -138,7 +138,7 @@ bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& de
 	
 	//Creo la matrice dei pesi.
 	MatrixXd weightsEdges = MatrixXd::Ones(V,V)*INFINITY;
-	CreateWheightsMatrix(mesh, weightsEdges);
+	CreateWeightsMatrix(mesh, weightsEdges);
 	
 	vector<int> predecessors(V);
 	vector<double> distances(V);
