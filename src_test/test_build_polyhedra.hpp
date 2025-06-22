@@ -357,11 +357,17 @@ TEST(TestChecking, TestFindShortestPath)
 	TriangulationTypeI(Mesh,NewMesh,p,q,n);
 	int nodo_partenza=3;
 	int nodo_arrivo=15;
-	FindShortestPath(NewMesh,nodo_partenza,nodo_arrivo);
+	unsigned int numero_lati=0;
+	double lunghezza_cammino=0.0;
+	FindShortestPath(NewMesh,nodo_partenza,nodo_arrivo,numero_lati,lunghezza_cammino);
 	PolyhedralMesh mesh;
 	mesh.ShortPathCell0Ds[1] = {3,1,2,5,15};
 	mesh.ShortPathCell1Ds[1] = {3,1,8,34};
+	unsigned int num_lati_corretto=5;
+	double lung_cammino_corretta=26.23;
 	EXPECT_EQ(NewMesh.ShortPathCell0Ds[1],mesh.ShortPathCell0Ds[1]);
 	EXPECT_EQ(NewMesh.ShortPathCell1Ds[1],mesh.ShortPathCell1Ds[1]);
+	EXPECT_EQ(numero_lati,num_lati_corretto);
+	EXPECT_EQ(lunghezza_cammino,lung_cammino_corretta);
 }
 }
