@@ -328,12 +328,16 @@ TEST(TestChecking, TestComputeDistances)
 	vector<double> distances(mesh.NumCell0Ds);
 	int sourceNode=3;
 	int destinationNode=15;
-	ComputeDistances(adjacencyList, sourceNode, destinationNode, weightsEdges, mesh.NumCell0Ds, predecessors, distances);
+	ComputeDistances(adjacencyList, sourceNode, destinationNode, weightsEdges, predecessors, distances);
 	double distanza_corretta=3.21143e-322;
 	EXPECT_EQ(distances[destinationNode],distanza_corretta);
 }
 
-/*TEST(TestChecking, TestFindShortestPath)
+bool isApprox(double a, double b, double tolerance = 1e-15) {
+  return abs(a - b) <= tolerance;
+}
+
+TEST(TestChecking, TestFindShortestPath)
 {
 	// controllo del cammino minimo
 	PolyhedralMesh Mesh;
@@ -353,13 +357,13 @@ TEST(TestChecking, TestComputeDistances)
 	double lunghezza_cammino=0.0;
 	FindShortestPath(NewMesh,nodo_partenza,nodo_arrivo,numero_lati,lunghezza_cammino);
 	PolyhedralMesh mesh;
-	mesh.ShortPathCell0Ds[1] = {3,1,2,5,15};
-	mesh.ShortPathCell1Ds[1] = {3,1,8,34};
-	unsigned int num_lati_corretto=5;
-	double lung_cammino_corretta=26.23;
+	mesh.ShortPathCell0Ds[1] = {3,4,15};
+	mesh.ShortPathCell1Ds[1] = {4,33};
+	unsigned int num_lati_corretto=2;
+	double lung_cammino_corretta= 1.7653668647301792e+00;
 	EXPECT_EQ(NewMesh.ShortPathCell0Ds[1],mesh.ShortPathCell0Ds[1]);
 	EXPECT_EQ(NewMesh.ShortPathCell1Ds[1],mesh.ShortPathCell1Ds[1]);
 	EXPECT_EQ(numero_lati,num_lati_corretto);
-	EXPECT_EQ(lunghezza_cammino,lung_cammino_corretta);
-}*/
+	EXPECT_TRUE(isApprox(lunghezza_cammino,lung_cammino_corretta, 1e-15));
+}
 }
