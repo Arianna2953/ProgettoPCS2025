@@ -1,0 +1,17 @@
+@startuml
+start
+
+:Controlla se esiste un punto corrispondente al vertice dato in input nella struct;
+if (la distanza tra il vertice in input e il vertice corrente è nulla) then (sì)
+    :restituisce id del vertice corrispondente già esistente;
+    stop
+else
+    :aggiunge il nuovo vertice nella struct
+    incrementando di 1 l'id e inserendo le sue coordinate;
+    :inizializzo il marker "ShortPath" a 0;
+    :restituisce l'id del nuovo vertice inserito;
+endif
+
+stop
+@enduml
+

@@ -1,0 +1,17 @@
+@startuml
+start
+
+:Estrae gli estremi del lato che si vuole controllare w0 e w1;
+:Controlla se tale lato esiste già tra i lati della struct;
+if ((w0 == u0 && w1 == u1) || (w0 == u1 && w1 == u0)) then (sì)
+    :restituisce id del lato corrispondente già esistente;
+    stop
+else
+    :aggiunge il nuovo lato nella struct
+    incrementando di 1 l'id e inserendo gli estremi;
+    :inizializzo il marker "ShortPath" a 0;
+    :restituisce l'id del nuovo lato inserito;
+endif
+
+stop
+@enduml

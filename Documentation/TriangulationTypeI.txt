@@ -1,0 +1,34 @@
+@startuml
+start
+title Funzione "TriangulationTypeI"
+:Inizializzo la struttura della mesh predisponendo 
+spazio a sufficienza in base ai valori di p,q,b,c inseriti;
+
+repeat
+
+  :Prende vertici v0, v1, v2 della faccia considerata;
+  note left
+    itera su ogni faccia del poliedro;
+  end note
+  
+  :Crea nuovi vertici con coordinate baricentriche 
+  (moltiplico ogni vertice per una combinazione di coefficienti opportuna);
+  :Proietto il nuovo vertice sulla sfera unitaria;
+  
+  if(il vertice creato non è presente nella mesh) then (sì)
+    :Aggiungo il nuovo vertice (Cell0Ds);
+  else
+    :Restituisco l'id del vertice corrispondente già esistente;
+  endif
+  :Inserisco l'id dei vertici della faccia in una matrice, disposti per riga;
+
+  :Genero i triangoli sfruttando gli indici delle posizioni nella matrice;
+  :Controllo se i lati creati (Cell1Ds) esistono ed eventualmente il aggiungo alla mesh (CheckAddEdges);
+    :Aggiungo le nuove facce create alla mesh (Cell2Ds);
+   
+repeat while (Ci sono altre facce del poliedro platonico?) is (yes) not (no)
+:Inserisco i dati relativi a Cell3Ds 
+nella mesh (id, veritici, lati, facce);
+
+stop
+@enduml

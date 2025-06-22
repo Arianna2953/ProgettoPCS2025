@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
 		n = max(b,c);
 		cout << "Triangolazione di 'tipo 1'" << endl;
 		if(dualize == true){
-			TriangulationTypeI(regularPolyhedron, toDualize,p,q,n);
+			TriangulationTypeI(regularPolyhedron, toDualize,q,p,n);
 			DualConstructor(toDualize,mesh);
 		}
 		else{

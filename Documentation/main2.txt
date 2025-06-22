@@ -1,0 +1,53 @@
+@startuml
+
+start
+:Legge input (p,q,b,c,v0,v1) (v0,v1 opzionali);
+
+
+switch (casi possibili)
+case (p == 3 & q == 3)
+   :Importa Tetraedro;
+case (p == 3 & q == 4)
+   :Importa Ottaedro;
+case (p == 3 & q == 5)
+   :Importa Icosaedro;
+case (p == 4 & q == 3)
+    :Importa Ottaedro;
+    :dualize = true;
+case (p == 5 & q == 3)   
+   :Importa Icosaedro;
+   :dualize = true;
+case (altrimenti)
+   :Errore: valori non accettabile;
+   stop
+endswitch
+
+if ((b==0 & c>=1) oppure (b>=1 & c==0)) then (sì)
+    :n = max{b,c};
+    if (dualize == true) then (sì)
+        :TriangulationTypeI;
+        :DualConstructor;
+    else
+        :TriangulationTypeI;
+    endif
+elseif (b==c (non nulli)) then (sì)
+    :n = b;
+    if (dualize == true) then (sì)
+        :TriangulationTypeII;
+        :DualConstructor;
+    else
+        :TriangulationTypeII;
+    endif
+   
+else
+    :valori di b e c non validi;
+    stop
+endif
+if (sono stati inseriti i vertici v0 e v1) then (sì)
+ :FindShortestPath;
+endif
+    :Esporta il poliedro con file .txt per tutte le proprietà;
+    :Esporta vertici e lati con
+    file .inp per la visualizzazione;
+    stop
+@enduml
