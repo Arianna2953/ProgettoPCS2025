@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
 		cout << "Poliedro regolare di base: Icosaedro" << endl;
     } 
     else if (p == 4 && q == 3) {
-		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
+		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale del poliedro risultante
 		
 		file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 		file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
 		dualize = true;
     } 
     else if (p == 5 && q == 3) {
-		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
+		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale del poliedro risultante
 		
 		file0Ds = "../PlatonicSolid/icosahedron/Cell0Ds.txt";
 		file1Ds = "../PlatonicSolid/icosahedron/Cell1Ds.txt";
@@ -125,7 +125,6 @@ int main(int argc, char* argv[]) {
 	}
 	else if(b==c && b!=0){
 		n = b;
-		//triangolazione tipo 2
 		cout << "Triangolazione di 'tipo 2'" << endl;
 		if(dualize == true){
 			TriangulationTypeII(regularPolyhedron, toDualize,n);

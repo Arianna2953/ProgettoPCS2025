@@ -6,7 +6,7 @@ using namespace std;
 
 namespace PolyhedralLibrary
 {
-/*Suddivide le facce del poliedro in triangoli regolari, proiettando tutti i nuovi vertici
+/*Suddivide le facce del poliedro in triangoli uguali, proiettando tutti i nuovi vertici
  su una sfera unitaria centrata nell'origine. La suddivisione avviene dividendo ogni lato
  in n segmenti uguali, creando una griglia triangolare regolare su ogni faccia.*/
 //polyOld: PolyhedralMesh struct che rappresenta il poliedro di partenza, le cui facce vengono triangolate dalla funzione
@@ -16,8 +16,9 @@ namespace PolyhedralLibrary
 void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& p, const int& q, const int& n); 
 
 /*Suddivide le facce del poliedro in una griglia triangolare arricchita, aggiungendo
- i baricentri dei triangoli generati e collegandoli tra loro per creare una struttura
- più fitta. I nuovi vertici sono proiettati su una sfera unitaria centrata nell'origine.*/
+ i baricentri dei triangoli generati e i punti medi dei lati situati sul bordo della faccia
+ e collegandoli tra loro per creare una struttura più fitta. 
+ I nuovi vertici sono proiettati su una sfera unitaria centrata nell'origine.*/
 //polyOld: PolyhedralMesh struct che rappresenta il poliedro di partenza, le cui facce vengono triangolate dalla funzione
 //polyNew: PolyhedralMesh struct in cui viene salvato il poliedro con le facce triangolate, e i cui vertici sono proiettati su una sfera di raggio unitario
 //n: numero di segmenti in cui viene diviso ogni lato

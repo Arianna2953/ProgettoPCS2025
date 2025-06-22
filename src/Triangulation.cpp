@@ -12,6 +12,7 @@
 
 namespace PolyhedralLibrary
 {
+	
 int CheckAddEdges(PolyhedralMesh& poly, const Vector2i& edge, int& id_edge){
 	int w0 = edge[0]; 
 	int w1 = edge[1]; 
@@ -128,7 +129,7 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 				
 				//controllo se il punto è già presente
 				int id_point = CheckAddVertices(polyNew,new_point,idV_new);
-				vertPosition(i,j) = id_point;//dovrebbe inserire al posto del nuovo id, quello del corrispondente già creato	
+				vertPosition(i,j) = id_point;//inserisce al posto del nuovo id, quello del corrispondente già creato	
 			}
 		}
 		//genero i triangoli (nuovi lati e facce)
@@ -236,7 +237,7 @@ void TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,
 				
 				//controllo se il punto è già presente
 				int id_point = CheckAddVertices(polyNew,new_point,idV_new);
-				vertPosition(i,j) = id_point;//dovrebbe inserire al posto del nuovo id, quello del corrispondente già creato	
+				vertPosition(i,j) = id_point;//inserisce al posto del nuovo id, quello del corrispondente già creato	
 			}
 		}
 		

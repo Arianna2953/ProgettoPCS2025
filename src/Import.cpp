@@ -20,17 +20,12 @@ bool ImportMesh(PolyhedralMesh& mesh,const string& file0Ds,const string& file1Ds
         return false;
 	}
 	else{
-		//cout << "Cell0D ShortPath:" << endl;
 		if (mesh.ShortPathCell0Ds.size()!=0){
 			for(auto it = mesh.ShortPathCell0Ds.begin(); it != mesh.ShortPathCell0Ds.end(); it++){
-				//cout << "ShortPath id:\t" << it -> first << "\t valori:";
 				for (const unsigned int id: it -> second)
 					cout << "\t" << id;
 				cout << endl;
 			}
-		}
-		else{
-			//cout<< "No not-null ShortPath found" << endl;
 		}
 	}
 
@@ -38,17 +33,12 @@ bool ImportMesh(PolyhedralMesh& mesh,const string& file0Ds,const string& file1Ds
         return false;
 	}
 	else{
-		//cout << "Cell1D ShortPath:" << endl;
 		if (mesh.ShortPathCell1Ds.size() != 0){
 			for(auto it = mesh.ShortPathCell1Ds.begin(); it != mesh.ShortPathCell1Ds.end(); it++){
-				//cout << "ShortPath id:\t" << it -> first << "\t valori:";
 				for (const unsigned int id: it -> second)
 					cout << "\t" << id;
 				cout << endl;
 			}
-		}
-		else{
-			//cout<< "No not-null ShortPath found" << endl;
 		}
 	}
 
@@ -66,9 +56,9 @@ bool ImportMesh(PolyhedralMesh& mesh,const string& file0Ds,const string& file1Ds
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 bool ImportCell0Ds(const string& file0Ds, PolyhedralMesh& mesh){
-    ifstream file(file0Ds);
-
-    if(file.fail())
+    
+	ifstream file(file0Ds);
+	if(file.fail())
         return false;
 
     list<string> listLines;
@@ -79,7 +69,7 @@ bool ImportCell0Ds(const string& file0Ds, PolyhedralMesh& mesh){
 
     file.close();
 
-    // remove header
+    //rimuovo header
     listLines.pop_front();
 
     mesh.NumCell0Ds = listLines.size();
@@ -99,7 +89,7 @@ bool ImportCell0Ds(const string& file0Ds, PolyhedralMesh& mesh){
 
         int id;
         int ShortPath;
-        char delimiter; // per memorizzare il ; del file csv
+        char delimiter; // per memorizzare il ";" del file csv
 
         converter >>  id >> delimiter >> ShortPath >> delimiter >> mesh.Cell0DsCoordinates(0, id) >> delimiter >> mesh.Cell0DsCoordinates(1, id)>> delimiter >> mesh.Cell0DsCoordinates(2, id);
 
@@ -115,7 +105,6 @@ bool ImportCell0Ds(const string& file0Ds, PolyhedralMesh& mesh){
             }
             else
             {
-                // mesh.ShortPathCell0Ds[ShortPath].push_back(id);
                 it->second.push_back(id);
             }
         }
@@ -126,8 +115,8 @@ bool ImportCell0Ds(const string& file0Ds, PolyhedralMesh& mesh){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 bool ImportCell1Ds(const string& file1Ds, PolyhedralMesh& mesh){
-    ifstream file(file1Ds);
-
+    
+	ifstream file(file1Ds);
     if(file.fail())
         return false;
 
@@ -138,7 +127,7 @@ bool ImportCell1Ds(const string& file1Ds, PolyhedralMesh& mesh){
 
     file.close();
 
-    // remove header
+    //rimuovo header
     listLines.pop_front();
 
     mesh.NumCell1Ds = listLines.size();
@@ -173,7 +162,6 @@ bool ImportCell1Ds(const string& file1Ds, PolyhedralMesh& mesh){
             }
             else
             {
-                // mesh.ShortPathCell1Ds[ShortPath].push_back(id);
                 it->second.push_back(id);
             }
 		}
@@ -190,8 +178,8 @@ bool ImportCell1Ds(const string& file1Ds, PolyhedralMesh& mesh){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh){
-    ifstream file(file1Ds);
-
+    
+	ifstream file(file1Ds);
     if(file.fail())
         return false;
 
@@ -202,7 +190,7 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh){
 
     file.close();
 
-    // remove header
+    //rimuovo header
     listLines.pop_front();
 
     mesh.NumCell2Ds = listLines.size();
@@ -220,21 +208,19 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh){
     for (const string& line : listLines)
     {
         istringstream converter(line);
-
-        int id;
-	//int ShortPath;
-	int num_vert;
-	int num_edges;
-	char delimiter;
-        
-	converter >> id >> delimiter >> num_vert;
+		int id;
+		int num_vert;
+		int num_edges;
+		char delimiter;
+		
+		converter >> id >> delimiter >> num_vert;
 
         vector<int> vecv;
 		vecv.reserve(num_vert);
         for(int i = 0; i < num_vert; i++){
-		int vert;
-        converter >> delimiter >> vert;
-		vecv.push_back(vert);
+			int vert;
+			converter >> delimiter >> vert;
+			vecv.push_back(vert);
 		}
 		mesh.Cell2DsVertices.push_back(vecv);
 		
@@ -251,22 +237,7 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh){
 		mesh.Cell2DsEdges.push_back(vece);
 		mesh.Cell2DsId.push_back(id);
 		
-		/*if(ShortPath != 0)
-        {
-            const auto it = mesh.ShortPathCell2Ds.find(ShortPath);
-            if(it == mesh.ShortPathCell2Ds.end())
-            {
-                mesh.ShortPathCell2Ds.insert({ShortPath, {id}});
-            }
-            else
-            {
-                // mesh.ShortPathCell2Ds[ShortPath].push_back(id);
-                it->second.push_back(id);
-            }
-		}*/
-		
 		// verifica che tutti i poligoni abbiano area diversa da zero
-		
 		const MatrixXd& coord = mesh.Cell0DsCoordinates;
 			Vector3d areaVec(0.0, 0.0, 0.0);
 
@@ -275,13 +246,10 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh){
 
 				Vector3d vi = coord.col(vecv[i]);
 				Vector3d vj = coord.col(vecv[j]);
-
 				areaVec += vi.cross(vj);
 			}
 
 			double area = 0.5 * areaVec.norm();
-			//cout << "area poligono " << id << " = " << area << endl;
-		
 			if (area<=1.e-16)
 			{
 			cerr<<"il poligono ha area pari a 0";
@@ -296,9 +264,9 @@ bool ImportCell2Ds(const string& file1Ds, PolyhedralMesh& mesh){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh){
-    ifstream file(file3Ds);
-
-    if(file.fail())
+    
+	ifstream file(file3Ds);
+	if(file.fail())
         return false;
 
     list<string> listLines;
@@ -308,7 +276,7 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh){
 
     file.close();
 
-    // remove header
+    //rimuovo header
     listLines.pop_front();
 
     mesh.NumCell3Ds = listLines.size();
@@ -329,20 +297,19 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh){
         istringstream converter(line);
 
         int id;
-	//int marker;
-	int num_vert;
-	int num_edges;
-	int num_faces;
-	char delimiter;
+		int num_vert;
+		int num_edges;
+		int num_faces;
+		char delimiter;
         
-	converter >> id >> delimiter >> num_vert;
+		converter >> id >> delimiter >> num_vert;
 
         vector<int> vecv;
 		vecv.reserve(num_vert);
         for(int i = 0; i < num_vert; i++){
-		int vert;
-            	converter >> delimiter >> vert;
-		vecv.push_back(vert);
+			int vert;
+			converter >> delimiter >> vert;
+			vecv.push_back(vert);
 		}
 		mesh.Cell3DsVertices.push_back(vecv);
 		
@@ -359,7 +326,7 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh){
 		mesh.Cell3DsEdges.push_back(vece);
 		mesh.Cell3DsId.push_back(id);
      
-	converter >> delimiter >> num_faces;
+		converter >> delimiter >> num_faces;
 	
 		vector<int> vecf;
 		vecf.reserve(num_faces);
@@ -369,25 +336,7 @@ bool ImportCell3Ds(const string& file3Ds, PolyhedralMesh& mesh){
             converter >> delimiter >> face;
 			vecf.push_back(face);
 		}
-		mesh.Cell3DsFaces.push_back(vecf);
-
-		
-	/*if(marker != 0)
-        {
-            const auto it = mesh.MarkerCell3Ds.find(marker);
-            if(it == mesh.MarkerCell3Ds.end())
-            {
-                mesh.MarkerCell3Ds.insert({marker, {id}});
-            }
-            else
-            {
-                // mesh.MarkerCell3Ds[marker].push_back(id);
-                it->second.push_back(id);
-            }
-		}*/
-		
-		// verifica che tutti i poligoni abbiano volume diverso da zero
-		
+		mesh.Cell3DsFaces.push_back(vecf);		
     }
     return true;
 }
