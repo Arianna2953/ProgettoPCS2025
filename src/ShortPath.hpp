@@ -30,10 +30,9 @@ void CreateWeightsMatrix(const PolyhedralMesh& mesh, MatrixXd& weights);
 //s: id sel nodo d'inizio.
 //d: id del nodo d'arrivo.
 //weights: matrice dei pesi (simmetrica), in posizione (i,j) si trova il peso dell'arco i-j, se l'arco i-j non esiste il peso associato è infinito.
-//V: numero di nodi del grafo.
 //pred: vettore dei predecessori, perd[i] sarà uguale all'id del nodo che viene prima del nodo i nel percoso minimo, se il predecessore di nodo i è ignodo pred[i] sarà pari a 1.
 //dist: vettore delle distanza, dist[i] sarà uguale alla distanza minima del nodo i (dal nodo di partenza), se tale distanza è ignota, dist[i] sarà pari a infinito.
-void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int& d, const MatrixXd& weights, const int& V, vector<int>& pred, vector<double>& dist);
+void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int& d, const MatrixXd& weights, vector<int>& pred, vector<double>& dist);
 
 //Data una mesh, l'id di un nodo di partenza e l'id di un nodo d'arrivo, interpreta la mesh come grafo pesato (con la lunghezza dei lati come pesi),
 //calcola la lunghezza del camminino minimo tra il nodo di partenza e il nodo di arrivo e il numero di lati che lo compongono.

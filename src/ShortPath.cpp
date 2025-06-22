@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <queue>
 
 namespace PolyhedralLibrary
 {
@@ -56,54 +57,47 @@ void CreateWeightsMatrix(const PolyhedralMesh& mesh, MatrixXd& weights){
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
-void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int& d, const MatrixXd& weights, const int& V, vector<int>& pred, vector<double>& dist){
+void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int& d, const MatrixXd& weights, vector<int>& pred, vector<double>& dist){
+	
+	const int V = adjList.size(); //Numero di nodi del grafo.
+	
 	//Riempio il vettore dei predecessori e quello delle distanze.
-	for (int i = 0; i < V; i++){
-		pred[i] = -1;
-		dist[i] = INFINITY;	
-	}
+	pred.assign(V,-1);
+	dist.assign(V,INFINITY);
 	
 	//Inizializzo il predecessore e la distanza del nodo sorgente s.
 	pred[s] = s;
 	dist[s] = 0;
 	
-	//Creo un vettore di n elementi per tenere traccia dei nodi  già  visitati.
-	vector<int> visitedNodes(V,0); //inizializzo a zero
-	//for (int i = 0; i < V; i++) {visitedNodes.push_back(0);} 
+	//Creo un vettore di n elementi per tenere traccia dei nodi visitati (0: non visitato; 1: visitato).
+	vector<int> visited(V,0); //inizializzo a zero
 	
-	//Implemento la priority queue con un heap partendo da un vettore di tuple (distanza_nodo_i, nodo_i).
-	vector<pair<double,int>> priorityQueue(V);
+	//Priority queue. Min heap : (distanza, nodo)
+	priority_queue<pair<double,int>,vector<pair<double,int>>,greater<>> pq;
 	for (int i = 0; i < V; i++){
-		priorityQueue.push_back(pair(dist[i], i));
-	}
-	make_heap(priorityQueue.begin(), priorityQueue.end(), greater<>{});
-	
-	cout << "CODA CON PRIORITA" << endl;
-	for (auto it = priorityQueue.begin(); it != priorityQueue.end(); it++){
-		cout << get<0>(*it) << "  -  " << get<1>(*it) << endl;
+		pq.push(pair(dist[i],i));
 	}
 	
-	for(int i = 0; i < V-1; i++){ //NOTA: uso un for per i che va da 0 a V-2 perché posso visitare al massimo V nodi e visitare l'ultimo (il più lontano) sarebbe superfluo
-		const int u = get<1>(priorityQueue.front()); //Leggo l'id del nodo con distanza minima.
-		
-		cout << "nodo u:" << u << endl;
-		
-		if (u == d) {break;} //Controllo se ho raggiunto il nodo destinazione, se sì esco dal ciclo for.
-		
-		visitedNodes[u] = 1; //Aggiorno visitedNodes, segno che il nodo u è stato visitato.
+	while(!pq.empty()){ //NOTA: uso un for per i che va da 0 a V-2 perché posso visitare al massimo V nodi e visitare l'ultimo (il più lontano) sarebbe superfluo
+		const int u = get<1>(pq.top()); //Leggo l'id del nodo con distanza minima.
 		
 		//Dequeue, rimuovo il nodo u dalla priority queue.
-		pop_heap(priorityQueue.begin(), priorityQueue.end());
-		priorityQueue.pop_back();
+		pq.pop();
+		
+		//cout << "nodo u:" << u << endl;
+		
+		if (u == d) {break;} //Controllo se ho raggiunto il nodo destinazione, se sì esco dal ciclo for.
+		if (visited[u] != 0) {continue;}
+		
+		visited[u] = 1; //Aggiorno visited, segno che il nodo u è stato visitato.
 		
 		for (int w : adjList[u]){
-			if (visitedNodes[w] != 0) {continue;} //Se ho già visitato il nodo w, passo al sucessivo.
-			cout << u << ", " << w << " : " << dist[u] + weights(u,w) << endl;
+			if (visited[w] != 0) {continue;} //Se ho già visitato il nodo w, passo al sucessivo.
+			//cout << u << ", " << w << " : " << dist[u] + weights(u,w) << endl;
 			if (dist[w] > dist[u] + weights(u,w)){
 				pred[w] = u;
 				dist[w] = dist[u] + weights(u,w);
-				priorityQueue.push_back(pair(dist[w],w));
-				push_heap(priorityQueue.begin(), priorityQueue.end(), greater<>{});
+				pq.push(pair(dist[w],w));
 			}
 		}
 	}
@@ -129,20 +123,20 @@ bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& de
 	vector<list<int>> adjacencyList(V);
 	CreateAdjacencyList(mesh, adjacencyList);
 	
-	cout << "LISTA DI ADIACENZA" << endl;
+	/*cout << "LISTA DI ADIACENZA" << endl;
 	for(int i = 0; i < V; i++) {
 		cout << i << ":  ";
 		for(int v : adjacencyList[i]) {cout << v << "  ";}
 		cout << endl;
-	}
+	}*/
 	
 	//Creo la matrice dei pesi.
 	MatrixXd weightsEdges = MatrixXd::Ones(V,V)*INFINITY;
 	CreateWeightsMatrix(mesh, weightsEdges);
 	
-	vector<int> predecessors(V);
-	vector<double> distances(V);
-	ComputeDistances(adjacencyList, sourceNode, destinationNode, weightsEdges, V, predecessors, distances);
+	vector<int> predecessors;
+	vector<double> distances;
+	ComputeDistances(adjacencyList, sourceNode, destinationNode, weightsEdges, predecessors, distances);
 	
 	//cout << "DISTANCES - PREDECESSORS" << endl;
 	//for(int i = 0; i < V; i++) {cout << i << ": " << distances[i] << " - " << predecessors[i] << endl;}
