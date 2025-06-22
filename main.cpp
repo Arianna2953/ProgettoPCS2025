@@ -37,9 +37,11 @@ int main(int argc, char* argv[]) {
     int b = stoi(argv[3]);
     int c = stoi(argv[4]);
     int v0 = -1, v1 = -1;
+	bool pathToFind = false;
     if (argc == 7) {
         v0 = stoi(argv[5]);
         v1 = stoi(argv[6]);
+		pathToFind = true;
     }
 
     cout << "Valori inseriti: p = " << p << ", q = " << q << ", b = " << b << ", c = " << c << ", v0 = " << v0 << ", v1 = " << v1 << endl;
@@ -103,7 +105,7 @@ int main(int argc, char* argv[]) {
 
 	if(!ImportMesh(regularPolyhedron,file0Ds,file1Ds,file2Ds,file3Ds))
 		{
-			cerr << "file non trovato" << endl;
+			cerr << "File non trovato." << endl;
 			return 1;
 		} 
 	
@@ -138,8 +140,15 @@ int main(int argc, char* argv[]) {
 	}
 	
 	//trovo il percorso minimo sul poliedro tra i vertici v0 e v1 
-	if(v0 >= 0 && v1 >= 0){
-		FindShortestPath(mesh,v0,v1);	
+	if(pathToFind){
+		unsigned int numEdges = 0;
+		double pathLenght = 0.0;
+		if(!FindShortestPath(mesh,v0,v1,numEdges,pathLenght)){
+			cerr << "Impossibile trovare il percorso minimo." << endl;
+			return 1;
+		}	
+		cout << "Numero di lati percorso minimo: " << numEdges << endl;
+		cout << "Lunghezza percorso minimo: " << pathLenght << endl;
 	}
 	
 	ExportPolyhedron(mesh);

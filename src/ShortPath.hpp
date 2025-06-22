@@ -36,11 +36,13 @@ void CreateWeightsMatrix(const PolyhedralMesh& mesh, MatrixXd& weights);
 void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int& d, const MatrixXd& weights, const int& V, vector<int>& pred, vector<double>& dist);
 
 //Data una mesh, l'id di un nodo di partenza e l'id di un nodo d'arrivo, interpreta la mesh come grafo pesato (con la lunghezza dei lati come pesi),
-//calcola la lunghezza del camminino minimo tra il nodo di partenza e quello di arrivo e assegna ai nodi e ai lati del cammino minimo la proprietà  ShortPath=1.
-//Infine, stampa a schermo il numero di lati che compongono il cammino minimo e la lunghezza complessiva di quest'ultimo.
+//calcola la lunghezza del camminino minimo tra il nodo di partenza e il nodo di arrivo e il numero di lati che lo compongono.
+//Assegna ai nodi e ai lati percorsi dal cammino minimo la proprietà  ShortPath=1.
 //mesh: PolyhedralMesh struct contenente i dati relativi a vertici, lati e facce di una mesh(di un poliedro).
 //sourceNode: id nodo di partenza.
 //destinationNode: id nodo d'arrivo.
-bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& destinationNode);
+//numEdges: numero di lati che compongono il percorso minimo.
+//pathLenght: lungheza del percorso minimo.
+bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& destinationNode, unsigned int& numEdges, double& pathLenght);
 
 }
