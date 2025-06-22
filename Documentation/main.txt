@@ -25,18 +25,18 @@ endswitch
 if ((b==0 & c>=1) oppure (b>=1 & c==0)) then (sì)
     :n = max{b,c};
     if (dualize == true) then (sì)
-        :Crea triangolazione di tipo 1 sulle \nfacce del poliedro importato;
-        :Fa il duale del poliedro ottenuto;
+        :TriangulationTypeI;
+        :DualConstructor;
     else
-        :Crea triangolazione di tipo 1 sulle \nfacce del poliedro importato;
+        :TriangulationTypeI;
     endif
 elseif (b==c (non nulli)) then (sì)
     :n = b;
     if (dualize == true) then (sì)
-        :Crea triangolazione di tipo 2 sulle \nfacce del poliedro importato;
-        :Fa il duale del poliedro ottenuto;
+        :TriangulationTypeII;
+        :DualConstructor;
     else
-        :Crea triangolazione di tipo 2 sulle \nfacce del poliedro importato;
+        :TriangulationTypeII;
     endif
    
 else
@@ -44,10 +44,10 @@ else
     stop
 endif
 if (sono stati inseriti i vertici v0 e v1) then (sì)
- :Trovo il percorso minimo tra v0 e v1 sul poliedro;
+ :FindShortestPath;
 endif
     :Esporta il poliedro con file .txt per tutte le proprietà;
-    :Esporta i punti con file .inp per la visualizzazione;
-    :Esporta i lati con file .inp per la visualizzazione;
+    :Esporta vertici e lati con
+    file .inp per la visualizzazione;
     stop
 @enduml

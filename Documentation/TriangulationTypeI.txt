@@ -1,33 +1,20 @@
 @startuml
 start
-
-:Inizializza idV_new, idE_new, idF_new;
-:T = n^2;
+title Funzione "TriangulationTypeI"
 :Inizializzo la struttura della mesh predisponendo 
-spazio a sufficienza in base al tipo di poliedro 
-di base indentificato da p e q;
+spazio a sufficienza in base ai valori di p,q,b,c inseriti;
 
-if ((p,q) == (3,3)) then (yes)
-  :V = 2*T+2;
-  :E = 6*T;
-  :F = 4*T;
-elseif ((p,q) == (3,4)) then (yes)
-  :V = 4*T+2;
-  :E = 12*T;
-  :F = 8*T;
-elseif ((p,q) == (3,5)) then (yes)
-  :V = 10*T+2;
-  :E = 30*T;
-  :F = 20*T;
-endif
+repeat
 
-:Itera su ogni faccia del poliedro di base;
-partition "Per ogni faccia" {
-  :Prendi vertici v0, v1, v2;
+  :Prende vertici v0, v1, v2 della faccia considerata;
+  note left
+    itera su ogni faccia del poliedro;
+  end note
   
   :Crea nuovi vertici con coordinate baricentriche 
   (moltiplico ogni vertice per una combinazione di coefficienti opportuna);
   :Proietto il nuovo vertice sulla sfera unitaria;
+  
   if(il vertice creato non è presente nella mesh) then (sì)
     :Aggiungo il nuovo vertice (Cell0Ds);
   else
@@ -39,8 +26,7 @@ partition "Per ogni faccia" {
   :Controllo se i lati creati (Cell1Ds) esistono ed eventualmente il aggiungo alla mesh (CheckAddEdges);
     :Aggiungo le nuove facce create alla mesh (Cell2Ds);
    
-}
-
+repeat while (Ci sono altre facce del poliedro platonico?) is (yes) not (no)
 :Inserisco i dati relativi a Cell3Ds 
 nella mesh (id, veritici, lati, facce);
 

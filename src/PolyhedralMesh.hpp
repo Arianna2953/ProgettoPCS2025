@@ -23,13 +23,11 @@ struct PolyhedralMesh
     vector<int> Cell2DsId = {}; // id poligoni, (1 x NumberCell2D)
     vector<vector<int>> Cell2DsVertices = {}; // id vertici del poligono, (1 x NumberCell2DVertices[NumberCell2D])
     vector<vector<int>> Cell2DsEdges = {}; // id lati del poligono, (1 x NumberCell2DEdges[NumberCell2D])
-	//map<int, list<int>> MarkerCell2Ds = {}; // Cell2D ShortPath
 	
 	int NumCell3Ds = 0; // numero di Cell3D
 	vector<int> Cell3DsId = {}; // id poligoni, (1 x NumberCell3D)
 	vector<vector<int>> Cell3DsVertices = {}; // id vertici del poligono, (1 x NumberCell3DVertices[NumberCell3D])
     vector<vector<int>> Cell3DsEdges = {}; // id lati del poligono, (1 x NumberCell3DEdges[NumberCell3D])
 	vector<vector<int>> Cell3DsFaces = {}; // id facce del poligono, (1 x NumberCell3Faces[NumberCell3D])
-	//map<int, list<int>> MarkerCell3Ds = {}; // Cell3D ShortPath
 };
 }

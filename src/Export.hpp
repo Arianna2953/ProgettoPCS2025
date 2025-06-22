@@ -6,27 +6,27 @@ using namespace std;
 
 namespace PolyhedralLibrary
 {
-// Export the Cell0D properties from PolyhedralMesh
-// mesh: a PolyhedralMesh struct
-// return the result of the creation of the new polyhedron, true if is success, false otherwise
+// Esportazione delle proprietà di Cell0D dalla PolyhedralMesh
+//mesh: struttura dati di tipo PolyhedralMesh
+//restituisce true se la creazione della nuova mesh ha avuto successo, altrimenti restituisce false
 bool Exportfile0Ds(const PolyhedralMesh & polyNew);
 
-// Export the Cell1D properties from PolyhedralMesh
-// mesh: a PolyhedralMesh struct
-// return the result of the creation of the new polyhedron, true if is success, false otherwise
+// Esportazione delle proprietà di Cell1D dalla PolyhedralMesh
+//mesh: struttura dati di tipo PolyhedralMesh
+//restituisce true se la creazione della nuova mesh ha avuto successo, altrimenti restituisce false
 bool Exportfile1Ds(const PolyhedralMesh & polyNew);
 
-// Export the Cell2D properties from PolyhedralMesh
-// mesh: a PolyhedralMesh struct
-// return the result of the creation of the new polyhedron, true if is success, false otherwise
+// Esportazione delle proprietà di Cell2D dalla PolyhedralMesh
+//mesh: struttura dati di tipo PolyhedralMesh
+//restituisce true se la creazione della nuova mesh ha avuto successo, altrimenti restituisce false
 bool Exportfile2Ds(const PolyhedralMesh & polyNew);
 
-// Export the Cell3D properties from PolyhedralMesh
-// mesh: a PolyhedralMesh struct
-// return the result of the creation of the new polyhedron, true if is success, false otherwise
+// Esportazione delle proprietà di Cell3D dalla PolyhedralMesh
+//mesh: struttura dati di tipo PolyhedralMesh
+//restituisce true se la creazione della nuova mesh ha avuto successo, altrimenti restituisce false
 bool Exportfile3Ds(const PolyhedralMesh & polyNew);
 
-// General function for exporting the polyhedron from PolyhedralMesh
+// funzione generale per esportare il poliedro dalla PolyhedralMesh
 bool ExportPolyhedron(const PolyhedralMesh & polyNew);
 
 }

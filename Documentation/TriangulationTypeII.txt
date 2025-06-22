@@ -1,0 +1,63 @@
+@startuml
+title Funzione "TriangulationTypeII"
+start
+
+:Creazione vertici con TriangulationTypeI;
+:Fase 2:;
+
+note left
+  Ciclo su ogni faccia triangolare e 
+  calcolo baricentro o punto medio a 
+  seconda dei casi
+end note
+
+repeat 
+
+repeat
+
+:Prende 3 vertici della Type1 che formano un triangolo 
+"a punta in su" di essa e ne salvo gli id in un vettore;
+
+:Calcolo del baricentro;
+note left
+  CheckAddVertices(baricentro)
+  e proiezione su sfera unitaria
+end note
+
+:Memorizzo l'id in una matrice (per la creazione dei triangoli più interni);
+
+
+if (Triangolo della Type1 posizionato sul bordo?) then (yes)
+  :Genera i punti medi dei lati sul bordo;
+note left
+    CheckAddVertices(punto medio)
+    e proiezione su sfera unitaria
+end note
+  :Genera triangoli adiacenti al bordo;
+  note left
+      CheckAddEdges(nuovi lati)
+  end note
+endif
+
+if (Il triangolo è a punta in giù?) then (yes)
+  :Prende 3 vertici della Type1 che formano un triangolo a "punta in giù";
+  :Calcolo del baricentro;
+    note left
+      CheckAddVertices(baricentro)
+      e proiezione su sfera unitaria
+    end note
+    :Memorizzo l'id in una matrice (per la creazione dei triangoli più interni);
+  :Genera le 6 facce adicenti a tale baricentro;
+   note left
+      CheckAddEdges(nuovi lati)
+    end note
+endif
+
+repeat while (Altri triangoli "a punta in su"?) is (yes) not (no)
+
+:Inserisci tutte le informazioni su nuovi verici, lati e facce nella struct;
+
+repeat while (Ci sono altre facce del poliedro platonico iniziale da triangolare?) is (yes) not (no)
+
+stop
+@enduml

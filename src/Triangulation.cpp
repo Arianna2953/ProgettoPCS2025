@@ -164,8 +164,8 @@ void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, 
 				}
 		}		
 	}
-	
-	polyNew.Cell3DsId.push_back(0); // ho solo un poliedro, con identificativo 0 (?)
+	//inserisco nella PolyhedralMesh le informazioni su Cell3Ds
+	polyNew.Cell3DsId.push_back(0); 
 	polyNew.Cell3DsVertices.push_back(polyNew.Cell0DsId);
 	polyNew.Cell3DsEdges.push_back(polyNew.Cell1DsId);
 	polyNew.Cell3DsFaces.push_back(polyNew.Cell2DsId);
@@ -413,7 +413,7 @@ void TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,
 				int i11 = CheckAddEdges(polyNew, {c_left, id_c}, idE_new);
 				int i12 = CheckAddEdges(polyNew, {vx0, c_left}, idE_new);
 				
-				//creo i nuovi triangoli intorno al baricentro
+				//creo i 6 nuovi triangoli intorno al baricentro
 				//triangolo 1
 				polyNew.Cell2DsId.push_back(idF_new);
 				polyNew.Cell2DsVertices.push_back({vx0,c_up,id_c});
@@ -453,12 +453,12 @@ void TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew,
 			}
 		}
 	}
-	polyNew.Cell3DsId.push_back(0); // ho solo un poliedro, con identificativo 0 (?)
+	//inserisco nella PolyhedralMesh le informazioni su Cell3Ds
+	polyNew.Cell3DsId.push_back(0); 
 	polyNew.Cell3DsVertices.push_back(polyNew.Cell0DsId);
 	polyNew.Cell3DsEdges.push_back(polyNew.Cell1DsId);
 	polyNew.Cell3DsFaces.push_back(polyNew.Cell2DsId);
 }
-
 
 }
 

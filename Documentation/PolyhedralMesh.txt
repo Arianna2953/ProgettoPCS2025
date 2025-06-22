@@ -41,7 +41,7 @@ struct PolyhedralMesh {
       + bool ExportPolyhedron(const PolyhedralMesh& polyNew)
 
     + void TriangulationTypeI(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& p, const int& q, const int& n)
-    + void  TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& n) : void
+    + void  TriangulationTypeII(const PolyhedralMesh& polyOld, PolyhedralMesh& polyNew, const int& n)
     + int  CheckAddEdges(PolyhedralMesh& poly, const Vector2i& edge, int& id_edge)
     + int CheckAddVertices(PolyhedralMesh& poly, const Vector3d& vertex, int& id_vert)
     + bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual)
