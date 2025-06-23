@@ -138,7 +138,10 @@ int main(int argc, char* argv[]) {
 		cout << "valori di b e c non validi" << endl;
 	}
 	
-	//trovo il percorso minimo sul poliedro tra i vertici v0 e v1 
+	//trovo il percorso minimo sul poliedro tra i vertici v0 e v1
+	cout << "CALCOLO DEL CAMMINO MINIMO" << endl;
+	cout << "Id vertice di partenza: " << v0 << endl;
+	cout << "Id vertice d'arrivo: " << v1 << endl;
 	if(pathToFind){
 		unsigned int numEdges = 0;
 		double pathLenght = 0.0;

@@ -105,9 +105,9 @@ void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int&
 
 bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& destinationNode, unsigned int& numEdges, double& pathLenght){
 	
-	cout << "CALCOLO DEL CAMMINO MINIMO" << endl;
+	/*cout << "CALCOLO DEL CAMMINO MINIMO" << endl;
 	cout << "Id vertice di partenza: " << sourceNode << endl;
-	cout << "Id vertice d'arrivo: " << destinationNode << endl;
+	cout << "Id vertice d'arrivo: " << destinationNode << endl;*/
 	
 	const int V = mesh.NumCell0Ds; //Numero di nodi del grafo.
 	
@@ -162,13 +162,13 @@ bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& de
 			mesh.ShortPathCell1Ds[0].remove(e);
 		}
 	
-	/*
+	
 	//Inverto l'ordine dei nodi e spigoli (perché sono salvati "al contrario")
 	//Voglio il cammino nel "verso giusto": da sourceNode a destinationNode
 	reverse(mesh.ShortPathCell0Ds[ShortPath].begin(), mesh.ShortPathCell0Ds[ShortPath].end());
 	reverse(mesh.ShortPathCell1Ds[ShortPath].begin(), mesh.ShortPathCell1Ds[ShortPath].end());
 	
-	//Stampo a terminale i nodi e i lati del percorso minimo
+	/*//Stampo a terminale i nodi e i lati del percorso minimo
 	cout << "Cammino minimo (nodi): ";
 	for (int v : mesh.ShortPathCell0Ds[1]) {cout << v << " ";}
 	cout << endl;
