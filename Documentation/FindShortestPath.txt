@@ -1,0 +1,44 @@
+@startuml
+start 
+title Funzione "FindShortestPath"
+
+:Controlla che gli id dei nodi di partenza e arrivo siano ammissibili;
+
+:Crea la lista di adiacenza;
+note right
+  con la funzione CreateAdjacencyList
+end note
+
+:Crea la matrice dei pesi;
+note right
+  con la funzione CreateWeightsMatrix
+end note
+
+:Calcola il percorso minimo dal vertice di partenza a quello di arrivo;
+note right
+  con la funzione ComputeDistances 
+che restituisce il vettore dei precedenti 
+e quello delle distanze
+end note
+
+:Assegna a PathLenght la distanza del nodo destinazione;
+
+:Inizializza currentNode = destinationNode;
+
+repeat
+  :Aggiorna la proprietà ShortPath del nodo currentNode;
+  :Trova il lato che connete currentNode con il suo predecessore 
+e ne aggiorna la proprietà ShortPath;
+  note right
+    con la funzione FindEdge
+  end note
+  :Assegna a currentNode l'id del suo predecessore e incrementa di uno il contatore dei lati;
+repeat while (currentNode != sourceNode) is (yes) not (no)
+
+:Aggiorna la proprietà ShortPath del nodo sourceNode;
+
+:Rimuove i nodi e i lati che fanno parte del percorso minimo dall'elenco
+di quelli con proprità ShortPath pari al valore di default;
+
+stop
+@enduml

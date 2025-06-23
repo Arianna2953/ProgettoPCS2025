@@ -1,0 +1,29 @@
+@startuml
+start 
+title Funzione "FindEdge"
+
+:Considera un poliedro (una mesh di tipo PolyhedralMesh)
+e gli id di due vertici v0 e v1;
+
+:Inizializza edgeId = -1;
+
+repeat
+:Considera un lato L del poliedro;
+note left
+Itera su ogni lato del poliedro
+end note
+
+:Ricava gli estremi u0 e u1;
+
+if (v0 == u0 e v1 == u1 oppure v0 == u1 e v1 == u0?) then (yes)
+
+:Assegna a edgeId il valore L;
+
+endif;
+
+repeat while (Ci sono altri lati del polidro?) is (yes) not (no)
+
+:Restituisce edgeId;
+
+stop
+@enduml

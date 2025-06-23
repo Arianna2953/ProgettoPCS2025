@@ -138,6 +138,8 @@ bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& de
 	vector<double> distances;
 	ComputeDistances(adjacencyList, sourceNode, destinationNode, weightsEdges, predecessors, distances);
 	
+	pathLenght = distances[destinationNode];
+	
 	//cout << "DISTANCES - PREDECESSORS" << endl;
 	//for(int i = 0; i < V; i++) {cout << i << ": " << distances[i] << " - " << predecessors[i] << endl;}
 	
@@ -188,7 +190,6 @@ bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& de
 	for (int e : mesh.ShortPathCell1Ds[1]) {cout << e << " ";}
 	cout << endl;
 	
-	pathLenght = distances[destinationNode];
 	return true;
 }
 

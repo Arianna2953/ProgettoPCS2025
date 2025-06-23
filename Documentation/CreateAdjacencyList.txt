@@ -1,0 +1,27 @@
+@startuml
+start 
+title Funzione "CreateAdjacencyList"
+
+:Considera una mesh di tipo PolyhedralMesh
+e un vettore di liste di interi vuoto (adjList);
+note left
+Costruisce una lista di adiacenza 
+come vettore di liste di interi
+end note
+
+repeat
+:Considera una Cell1D;
+note left
+Itera su ogni Cell1D della mesh
+end note
+
+:Ricava gli estremi idFrom e idTo;
+
+:Aggiunge idFrom a adjList[idTo];
+
+:Aggiunge idTo a adjList[idFrom];
+
+repeat while (Ci sono altre Cell1D nella mesh?) is (yes) not (no)
+
+stop
+@enduml

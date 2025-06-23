@@ -63,33 +63,30 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual){
 	const int Ndual = E*2/F; //Numero di vertici/lati per faccia nel poliedro duale 
 	
 	//Iterando sulle facce del poliedro originale mi trovo i baricentri, cioè i vertici del poliedro duale
-	for (int f : polyhedron.Cell2DsId)
-		{
-			Vector3d barCoords; //Contenitore dove salverò le coordinate del baricentro
-			
-			//Ricavo id e coordinate dei vertici della faccia
-			const vector<int>& faceVertices = polyhedron.Cell2DsVertices[f];
-			
-			//cout << "faccia: "<< f << "vertici: " <<  faceVertices[0] <<  faceVertices[1] << faceVertices[2] << endl;
-			
-			Vector3d v0 = polyhedron.Cell0DsCoordinates.col(faceVertices[0]);
-			Vector3d v1 = polyhedron.Cell0DsCoordinates.col(faceVertices[1]);
-			Vector3d v2 = polyhedron.Cell0DsCoordinates.col(faceVertices[2]);
-			
-			//Calcolo le coordinate del baricentro della faccia
-			barCoords = (v0+v1+v2)/3;
-			
-			//Proietto il punto sulla sfera di raggio 1
-			if (barCoords.norm() < 1e-16) {
-				cerr << "Warning: il vettore considerato ha lunghezza nulla";
-				return false;
-			};
-			barCoords.normalize();
-			
-			//Aggiungo il punto appena trovato ai vertici del  poliedro duale
-			dual.Cell0DsId.push_back(f);
-			dual.Cell0DsCoordinates.col(f) << barCoords;
+
+	for (int id : polyhedron.Cell2DsId){
+		Vector3d barCoords; //Contenitore dove salverò le coordinate del baricentro
+		
+		//Ricavo id e coordinate dei vertici della faccia
+		const vector<int>& faceVertices = polyhedron.Cell2DsVertices[id];
+		Vector3d v0 = polyhedron.Cell0DsCoordinates.col(faceVertices[0]);
+		Vector3d v1 = polyhedron.Cell0DsCoordinates.col(faceVertices[1]);
+		Vector3d v2 = polyhedron.Cell0DsCoordinates.col(faceVertices[2]);
+		
+		//Calcolo le coordinate del baricentro della faccia
+		barCoords = (v0+v1+v2)/3;
+		
+		//Proietto il punto sulla sfera di raggio 1
+		if (barCoords.norm() < 1e-16) {
+			cerr << "Warning: il vettore considerato ha lunghezza nulla";
+			return false;
 		};
+		barCoords.normalize();
+		
+		//Aggiungo il punto appena trovato ai vertici del  poliedro duale
+		dual.Cell0DsId.push_back(id);
+		dual.Cell0DsCoordinates.col(id) << barCoords;
+	};
 	
 	/*Trovo i lati del duale. 
 	Scorro le facce (f1) del poliedro orginale e ne considero un lato alla volta cercando la faccia (f2) 

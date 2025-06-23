@@ -1,0 +1,121 @@
+@startuml
+start
+title Funzione "DualConstrunctor"
+:Inizializzo la struttura della mesh del duale  
+(Allocando spazio a sufficienza in base a numero di vertici, lati e facce attese);
+
+repeat
+
+  :Considera una faccia del poliedro di partenza;
+  note left
+    Itera su ogni faccia del poliedro di partenza
+  end note
+  
+  :Ne calcola il baricentro;
+  :Lo proietta sulla sfera di raggio 1;
+  :Aggiunge il nuovo punto ai vertici del duale
+(Con lo stesso id della faccia corrispondente nel poliedro di partenza);
+
+repeat while (Ci sono altre facce del poliedro di partenza?) is (sì) not (no)
+
+repeat
+
+  :Considera una faccia del poliedro di partenza f1;
+  note left
+    Itera su ogni faccia del poliedro di partenza
+  end note
+  
+  repeat
+  :Considera un lato L della faccia f1;
+  note left
+    Itera su ogni lato della faccia f1 del poliedro di partenza
+  end note
+
+  repeat
+  :Considera la faccia f2 del poliedro di partenza (f2 < f1);
+  note left
+    Itera su ogni faccia del poliedro di partenza "precedente" alla faccia f1
+  end note  
+
+  repeat
+  :Considera un lato K della faccia f2;
+  note left
+    Itera su ogni lato della faccia f2 del poliedro di partenza
+  end note
+  
+  if (L==K?) then (sì)
+    :Aggiungo il lato che va dal baricentro di f1 al baricentro di f2 ai lati del poliedro duale;
+  endif
+
+  repeat while (Ci sono altri lati della faccia f2 o L==K?) is (sì)  not (no)
+
+  repeat while (Ci sono altre facce del poliedro di partenza "precedenti" alla faccia f1?) is (sì)  not (no)
+
+
+  repeat while (Ci sono altri lati della faccia f1?) is (sì)  not (no)
+
+repeat while (Ci sono altre facce del poliedro di partenza?) is (sì) not (no)
+
+repeat
+
+  :Considera un vertice v del poliedro di partenza;
+  note left
+    Itera su ogni vertice del poliedro di partenza
+  end note
+  
+  :Crea il vettore adjacentFaces in cui salva gli id delle facce di cui v è vertice;
+
+  repeat 
+  :Considera una faccia f del poliedro di partenza;
+  note left
+    Itera su ogni faccia del poliedro di partenza
+  end note
+  
+  repeat
+  
+  :Considera un vertice della faccia f, vf;
+  note left
+    Itera su ogni vertice di f, finché non trova v
+  end note
+  
+  if (vf == v?) then (sì)
+    :Aggiungo f a adjacentFaces;
+  endif 
+
+  repeat while (Ci sono altri vertici della faccia f e 
+v non è stato trovato tra i vertici di f) is (yes) not (no)
+ 
+  repeat while (Ci sono altre facce del poliedro di partenza?) is (yes) not (no)
+
+  :Interpreta i baricentri delle facce adiacenti al vertice v come i vertici della faccia del duale corrispondente;
+  
+  repeat 
+
+  :Considera un vertice u0 tra quelli della faccia del duale corrente;
+  note left
+    Itera sui vertici appena trovati
+  end note  
+
+  repeat
+  
+  :Considera un vertice u1 tra quelli della faccia del duale corrente;
+  note left
+  Itera sui vertici appena trovati, finché non 
+trova il lato di estremi u0 e u1
+  end note  
+
+  if (Esiste il lato di estremi u0 e u1 tra i lati del duale?) then (sì)
+  :Aggiungo il lato all'elenco dei lati della faccia;
+  :Aggiungo u0 all'elenco ordinato dei lati della faccia;
+  :Pongo u0 = u1 e esco dal cliclo;
+  endif
+
+  repeat while (Ho trovato un lato di estremi u0 e u1?) is (no) not (sì)
+
+
+  repeat while (Ho visitato tutti  vertici della faccia?) is (no) not (sì)
+
+repeat while (Ci sono altri vertici del poliedro di partenza?) is (sì) not (no)
+
+stop
+@enduml
