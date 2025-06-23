@@ -226,7 +226,7 @@ Gedim::UCDUtilities utilities;
                              cell2Ds_properties,
                              materials);
 }*/
-	//visualizzazione a terminale
+	/*//visualizzazione a terminale
     cout << "=== Cell0Ds (Vertices) ===\n";
     cout << "NumCell0Ds: " << mesh.NumCell0Ds << "\n";
     cout << "Cell0DsId: ";
@@ -289,7 +289,7 @@ Gedim::UCDUtilities utilities;
         cout << "  Volume " << i << ": ";
         for (int f : mesh.Cell3DsFaces[i]) cout << f << " ";
         cout << "\n";
-    }
+    }*/
 
 
 }

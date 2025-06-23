@@ -205,15 +205,17 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual){
 		vector<int> orderedEdges;
 		vector<bool> visited(polyhedron.NumCell2Ds, false); //segno le facce già inserite, per non ripetere
 
+		const vector<int>& dualFaceUnorderedVertices = adjacentFaces;
+
 		//prima faccia trovata da cui parto
-		int current = adjacentFaces[0];
+		int current = dualFaceUnorderedVertices[0];
 		visited[current] = true;
 		orderedVertices.push_back(current);
 		
 		//cerco la faccia successiva adiacente a quella corrente tramite un lato del duale
-		while (orderedVertices.size() < adjacentFaces.size()) {
+		while (orderedVertices.size() < dualFaceUnorderedVertices.size()) {
 			bool found = false;
-			for (int f : adjacentFaces) {
+			for (int f : dualFaceUnorderedVertices) {
 				if (visited[f]) continue;
 
 				for (int j = 0; j < E; ++j) {
@@ -236,7 +238,7 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual){
 			}
 		}
 		//aggiungo ultimo lato a chiudere la faccia
-		if (orderedVertices.size() == adjacentFaces.size()) {
+		if (orderedVertices.size() == dualFaceUnorderedVertices.size()) {
 			for (int j = 0; j < E; ++j) {
 				Vector2i e = dual.Cell1DsExtrema.col(j);
 				if ((e[0] == current && e[1] == orderedVertices[0]) || 
