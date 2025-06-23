@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -10,7 +9,6 @@
 #include <map>
 #include <vector>
 #include <set>
-
 #include <gtest/gtest.h>
 #include "Import.hpp"
 #include "Export.hpp"
@@ -41,47 +39,6 @@ TEST(TestChecking, TestCheckAddEdges1)
 	EXPECT_EQ(id_prova,id_corretto);
 }
 
-/*TEST(TestChecking, TestCheckAddEdges1b)
-{
-    PolyhedralMesh mesh;
-    string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
-    string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
-    string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
-    string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-    ImportMesh(mesh, file0Ds, file1Ds, file2Ds, file3Ds);
-    int originalNumEdges = mesh.NumCell1Ds;
-    Vector2i edge = {4, 5}; //nuovo lato da aggiungere, non presente
-    // Pre-allocazione se necessario (se CheckAddEdges assume spazio sufficiente)
-    if (mesh.Cell1DsExtrema.cols() <= originalNumEdges) {
-        mesh.Cell1DsExtrema.conservativeResize(2, originalNumEdges + 10);
-    }
-    int id_edge = originalNumEdges - 1; 
-    int returnedId = CheckAddEdges(mesh, edge, id_edge);
-    EXPECT_EQ(returnedId, originalNumEdges);
-    EXPECT_EQ(mesh.Cell1DsId.back(), originalNumEdges);
-    EXPECT_EQ(mesh.Cell1DsExtrema(0, originalNumEdges), 4);
-    EXPECT_EQ(mesh.Cell1DsExtrema(1, originalNumEdges), 5);
-}
-
-
-TEST(TestChecking, TestCheckAddEdges2b)
-{
-	PolyhedralMesh OldMesh;
-	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
-	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
-	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
-	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
-	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
-	Vector2i edge = {4,5}; //non è tra quelli già presenti nel file di input
-	OldMesh.Cell1DsId.resize(1,OldMesh.NumCell0Ds + 1);
-	OldMesh.Cell1DsExtrema.conservativeResize(2,OldMesh.NumCell0Ds + 1);
-	int id_prova = CheckAddEdges(OldMesh, edge, OldMesh.NumCell1Ds);
-	int id_corretto = OldMesh.NumCell1Ds + 1;
-	EXPECT_EQ(id_prova,id_corretto);
-}*/
-
-//si potrebbero fare questi test sopra anche senza file di input, ma con una figura geometrica a caso, con vertici semplici
-
 TEST(TestChecking, TestCheckAddEdges2)
 {
 	//aggiungo un nuovo lato che non esiste
@@ -93,10 +50,9 @@ TEST(TestChecking, TestCheckAddEdges2)
 	mesh.Cell1DsId = {0,1,2};
 	int id_iniziale = 2;
     Vector2i edge(2,3);
-    int id_prova = CheckAddEdges(mesh, edge, id_iniziale);
-    EXPECT_EQ(id_prova, 3);              
+    int id_prova = CheckAddEdges(mesh,edge,id_iniziale);
+    EXPECT_EQ(id_prova,3);              
 }
-
 
 TEST(TestChecking, TestCheckAddVertices1)
 {
@@ -129,18 +85,13 @@ TEST(TestChecking, TestCheckAddVertices2)
 
 TEST(TestChecking, TestTriangulationTypeI)
 {
-	// confrontro tra numero di vertici, lati e facce del poliedro triangolato (ootenuto con la funzione) e i valori che si ottengono applicando le formule
+	//confrontro tra numero di vertici, lati e facce del poliedro triangolato (ottenuto con la funzione) e i valori che si ottengono applicando le formule
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
 	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
 	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
 	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
-	/*OldMesh.Cell0DsCoordinates = MatrixXd::Zero(3,10);
-	OldMesh.Cell0DsCoordinates.col(0) = Vector3d(0, 0, 0);
-	OldMesh.Cell0DsCoordinates.col(1) = Vector3d(1, 0, 0);
-	OldMesh.Cell0DsCoordinates.col(2) = Vector3d(0.5, 0.8660254038, 0);
-	OldMesh.Cell2DsVertices = {{0,1,2}};*/
 	PolyhedralMesh NewMesh;
 	int p=3;
 	int q=4;
@@ -151,9 +102,6 @@ TEST(TestChecking, TestTriangulationTypeI)
 	mesh.Cell3DsVertices = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}};
 	mesh.Cell3DsEdges = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47}};
 	mesh.Cell3DsFaces = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31}};
-	//mesh.Cell3DsVertices = {{0,1,2,3,4,5,6,7,8,9}};
-	//mesh.Cell3DsEdges = {{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}};
-	//mesh.Cell3DsFaces = {{0}};
 	EXPECT_EQ(NewMesh.Cell3DsId,mesh.Cell3DsId);
 	EXPECT_EQ(NewMesh.Cell3DsVertices,mesh.Cell3DsVertices);
 	EXPECT_EQ(NewMesh.Cell3DsEdges,mesh.Cell3DsEdges);
@@ -162,24 +110,14 @@ TEST(TestChecking, TestTriangulationTypeI)
 
 TEST(TestChecking, TestTriangulationTypeII)
 {
-	// confrontro tra numero di vertici, lati e facce del poliedro triangolato (ootenuto con la funzione) e i valori che si ottengono applicando le formule
+	//confrontro tra numero di vertici, lati e facce del poliedro triangolato (ottenuto con la funzione) e i valori che si ottengono applicando le formule
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
 	string file2Ds = "../PlatonicSolid/octahedron/Cell2Ds.txt";
 	string file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";
 	ImportMesh(OldMesh,file0Ds,file1Ds,file2Ds,file3Ds);
-	/*OldMesh.NumCell0Ds = 6;
-	OldMesh.NumCell1Ds = 12;
-	OldMesh.NumCell2Ds = 8;
-	OldMesh.Cell0DsCoordinates = MatrixXd::Zero(3,10);
-	OldMesh.Cell0DsCoordinates.col(0) = Vector3d(0, 0, 0);
-	OldMesh.Cell0DsCoordinates.col(1) = Vector3d(1, 0, 0);
-	OldMesh.Cell0DsCoordinates.col(2) = Vector3d(0.5, 0.8660254038, 0);
-	OldMesh.Cell2DsVertices = {{0,1,2}};*/
 	PolyhedralMesh NewMesh;
-	//int p=3;
-	//int q=4;
 	int n=2;
 	TriangulationTypeII(OldMesh,NewMesh,n);
 	PolyhedralMesh mesh;
@@ -195,7 +133,7 @@ TEST(TestChecking, TestTriangulationTypeII)
 
 TEST(TestChecking, TestDualConstructor)
 {
-	// confrontro tra il numero di vertici, lati e facce del poliedro duale che si ottine utilizzando la funzione e i valori che si ottengono applicando le formule
+	//confrontro tra il numero di vertici, lati e facce del poliedro duale che si ottine utilizzando la funzione e i valori che si ottengono applicando le formule
 	PolyhedralMesh OldMesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -217,6 +155,7 @@ TEST(TestChecking, TestDualConstructor)
 
 TEST(TestChecking, TestFindEdge)
 {
+	//verifico che il lato che unisce due vertici, trovato dalla funzione, corrisponda con il lato che li unisce realmente
 	PolyhedralMesh mesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -231,6 +170,7 @@ TEST(TestChecking, TestFindEdge)
 
 TEST(TestChecking, TestCreateAdjacencyList)
 {
+	//verifico che la lista di adiacenza, trovata con la funzione, sia la medesima di quella trovata manualmente
 	PolyhedralMesh mesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -245,6 +185,7 @@ TEST(TestChecking, TestCreateAdjacencyList)
 
 TEST(TestChecking, TestCreateWeightsMatrix)
 {
+	//verifico che la matrice dei pesi, che si crea tramite alla funzione, si differenzia dalla matrice calcolata manualmente di una tolleranza minima
 	PolyhedralMesh mesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -266,6 +207,7 @@ TEST(TestChecking, TestCreateWeightsMatrix)
 
 TEST(TestChecking, TestComputeDistances)
 {
+	//verifico che la distanza tra i nodi, trovata con la funzione, sia la medesima di quella trovata manualmente
 	PolyhedralMesh mesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -291,7 +233,7 @@ bool isApprox(double a, double b, double tolerance = 1e-15) {
 
 TEST(TestChecking, TestFindShortestPath)
 {
-	// controllo del cammino minimo
+	//verifico che vertici, lati e il numero di questi ultimo, trovati dalla funzione, corrispondono con quelli trovati manualmente; inoltre verifico anche che la lunghezza del cammino minimo, trovata dalla funzione, si differenzia dalla lunghezza calcolata manualmente di una tolleranza minima
 	PolyhedralMesh Mesh;
 	string file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 	string file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
