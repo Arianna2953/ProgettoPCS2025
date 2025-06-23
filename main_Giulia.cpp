@@ -13,7 +13,6 @@ using namespace std;
 using namespace Eigen;
 using namespace PolyhedralLibrary;
 
-
 int main(int argc, char* argv[]) {
     // Verifica che ci siano 5 o 7 argomenti (5 se non ci sono v0 e v1, 7 se ci sono v0 e v1)
     if (argc != 5 && argc != 7) {
@@ -38,7 +37,7 @@ int main(int argc, char* argv[]) {
     int b = stoi(argv[3]);
     int c = stoi(argv[4]);
     int v0 = -1, v1 = -1;
-    bool pathToFind = false;
+	bool pathToFind = false;
     if (argc == 7) {
         v0 = stoi(argv[5]);
         v1 = stoi(argv[6]);
@@ -80,7 +79,7 @@ int main(int argc, char* argv[]) {
 		cout << "Poliedro regolare di base: Icosaedro" << endl;
     } 
     else if (p == 4 && q == 3) {
-		//importo il poliedro di base, triangolo, proietto sulla sfera unitaria e poi calcolo il duale
+		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale del poliedro risultante
 		
 		file0Ds = "../PlatonicSolid/octahedron/Cell0Ds.txt";
 		file1Ds = "../PlatonicSolid/octahedron/Cell1Ds.txt";
@@ -90,7 +89,7 @@ int main(int argc, char* argv[]) {
 		dualize = true;
     } 
     else if (p == 5 && q == 3) {
-		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale??
+		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale del poliedro risultante
 		
 		file0Ds = "../PlatonicSolid/icosahedron/Cell0Ds.txt";
 		file1Ds = "../PlatonicSolid/icosahedron/Cell1Ds.txt";
@@ -106,7 +105,7 @@ int main(int argc, char* argv[]) {
 
 	if(!ImportMesh(regularPolyhedron,file0Ds,file1Ds,file2Ds,file3Ds))
 		{
-			cerr << "file non trovato" << endl;
+			cerr << "File non trovato." << endl;
 			return 1;
 		} 
 	
@@ -117,8 +116,8 @@ int main(int argc, char* argv[]) {
 		n = max(b,c);
 		cout << "Triangolazione di 'tipo 1'" << endl;
 		if(dualize == true){
-			TriangulationTypeI(regularPolyhedron,toDualize,q,p,n);
-			DualConstructor(toDualize,mesh);			
+			TriangulationTypeI(regularPolyhedron, toDualize,q,p,n);
+			DualConstructor(toDualize,mesh);
 		}
 		else{
 			TriangulationTypeI(regularPolyhedron, mesh,p,q,n);
@@ -126,10 +125,9 @@ int main(int argc, char* argv[]) {
 	}
 	else if(b==c && b!=0){
 		n = b;
-		//triangolazione tipo 2
 		cout << "Triangolazione di 'tipo 2'" << endl;
 		if(dualize == true){
-			TriangulationTypeII(regularPolyhedron,toDualize,n);
+			TriangulationTypeII(regularPolyhedron, toDualize,n);
 			DualConstructor(toDualize,mesh);
 		}
 		else{
@@ -148,12 +146,12 @@ int main(int argc, char* argv[]) {
 			cerr << "Impossibile trovare il percorso minimo." << endl;
 			return 1;
 		}	
-		//cout << "Numero di lati percorso minimo: " << numEdges << endl;
-		//cout << "Lunghezza percorso minimo: " << pathLenght << endl;
+		cout << "Numero di lati percorso minimo: " << numEdges << endl;
+		cout << "Lunghezza percorso minimo: " << pathLenght << endl;
 	}
 	
 	ExportPolyhedron(mesh);
-	
+		
 //esporto file per visualizzazione
 Gedim::UCDUtilities utilities;
     {	vector<Gedim::UCDProperty<double>> cell0Ds_properties(1);
@@ -229,7 +227,7 @@ Gedim::UCDUtilities utilities;
                              materials);
 }*/
 	//visualizzazione a terminale
-    /*cout << "=== Cell0Ds (Vertices) ===\n";
+    cout << "=== Cell0Ds (Vertices) ===\n";
     cout << "NumCell0Ds: " << mesh.NumCell0Ds << "\n";
     cout << "Cell0DsId: ";
     for (int id : mesh.Cell0DsId) cout << id << " ";
@@ -292,6 +290,6 @@ Gedim::UCDUtilities utilities;
         for (int f : mesh.Cell3DsFaces[i]) cout << f << " ";
         cout << "\n";
     }
-*/
+
 
 }

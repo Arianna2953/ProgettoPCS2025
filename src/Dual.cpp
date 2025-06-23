@@ -12,6 +12,28 @@
 
 namespace PolyhedralLibrary
 {
+
+
+double ComputePolygonArea3D(const vector<int>& vertIds, const MatrixXd& V) {
+    int N = vertIds.size();
+    if (N < 3) return 0.0;
+
+    // Baricentro del poligono
+    Vector3d C = Vector3d::Zero();
+    for (int id : vertIds)
+        C += V.col(id);
+    C /= N;
+
+    // Somma aree triangoli (centroide–i–i+1)
+    double area = 0.0;
+    for (int i = 0; i < N; ++i) {
+        Vector3d p0 = V.col(vertIds[i]);
+        Vector3d p1 = V.col(vertIds[(i + 1) % N]);
+        area += 0.5 * ( (p0 - C).cross(p1 - C) ).norm();
+    }
+    return area;
+}
+
 	
 bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual){	
 	const int V = polyhedron.NumCell2Ds; //Numero facce poliedro originale = numero vertici duale
@@ -47,6 +69,9 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual){
 			
 			//Ricavo id e coordinate dei vertici della faccia
 			const vector<int>& faceVertices = polyhedron.Cell2DsVertices[f];
+			
+			//cout << "faccia: "<< f << "vertici: " <<  faceVertices[0] <<  faceVertices[1] << faceVertices[2] << endl;
+			
 			Vector3d v0 = polyhedron.Cell0DsCoordinates.col(faceVertices[0]);
 			Vector3d v1 = polyhedron.Cell0DsCoordinates.col(faceVertices[1]);
 			Vector3d v2 = polyhedron.Cell0DsCoordinates.col(faceVertices[2]);
@@ -101,12 +126,12 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual){
 	
 	
 	//Iterando sui vertici del  poliedro originale costruisco le facce del duale
-	for (int v : polyhedron.Cell0DsId)
+	/*for (int v : polyhedron.Cell0DsId)
 	{
 		vector<int> adjacentFaces; //Contenitore dove mi salverò gli id delle facce adiacenti a v nel poliedro originale.
 		adjacentFaces.reserve(Ndual);
 		int m = 0; //Contatore delle facce adiacenti a v trovate
-		//Trovo le vacce adiacenti al vertice v (nel poliedro originale)
+		//Trovo le facce adiacenti al vertice v (nel poliedro originale)
 		for  (int f : polyhedron.Cell2DsId)
 		{
 			for (int vf : polyhedron.Cell2DsVertices[f])
@@ -157,18 +182,93 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual){
 			}
 		}
 		
+			
 		dual.Cell2DsId.push_back(v); //v corrisponde ad una faccia del duale.
 		dual.Cell2DsVertices.push_back(fVDSorted); 
 		dual.Cell2DsEdges.push_back(faceEdgesDual);
 		
-	}
-	
-	
-	//Aggiorno valori Cell3Ds
-	dual.Cell3DsVertices.push_back(dual.Cell0DsId);
-	dual.Cell3DsEdges.push_back(dual.Cell1DsId);
-	dual.Cell3DsFaces.push_back(dual.Cell2DsId);
-	return true;	
+	}*/
+
+	for (int v : polyhedron.Cell0DsId) {
+		vector<int> adjacentFaces;
+		adjacentFaces.reserve(Ndual);
+		
+		// Trova tutte le facce adiacenti al vertice v
+		for (int f = 0; f < polyhedron.NumCell2Ds; ++f) {
+			for (int vf : polyhedron.Cell2DsVertices[f]) {
+				if (v == vf) {
+					adjacentFaces.push_back(f);
+					break;
+				}
+			}
+		}
+
+		// Ricostruzione ordinata dei vertici della faccia duale
+		vector<int> orderedVertices;
+		vector<int> orderedEdges;
+		vector<bool> visited(polyhedron.NumCell2Ds, false); //segno le facce già inserite, per non ripetere
+
+		//prima faccia trovata da cui parto
+		int current = adjacentFaces[0];
+		visited[current] = true;
+		orderedVertices.push_back(current);
+		
+		//cerco la faccia successiva adiacente a quella corrente tramite un lato del duale
+		while (orderedVertices.size() < adjacentFaces.size()) {
+			bool found = false;
+			for (int f : adjacentFaces) {
+				if (visited[f]) continue;
+
+				for (int j = 0; j < E; ++j) {
+					Vector2i e = dual.Cell1DsExtrema.col(j);
+					if ((e[0] == current && e[1] == f) || (e[1] == current && e[0] == f)) { //lo voglio tra adjfaces
+						current = f;
+						visited[f] = true;
+						orderedVertices.push_back(f);
+						orderedEdges.push_back(dual.Cell1DsId[j]);
+						found = true;
+						break;
+					}
+				}
+				if (found) break;
+			}
+
+			if (!found) {
+				cerr << "ATTENZIONE: ciclo non chiuso correttamente per vertice " << v << endl;
+				break;
+			}
+		}
+		//aggiungo ultimo lato a chiudere la faccia
+		if (orderedVertices.size() == adjacentFaces.size()) {
+			for (int j = 0; j < E; ++j) {
+				Vector2i e = dual.Cell1DsExtrema.col(j);
+				if ((e[0] == current && e[1] == orderedVertices[0]) || 
+					(e[1] == current && e[0] == orderedVertices[0])) {
+					orderedEdges.push_back(dual.Cell1DsId[j]);
+					break;
+				}
+			}
+		}
+		// Salvataggio dei dati della faccia duale
+		dual.Cell2DsId.push_back(v);
+		dual.Cell2DsVertices.push_back(orderedVertices);
+		dual.Cell2DsEdges.push_back(orderedEdges);
+}
+
+//calcolo area delle facce
+for (int f = 0; f < dual.NumCell2Ds; ++f) {
+    const auto& verts = dual.Cell2DsVertices[f];
+    double area = ComputePolygonArea3D(verts, dual.Cell0DsCoordinates);
+    std::cout << "Area faccia 2D id=" << dual.Cell2DsId[f]
+              << " = " << area << "\n";
+}		
+		
+// Aggiornamento delle celle 3D
+dual.Cell3DsVertices.push_back(dual.Cell0DsId);
+dual.Cell3DsEdges.push_back(dual.Cell1DsId);
+dual.Cell3DsFaces.push_back(dual.Cell2DsId);
+return true;
+
 }
 
 }
