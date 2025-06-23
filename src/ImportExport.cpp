@@ -14,8 +14,7 @@ using namespace std;
 
 namespace PolyhedralLibrary
 {
-bool ImportMesh(PolyhedralMesh& mesh,const string& file0Ds,const string& file1Ds,const string& file2Ds,const string& file3Ds)
-{
+bool ImportMesh(PolyhedralMesh& mesh,const string& file0Ds,const string& file1Ds,const string& file2Ds,const string& file3Ds){
 
     if(!ImportCell0Ds(file0Ds,mesh)){
         return false;

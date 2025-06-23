@@ -25,55 +25,7 @@ using namespace PolyhedralLibrary;
 
 namespace PolyhedralLibrary{
 	
-	/*PolyhedralMesh OldMesh;
-
-	OldMesh.NumCell0Ds = 6;
-	OldMesh.Cell0DsId = {0,1,2,3,4,5};
-
-	OldMesh.Cell0DsCoordinates = MatrixXd::Zero(3, OldMesh.NumCell0Ds);
-	OldMesh.Cell0DsCoordinates.col(0) = Vector3d(1, 0, 0);
-	OldMesh.Cell0DsCoordinates.col(1) = Vector3d(-1, 0, 0);
-	OldMesh.Cell0DsCoordinates.col(2) = Vector3d(0, 1, 0);
-	OldMesh.Cell0DsCoordinates.col(3) = Vector3d(0, -1, 0);
-	OldMesh.Cell0DsCoordinates.col(4) = Vector3d(0, 0, 1);
-	OldMesh.Cell0DsCoordinates.col(5) = Vector3d(0, 0, -1);
-
-	OldMesh.ShortPathCell0Ds[0] = {0,1,2,3,4,5};
-
-	OldMesh.NumCell1Ds = 12;
-	OldMesh.Cell1DsId = {0,1,2,3,4,5,6,7,8,9,10,11};
-
-	OldMesh.Cell1DsExtrema = MatrixXi::Zero(2, OldMesh.NumCell1Ds);
-	OldMesh.Cell1DsExtrema.col(0) = Vector2i(0,2);
-	OldMesh.Cell1DsExtrema.col(1) = Vector2i(0,3);
-	OldMesh.Cell1DsExtrema.col(2) = Vector2i(0,4);
-	OldMesh.Cell1DsExtrema.col(3) = Vector2i(0,5);
-	OldMesh.Cell1DsExtrema.col(4) = Vector2i(1,2);
-	OldMesh.Cell1DsExtrema.col(5) = Vector2i(1,3);
-	OldMesh.Cell1DsExtrema.col(6) = Vector2i(1,4);
-	OldMesh.Cell1DsExtrema.col(7) = Vector2i(1,5);
-	OldMesh.Cell1DsExtrema.col(8) = Vector2i(2,4);
-	OldMesh.Cell1DsExtrema.col(9) = Vector2i(2,5);
-	OldMesh.Cell1DsExtrema.col(10) = Vector2i(3,4);
-	OldMesh.Cell1DsExtrema.col(11) = Vector2i(3,5);
-
-	OldMesh.ShortPathCell1Ds[0] = {0,1,2,3,4,5,6,7,8,9,10,11};
-
-	OldMesh.NumCell2Ds = 8;
-	OldMesh.Cell2DsId = {0,1,2,3,4,5,6,7};
-	OldMesh.Cell2DsVertices = {{0,2,4},{2,1,4},{1,3,4},{3,0,4},{0,2,5},{2,1,5},{1,3,5},{3,0,5}};
-	OldMesh.Cell2DsEdges = {{0,8,2},{4,6,8},{5,10,6},{1,2,10},{0,9,3},{4,7,9},{5,11,7},{1,3,11}};
-
-	OldMesh.NumCell3Ds = 1;
-	OldMesh.Cell3DsId = {0};
-	OldMesh.Cell3DsVertices = {{0,1,2,3,4,5}};
-	OldMesh.Cell3DsEdges = {{0,1,2,3,4,5,6,7,8,9,10,11}};
-	OldMesh.Cell3DsFaces = {{0,1,2,3,4,5,6,7}};
-	*/
-	
-	//con questa inizializzazione potrebbe funzionare, ma non la prende nei test...forse va inserita dentro ogni test? forse conviene usare import a questo punto... o comunque provare con figure 2D quando si può e non solidi veri e propri
-
-	PolyhedralMesh NewMesh;
+PolyhedralMesh NewMesh;
 	
 TEST(TestChecking, TestCheckAddEdges1)
 {
@@ -328,12 +280,16 @@ TEST(TestChecking, TestComputeDistances)
 	vector<double> distances(mesh.NumCell0Ds);
 	int sourceNode=3;
 	int destinationNode=15;
-	ComputeDistances(adjacencyList, sourceNode, destinationNode, weightsEdges, mesh.NumCell0Ds, predecessors, distances);
+	ComputeDistances(adjacencyList, sourceNode, destinationNode, weightsEdges, predecessors, distances);
 	double distanza_corretta=3.21143e-322;
 	EXPECT_EQ(distances[destinationNode],distanza_corretta);
 }
 
-/*TEST(TestChecking, TestFindShortestPath)
+bool isApprox(double a, double b, double tolerance = 1e-15) {
+  return abs(a - b) <= tolerance;
+}
+
+TEST(TestChecking, TestFindShortestPath)
 {
 	// controllo del cammino minimo
 	PolyhedralMesh Mesh;
@@ -353,13 +309,13 @@ TEST(TestChecking, TestComputeDistances)
 	double lunghezza_cammino=0.0;
 	FindShortestPath(NewMesh,nodo_partenza,nodo_arrivo,numero_lati,lunghezza_cammino);
 	PolyhedralMesh mesh;
-	mesh.ShortPathCell0Ds[1] = {3,1,2,5,15};
-	mesh.ShortPathCell1Ds[1] = {3,1,8,34};
-	unsigned int num_lati_corretto=5;
-	double lung_cammino_corretta=26.23;
+	mesh.ShortPathCell0Ds[1] = {3,4,15};
+	mesh.ShortPathCell1Ds[1] = {4,33};
+	unsigned int num_lati_corretto=2;
+	double lung_cammino_corretta= 1.7653668647301792e+00;
 	EXPECT_EQ(NewMesh.ShortPathCell0Ds[1],mesh.ShortPathCell0Ds[1]);
 	EXPECT_EQ(NewMesh.ShortPathCell1Ds[1],mesh.ShortPathCell1Ds[1]);
 	EXPECT_EQ(numero_lati,num_lati_corretto);
-	EXPECT_EQ(lunghezza_cammino,lung_cammino_corretta);
-}*/
+	EXPECT_TRUE(isApprox(lunghezza_cammino,lung_cammino_corretta, 1e-15));
+}
 }

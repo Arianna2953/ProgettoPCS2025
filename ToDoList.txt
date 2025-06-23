@@ -1,4 +1,0 @@
-1. (GIULIA)   X File di base poliedri platonici
-			    Provo a impostare la triangolazione per il caso 1 :)
-2. (ELENA)    X CMake
-3. (ARIANNIA) X PolyhedralMesh.hpp (struct)
