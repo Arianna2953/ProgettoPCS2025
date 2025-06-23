@@ -1,0 +1,61 @@
+@startuml
+start 
+title Funzione "ComputeDistances"
+
+:Ricava il numero di nodi V dalla dimensione della lista di adiacenza;
+
+:Inizializza il vettore dei predecessori (tutti -1, lunghezza V);
+
+:Inizializza il vettore delle distanze(tutti INFINITY, lunghezza V);
+
+:Inizializza il vettore dei nodi visitati(tutti -1, lunghezza V);
+
+:Crea la coda con priorità ( Min heap : (distanza, nodo) );
+note right
+  con la priority_queue della libreria standard,più precisamente come
+priority_queue<pair<double,int>,vector<pair<double,int>>,greater<>>
+end note
+
+repeat
+
+:Legge l'id del nodo in cima alla coda con priorità e lo salva nella variabile u;
+
+:Rimuove il primo elemento dalla coda;
+
+if(u è il nodo destinazione) then (sì)
+
+else
+
+if(u è già stato visitato) then (sì)
+else
+
+:Segna che il nodo u è stato visitato;
+
+repeat
+:Considera il nodo w nella lista di adiacenza del nodo u;
+
+if(w è già stato visitato) then (sì)
+else
+
+if(La distanza di w è maggiore della distanza di u sommata al peso dell'arco u-w) then (sì)
+
+:Assegna u come predecessore di u;
+
+:Assegna la distanza di u sommata al peso dell'arco u-w come distanza di w;
+
+:Aggiunge la tupla (distanza di w, w) alla coda con priorità;
+
+end if;
+
+end if;
+
+repeat while (Ci sono altri nodi nella lista di adiacenza di u?) is (yes) not (no)
+
+end if;
+
+end if;
+
+repeat while (La coda con priorità è vuota o ho raggiunto il nodo destinazione?) is (no) not (yes)
+
+stop
+@enduml

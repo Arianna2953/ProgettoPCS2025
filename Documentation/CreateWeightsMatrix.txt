@@ -1,0 +1,23 @@
+@startuml
+start 
+title Funzione "CreateWeightsMatrix"
+
+:Considera una matrice di dimensioni VxV 
+con V numero di vertici del poliedro;
+
+repeat
+:Considera un lato del poliedro;
+note left
+Itera su ogni lato del poliedro
+end note
+
+:Ricava gli estremi V1 e V2;
+
+:Calcola la lunghezza L del lato;
+
+:Assegna agli elementi (V1,V2) e (V2,V1) della matrice il valore L;
+
+repeat while (Ci sono altri lati del poliedro?) is (yes) not (no)
+
+stop
+@enduml
