@@ -87,6 +87,7 @@ int main(int argc, char* argv[]) {
 		file3Ds = "../PlatonicSolid/octahedron/Cell3Ds.txt";		
         cout << "Poliedro regolare di base: Ottaedro - bisogna poi farne il duale" << endl;
 		dualize = true;
+		cout << "Effettuo la dualizzazione" << endl;
     } 
     else if (p == 5 && q == 3) {
 		//importo il poliedro di base, triangolo, proietto e poi calcolo il duale del poliedro risultante
@@ -97,6 +98,7 @@ int main(int argc, char* argv[]) {
 		file3Ds = "../PlatonicSolid/icosahedron/Cell3Ds.txt";		
         cout << "Poliedro regolare di base: Icosaedro - bisogna poi farne il duale" << endl;	
 		dualize = true;
+		cout << "Effettuo la dualizzazione" << endl;
     } 
     else {
         cout << "Combinazione di valori di p e q non corrispondente a nessun poliedro regolare." << endl;
@@ -117,10 +119,13 @@ int main(int argc, char* argv[]) {
 		cout << "Triangolazione di 'tipo 1'" << endl;
 		if(dualize == true){
 			TriangulationTypeI(regularPolyhedron, toDualize,q,p,n);
+			cout << "Effettuo la triangolazione di tipo 1" << endl;
 			DualConstructor(toDualize,mesh);
+			cout << "Effettuo la dualizzazione" << endl;
 		}
 		else{
 			TriangulationTypeI(regularPolyhedron, mesh,p,q,n);
+			cout << "Effettuo la triangolazione di tipo 1" << endl;
 		}
 	}
 	else if(b==c && b!=0){
@@ -128,10 +133,13 @@ int main(int argc, char* argv[]) {
 		cout << "Triangolazione di 'tipo 2'" << endl;
 		if(dualize == true){
 			TriangulationTypeII(regularPolyhedron, toDualize,n);
+			cout << "Effettuo la triangolazione di tipo 2" << endl;
 			DualConstructor(toDualize,mesh);
+			cout << "Effettuo la dualizzazione" << endl;
 		}
 		else{
 			TriangulationTypeII(regularPolyhedron, mesh,n);
+			cout << "Effettuo la triangolazione di tipo 2" << endl;
 		}
 	}
 	else {
