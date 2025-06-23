@@ -289,7 +289,7 @@ Gedim::UCDUtilities utilities;
         cout << "  Volume " << i << ": ";
         for (int f : mesh.Cell3DsFaces[i]) cout << f << " ";
         cout << "\n";
-    }*/
-
+    }
+*/
 
 }

@@ -14,7 +14,7 @@ namespace PolyhedralLibrary
 {
 
 
-double ComputePolygonArea3D(const vector<int>& vertIds, const MatrixXd& V) {
+/*double ComputePolygonArea3D(const vector<int>& vertIds, const MatrixXd& V) {
     int N = vertIds.size();
     if (N < 3) return 0.0;
 
@@ -32,7 +32,7 @@ double ComputePolygonArea3D(const vector<int>& vertIds, const MatrixXd& V) {
         area += 0.5 * ( (p0 - C).cross(p1 - C) ).norm();
     }
     return area;
-}
+}*/
 
 	
 bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual){	
@@ -248,19 +248,41 @@ bool DualConstructor(const PolyhedralMesh& polyhedron, PolyhedralMesh& dual){
 				}
 			}
 		}
+		
+		// Calcolo dell'area della faccia
+		int N = orderedVertices.size();
+		if (N < 3) {
+			cerr << "Warning: faccia duale con meno di 3 vertici (id: " << v << ")" << endl;
+		} 
+		else {
+			// Calcolo baricentro della faccia
+			Vector3d C = Vector3d::Zero();
+			for (int idv : orderedVertices){
+				C += dual.Cell0DsCoordinates.col(idv);
+			}
+			C /= N;
+
+			// Calcolo area sommando triangoli (C, vi, vi+1)
+			double area = 0.0;
+			for (int i = 0; i < N; ++i) {
+				Vector3d p0 = dual.Cell0DsCoordinates.col(orderedVertices[i]);
+				Vector3d p1 = dual.Cell0DsCoordinates.col(orderedVertices[(i + 1) % N]);
+				area += 0.5 * ( (p0 - C).cross(p1 - C) ).norm();
+			}
+			//cout << "Area della faccia " << v << ": " << area << endl;
+
+			if (area < 1e-14) {
+				cerr << "Warning: area nulla (" << area << "), faccia duale con id " << v << endl;
+				//return false; (??)
+			}
+		}
+		
 		// Salvataggio dei dati della faccia duale
 		dual.Cell2DsId.push_back(v);
 		dual.Cell2DsVertices.push_back(orderedVertices);
 		dual.Cell2DsEdges.push_back(orderedEdges);
-}
+	}	
 
-//calcolo area delle facce
-for (int f = 0; f < dual.NumCell2Ds; ++f) {
-    const auto& verts = dual.Cell2DsVertices[f];
-    double area = ComputePolygonArea3D(verts, dual.Cell0DsCoordinates);
-    std::cout << "Area faccia 2D id=" << dual.Cell2DsId[f]
-              << " = " << area << "\n";
-}		
 		
 // Aggiornamento delle celle 3D
 dual.Cell3DsVertices.push_back(dual.Cell0DsId);
