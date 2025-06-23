@@ -43,9 +43,9 @@ void CreateAdjacencyList(const PolyhedralMesh& mesh, vector<list<int>>& adjList)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 void CreateWeightsMatrix(const PolyhedralMesh& mesh, MatrixXd& weights){
-	for (int e = 0; e < mesh.NumCell1Ds; e++){
-		int idV1 = mesh.Cell1DsExtrema(0,e);
-		int idV2 = mesh.Cell1DsExtrema(1,e);
+	for (int j = 0; j < mesh.NumCell1Ds; j++){
+		int idV1 = mesh.Cell1DsExtrema(0,j);
+		int idV2 = mesh.Cell1DsExtrema(1,j);
 		Vector3d coordV1 = mesh.Cell0DsCoordinates.col(idV1);
 		Vector3d coordV2 = mesh.Cell0DsCoordinates.col(idV2);
 		double edgeLenght = (coordV1-coordV2).norm();
@@ -70,7 +70,7 @@ void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int&
 	dist[s] = 0;
 	
 	//Creo un vettore di n elementi per tenere traccia dei nodi visitati (0: non visitato; 1: visitato).
-	vector<int> visited(V,0); //inizializzo a zero
+	vector<int> visited(V,0);
 	
 	//Priority queue. Min heap : (distanza, nodo)
 	priority_queue<pair<double,int>,vector<pair<double,int>>,greater<>> pq;
@@ -78,22 +78,18 @@ void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int&
 		pq.push(pair(dist[i],i));
 	}
 	
-	while(!pq.empty()){ //NOTA: uso un for per i che va da 0 a V-2 perché posso visitare al massimo V nodi e visitare l'ultimo (il più lontano) sarebbe superfluo
+	while(!pq.empty()){ 
 		const int u = get<1>(pq.top()); //Leggo l'id del nodo con distanza minima.
 		
-		//Dequeue, rimuovo il nodo u dalla priority queue.
-		pq.pop();
-		
-		//cout << "nodo u:" << u << endl;
+		pq.pop();//Dequeue, rimuovo il nodo u dalla priority queue.
 		
 		if (u == d) {break;} //Controllo se ho raggiunto il nodo destinazione, se sì esco dal ciclo for.
-		if (visited[u] != 0) {continue;}
+		if (visited[u] != 0) {continue;} //Se ho già visitato il nodo u passo all'iterazione successiva
 		
 		visited[u] = 1; //Aggiorno visited, segno che il nodo u è stato visitato.
 		
 		for (int w : adjList[u]){
 			if (visited[w] != 0) {continue;} //Se ho già visitato il nodo w, passo al sucessivo.
-			//cout << u << ", " << w << " : " << dist[u] + weights(u,w) << endl;
 			if (dist[w] > dist[u] + weights(u,w)){
 				pred[w] = u;
 				dist[w] = dist[u] + weights(u,w);
@@ -109,48 +105,37 @@ void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int&
 
 bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& destinationNode, unsigned int& numEdges, double& pathLenght){
 	
-	const int V = mesh.NumCell0Ds;
+	cout << "Id vertice di partenza: " << sourceNode << endl;
+	cout << "Id vertice d'arrivo: " << destinationNode << endl;
 	
+	const int V = mesh.NumCell0Ds; //Numero di nodi del grafo.
+	
+	//Controllo che gli id dei nodi di partenza e destinazione siano validi.
 	if (sourceNode < 0 || sourceNode >= V || destinationNode < 0 || destinationNode >= V ){
 		cerr << "ATTENZIONE: Id vertici inseriti non validi." << endl;
 		return false;
 	}
 	
-	cout << "Id vertice di partenza: " << sourceNode << endl;
-	cout << "Id vertice d'arrivo: " << destinationNode << endl;
-	
-	//Creo la lista di adiacenza dei vertici del poliedro come vettore di liste.
+	//Creo la lista di adiacenza dei vertici del poliedro come vettore di liste di interi.
 	vector<list<int>> adjacencyList(V);
 	CreateAdjacencyList(mesh, adjacencyList);
-	
-	/*cout << "LISTA DI ADIACENZA" << endl;
-	for(int i = 0; i < V; i++) {
-		cout << i << ":  ";
-		for(int v : adjacencyList[i]) {cout << v << "  ";}
-		cout << endl;
-	}*/
 	
 	//Creo la matrice dei pesi.
 	MatrixXd weightsEdges = MatrixXd::Ones(V,V)*INFINITY;
 	CreateWeightsMatrix(mesh, weightsEdges);
 	
+	//Calcolo la distanza minima con l'algoritmo di Dijkstra.
 	vector<int> predecessors;
 	vector<double> distances;
 	ComputeDistances(adjacencyList, sourceNode, destinationNode, weightsEdges, predecessors, distances);
 	
-	pathLenght = distances[destinationNode];
+	pathLenght = distances[destinationNode]; 
 	
-	//cout << "DISTANCES - PREDECESSORS" << endl;
-	//for(int i = 0; i < V; i++) {cout << i << ": " << distances[i] << " - " << predecessors[i] << endl;}
-	
-	//Calcolo il numero di lati nel percorso minimo 
-	//e aggiorno la proprietà ShortPath dei nodi e dei lati che compongono il percorso.
+	//Calcolo il numero di lati nel percorso minimo e aggiorno la proprietà ShortPath dei nodi e dei lati che compongono il percorso.
 	int ShortPath = 1;
-	
-	//unsigned int numEdges =0;
 	int currentNode = destinationNode;
 	
-	// Ricostruisco il cammino minimo andando indietro
+	// Parto dal nodo destinazione e ricostruisco il cammino minimo andando indietro.
 	while (currentNode != sourceNode) {
 		mesh.ShortPathCell0Ds[ShortPath].push_back(currentNode); 
 		
@@ -165,30 +150,31 @@ bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& de
 		currentNode = prevNode;
 		numEdges++;
 	}
-	// Aggiungo anche il nodo sorgente alla lista dei nodi nel cammino minimo
+	// Aggiorno la proprietà  ShortPath del nodo di partenza.
 	mesh.ShortPathCell0Ds[ShortPath].push_back(sourceNode);
 	
-	//rimuovo i vertici e i lati dal vettore associato a ShortPath = 0
+	//Rimuovo i vertici e i lati del cammino minimo dalla lista "di default" associata a ShortPath = 0.
 	for (int v : mesh.ShortPathCell0Ds[ShortPath]) {
-			mesh.ShortPathCell0Ds[0].remove(v);  // rimuove dalla lista "default" con shortpath = 0
+			mesh.ShortPathCell0Ds[0].remove(v);  
 		}
-	
 	for (int e : mesh.ShortPathCell1Ds[ShortPath]) {
-			mesh.ShortPathCell1Ds[0].remove(e);  // rimuove dalla lista "default" con shortpath = 0
+			mesh.ShortPathCell1Ds[0].remove(e);
 		}
 	
+	/*
 	//Inverto l'ordine dei nodi e spigoli (perché sono salvati "al contrario")
 	//Voglio il cammino nel "verso giusto": da sourceNode a destinationNode
 	reverse(mesh.ShortPathCell0Ds[ShortPath].begin(), mesh.ShortPathCell0Ds[ShortPath].end());
 	reverse(mesh.ShortPathCell1Ds[ShortPath].begin(), mesh.ShortPathCell1Ds[ShortPath].end());
 	
-	//Per vedere quali nodi e archi sono parte del percorso minimo (check a terminale... si può poi togliere)
+	//Stampo a terminale i nodi e i lati del percorso minimo
 	cout << "Cammino minimo (nodi): ";
 	for (int v : mesh.ShortPathCell0Ds[1]) {cout << v << " ";}
 	cout << endl;
 	cout << "Cammino minimo (spigoli): ";
 	for (int e : mesh.ShortPathCell1Ds[1]) {cout << e << " ";}
 	cout << endl;
+	*/
 	
 	return true;
 }
