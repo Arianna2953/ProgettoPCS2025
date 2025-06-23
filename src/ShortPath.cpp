@@ -105,6 +105,7 @@ void ComputeDistances(const vector<list<int>>& adjList, const int& s, const int&
 
 bool FindShortestPath(PolyhedralMesh& mesh, const int& sourceNode, const int& destinationNode, unsigned int& numEdges, double& pathLenght){
 	
+	cout << "CALCOLO DEL CAMMINO MINIMO" << endl;
 	cout << "Id vertice di partenza: " << sourceNode << endl;
 	cout << "Id vertice d'arrivo: " << destinationNode << endl;
 	

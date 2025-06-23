@@ -87,34 +87,3 @@ add_executable(${PROJECT_NAME}_TEST
 target_link_libraries(${PROJECT_NAME}_TEST ${${PROJECT_NAME}_LINKED_LIBRARIES})
 target_include_directories(${PROJECT_NAME}_TEST PRIVATE ${${PROJECT_NAME}_test_includes})
 target_compile_options(${PROJECT_NAME}_TEST PUBLIC -fPIC)
-
-
-################################################################################
-# Eseguibili personali
-#add_executable(${PROJECT_NAME}_Arianna
-      #main_Arianna.cpp
-      #${${PROJECT_NAME}_test_sources}
-	  #${${PROJECT_NAME}_test_headers})
-
-#target_link_libraries(${PROJECT_NAME}_Arianna ${${PROJECT_NAME}_LINKED_LIBRARIES})
-#target_include_directories(${PROJECT_NAME}_Arianna PRIVATE ${${PROJECT_NAME}_test_includes})
-#target_compile_options(${PROJECT_NAME}_Arianna PUBLIC -fPIC)
-
-add_executable(${PROJECT_NAME}_Elena
-      main_Elena.cpp
-	  ${${PROJECT_NAME}_test_sources}
-	  ${${PROJECT_NAME}_test_headers})
-	  
-target_link_libraries(${PROJECT_NAME}_Elena ${${PROJECT_NAME}_LINKED_LIBRARIES})
-target_include_directories(${PROJECT_NAME}_Elena PRIVATE ${${PROJECT_NAME}_test_includes})
-target_compile_options(${PROJECT_NAME}_Elena PUBLIC -fPIC)
-	  
-add_executable(${PROJECT_NAME}_Giulia
-      main_Giulia.cpp
-      ${${PROJECT_NAME}_test_sources}
-	  ${${PROJECT_NAME}_test_headers})
-
-target_link_libraries(${PROJECT_NAME}_Giulia ${${PROJECT_NAME}_LINKED_LIBRARIES})
-target_include_directories(${PROJECT_NAME}_Giulia PRIVATE ${${PROJECT_NAME}_test_includes})
-target_compile_options(${PROJECT_NAME}_Giulia PUBLIC -fPIC)
-################################################################################
